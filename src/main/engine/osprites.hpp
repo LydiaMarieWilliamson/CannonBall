@@ -1,13 +1,13 @@
 /***************************************************************************
     Sprite Handling Routines.
-    
+
     - Initializing Sprites from level data.
     - Mapping palettes to sprites.
     - Ordering sprites by priority.
     - Adding shadows to sprites where appropriate.
     - Clipping sprites based on priority in relation to road hardware.
     - Conversion from internal format to output format required by hardware.
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -23,10 +23,10 @@ class OSprites
 {
 public:
 
-	enum 
+	enum
     {
 		HFLIP = 0x1,			// Bit 0: Horizontally flip sprite
-		WIDE_ROAD = 0x4,		// Bit 2: Set if road_width >= 0x118, 
+		WIDE_ROAD = 0x4,		// Bit 2: Set if road_width >= 0x118,
         TRAFFIC_SPRITE = 0x8,   // Bit 3: Traffic Sprite - Set for traffic
         SHADOW = 0x10,          // Bit 4: Sprite has shadows
 		DRAW_SPRITE = 0x20,	    // Bit 5: Toggle sprite visibility
@@ -37,11 +37,11 @@ public:
     // Note, the original game has 0x4F entries.
     // But we can set it to a higher value, to fix the broken arches on Gateway.
     // this is a limitation in the original game.
-    // We just leave the larger array in place when changing the settings. 
-    
+    // We just leave the larger array in place when changing the settings.
+
     // Total sprite entries in Jump Table (start at offset #3)
 	const static uint8_t SPRITE_ENTRIES = 0x62;
-    
+
     // This is initalized based on the config
     uint8_t no_sprites;
 
@@ -62,7 +62,7 @@ public:
     const static uint8_t SPRITE_TRAFF6  = SPRITE_ENTRIES + 12;
     const static uint8_t SPRITE_TRAFF7  = SPRITE_ENTRIES + 13;
     const static uint8_t SPRITE_TRAFF8  = SPRITE_ENTRIES + 14;
-    
+
     const static uint8_t SPRITE_CRASH          = SPRITE_ENTRIES + 15;
     const static uint8_t SPRITE_CRASH_SHADOW   = SPRITE_ENTRIES + 16;
     const static uint8_t SPRITE_CRASH_PASS1    = SPRITE_ENTRIES + 17;
@@ -73,7 +73,7 @@ public:
     const static uint8_t SPRITE_FLAG  = SPRITE_ENTRIES + 21;    // Flag Man
 
 	// Jump Table Sprite Entries
-	oentry jump_table[JUMP_ENTRIES_TOTAL]; 
+	oentry jump_table[JUMP_ENTRIES_TOTAL];
 
 	// Converted sprite entries in RAM for hardware.
 	osprite sprite_entries[JUMP_ENTRIES_TOTAL];
@@ -85,13 +85,13 @@ public:
 	// +22 [Word] Road Position For Next Segment Of Sprites
 	uint16_t seg_pos;
 
-	// +24 [Byte] Number Of Sprites In Segment  
+	// +24 [Byte] Number Of Sprites In Segment
 	uint8_t seg_total_sprites;
 
 	// +26 [Word] Sprite Frequency Bitmask
 	uint16_t seg_sprite_freq;
 
-	// +28 [Word] Sprite Info Offset - Start Value. Loaded Into 2A. 
+	// +28 [Word] Sprite Info Offset - Start Value. Loaded Into 2A.
 	int16_t seg_spr_offset2;
 
 	// +2A [Word] Sprite Info Offset
@@ -153,7 +153,7 @@ private:
 	uint8_t spr_col_pal;
 
 	// Stores number of palette entries to copy from rom to palram
-	int16_t pal_copy_count; 
+	int16_t pal_copy_count;
 
 	// Palette Addresses. Used in conjunction with palette lookup table.
 	// Originally stored between 0x61602 - 0x617FF in RAM

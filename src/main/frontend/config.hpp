@@ -154,7 +154,7 @@ public:
     engine_settings_t      engine;
     ttrial_settings_t      ttrial;
     smartypi_settings_t    smartypi;
-	
+
 	const static int CABINET_MOVING  = 0;
 	const static int CABINET_UPRIGHT = 1;
 	const static int CABINET_MINI    = 2;
@@ -173,7 +173,7 @@ public:
 
     // Continuous Mode: Traffic Setting
     int cont_traffic;
-    
+
     Config(void);
     ~Config(void);
 
@@ -188,7 +188,7 @@ public:
     void set_fps(int fps);
     void inc_time();
     void inc_traffic();
-   
+
 private:
 };
 

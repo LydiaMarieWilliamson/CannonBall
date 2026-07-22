@@ -99,7 +99,7 @@ void OHiScore::tick()
     switch (state & 3)
     {
         // Detect Score Position, Insert Score, Init Table
-        case STATE_GETPOS:   
+        case STATE_GETPOS:
             get_score_pos();
 
             // New High Score
@@ -107,7 +107,7 @@ void OHiScore::tick()
             {
                 osoundint.queue_sound(sound::PCM_WAVE);
                 osoundint.queue_sound(sound::MUSIC_LASTWAVE);
-                insert_score();               
+                insert_score();
             }
             // Not a High Score
             else
@@ -121,7 +121,7 @@ void OHiScore::tick()
             break;
 
         // Display Basic High Score Table
-        case STATE_DISPLAY: 
+        case STATE_DISPLAY:
             display_scores();
             if (best_or_state >= 2)
                 state = STATE_ENTRY; // Only allow name entry when minicars have animation finished
@@ -210,7 +210,7 @@ void OHiScore::set_display_pos()
             score_display_pos = 0;
         else if (score_display_pos > 13)
             score_display_pos = 13;
-    } 
+    }
     //score_display_pos = 0; // HACK!
 }
 
@@ -233,13 +233,13 @@ void OHiScore::check_name_entry()
         // Blit Alphabet. Highlight selected letter red.
         blit_alphabet();
         // Flash current initial that is being entered
-        flash_entry(score_adr);   
+        flash_entry(score_adr);
         // Draw big red countdown timer
         const uint16_t BIG_RED_FONT = 0x8080;
         ohud.draw_timer2(ostats.time_counter, 0x1101EC, BIG_RED_FONT);
         // Input from controls
         do_input(score_adr);
-        
+
         // Save new score info
         if (state == STATE_DONE)
             config.save_scores(outrun.cannonball_mode == Outrun::MODE_ORIGINAL);
@@ -263,7 +263,7 @@ uint32_t OHiScore::get_score_adr()
 void OHiScore::blit_alphabet()
 {
     // Print Text: "ABCDEFGHIJK..."
-    ohud.blit_text2(TEXT2_ALPHABET); 
+    ohud.blit_text2(TEXT2_ALPHABET);
 
     // Address in text ram for characters
     uint32_t adr = 0x110BF0;
@@ -309,7 +309,7 @@ void OHiScore::do_input(uint32_t adr)
 
     const static uint8_t ENTRIES = 28; // 28 Possible entries we can select from
     const static uint8_t DELETE = ENTRIES - 1;
-    
+
     int16_t position = read_controls() + letter_selected;
 
     if (position > ENTRIES)
@@ -350,7 +350,7 @@ void OHiScore::do_input(uint32_t adr)
     else
     {
         uint8_t tile = roms.rom0.read8(TILES_ALPHABET + letter_selected);
-        
+
         // Store initial to score structure
         if (initial_selected == 0)
             scores[score_pos].initial1 = tile;
@@ -422,7 +422,7 @@ int8_t OHiScore::read_controls()
         steer = 0;
     else
         movement = 0; // no movement
-   
+
     return movement;
 }
 
@@ -446,7 +446,7 @@ void OHiScore::display_scores()
             tick_minicars();
             // Have all mini-cars reached their destination?
             if (dest_total >= 7)
-                 best_or_state = 2; // Set State to DONE 
+                 best_or_state = 2; // Set State to DONE
             break;
 
         // Return
@@ -486,7 +486,7 @@ void OHiScore::tick_minicars()
     for (int i = 0; i < NO_MINICARS; i++)
     {
         minicar_entry* minicar = &minicars[i];
-        
+
         // Minicar is on-screen
         if (!minicar->dst_reached & BIT_0)
         {
@@ -727,7 +727,7 @@ void OHiScore::blit_lap_time()
             {
                 video.write_tile16(dst - 0x2, laptime[0]); // Minutes Digit 1
             }
-            
+
             video.write_tile16(0x0 + dst, laptime[1]); // Minutes Digit 2
             video.write_tile16(0x2 + dst, 0x5E);       // '
             video.write_tile16(0x4 + dst, laptime[2]); // Seconds Digit 1
@@ -749,7 +749,7 @@ void OHiScore::convert_lap_time(uint16_t time)
 {
     const uint16_t MINUTE = 3600;
 
-    int32_t src_time = time; // laptime copy [d0] 
+    int32_t src_time = time; // laptime copy [d0]
     int16_t minutes = -1;     // Store number of minutes
 
     // Calculate Minutes
@@ -759,13 +759,13 @@ void OHiScore::convert_lap_time(uint16_t time)
         minutes++;
     }
     while (src_time >= 0);
-    
+
     src_time += MINUTE;
     minutes = outils::convert16_dechex(minutes);
 
     // Store Millisecond Lookup
-    uint16_t ms_lookup = src_time & 0x3F; 
-    
+    uint16_t ms_lookup = src_time & 0x3F;
+
     // Calculate Seconds
     uint16_t seconds   = src_time >> 6;   // Store Seconds
 

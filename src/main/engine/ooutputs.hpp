@@ -1,6 +1,6 @@
 /***************************************************************************
     Process Outputs.
-    
+
     - Only the Deluxe Moving Motor Code is ported for now.
     - This is used by the force-feedback haptic system.
 
@@ -9,7 +9,7 @@
 
     Therefore, it's not perfect when used in this way, but the results
     aren't bad :)
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -28,7 +28,7 @@ struct CoinChute
 
 class OOutputs
 {
-public:  
+public:
     const static int MODE_DISABLED = 0; // Disabled
     const static int MODE_CABINET = 1; // SmartyPi Interface / Original Cabinet
     const static int MODE_FFEEDBACK = 2; // Force Feedback for Wheels
@@ -90,7 +90,7 @@ private:
     const static uint8_t MOTOR_RIGHT  = 0x5;
     const static uint8_t MOTOR_CENTRE = 0x8;
     const static uint8_t MOTOR_LEFT   = 0xB;
-    
+
 
     // These are calculated during startup in the original game.
     // Here we just hardcode them, as the motor init code isn't ported.

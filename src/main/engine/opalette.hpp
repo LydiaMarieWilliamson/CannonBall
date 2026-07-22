@@ -27,7 +27,7 @@ public:
     OPalette(void);
     ~OPalette(void);
     void init();
-	void setup_sky_palette();	
+	void setup_sky_palette();
 	void setup_sky_change();
     void setup_sky_cycle();
     void cycle_sky_palette();

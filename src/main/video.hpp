@@ -1,6 +1,6 @@
 /***************************************************************************
-    Video Rendering. 
-    
+    Video Rendering.
+
     - Renders the System 16 Video Layers
     - Handles Reads and Writes to these layers from the main game code
     - Interfaces with platform specific rendering code
@@ -39,7 +39,7 @@ public:
 
 	Video();
     ~Video();
-    
+
 	int init(Roms* roms, video_settings_t* settings);
     void disable();
     int set_video_mode(video_settings_t* settings);
@@ -57,7 +57,7 @@ public:
     void write_text32(uint32_t, const uint32_t);
     uint8_t read_text8(uint32_t);
 
-    void clear_tile_ram();    
+    void clear_tile_ram();
     void write_tile8(uint32_t, const uint8_t);
 	void write_tile16(uint32_t*, const uint16_t);
 	void write_tile16(uint32_t, const uint16_t);
@@ -79,7 +79,7 @@ public:
 private:
     // SDL Renderer
     RenderBase* renderer;
-    
+
 	uint8_t palette[S16_PALETTE_ENTRIES * 2]; // 2 Bytes Per Palette Entry
     void refresh_palette(uint32_t);
 };

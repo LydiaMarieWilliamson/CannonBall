@@ -37,7 +37,7 @@ Config config;
 Config::Config(void)
 {
     data.cfg_file = "./config.xml";
-    
+
     // Setup default sounds
     music_t magical, breeze, splash;
     magical.title = "MAGICAL SOUND SHOWER";
@@ -71,8 +71,8 @@ ptree pt_config;
 
 void Config::load()
 {
-    // Load XML file and put its contents in property tree. 
-    // No namespace qualification is needed, because of Koenig 
+    // Load XML file and put its contents in property tree.
+    // No namespace qualification is needed, because of Koenig
     // lookup on the second argument. If reading fails, exception
     // is thrown.
     try
@@ -109,9 +109,9 @@ void Config::load()
     // ------------------------------------------------------------------------
     // Video Settings
     // ------------------------------------------------------------------------
-   
-    video.mode       = pt_config.get("video.mode",               2); // Video Mode: Default is Full Screen 
-    video.scale      = pt_config.get("video.window.scale",       2); // Video Scale: Default is 2x    
+
+    video.mode       = pt_config.get("video.mode",               2); // Video Mode: Default is Full Screen
+    video.scale      = pt_config.get("video.window.scale",       2); // Video Scale: Default is 2x
     video.scanlines  = pt_config.get("video.scanlines",          0); // Scanlines
     video.fps        = pt_config.get("video.fps",                2); // Default is 60 fps
     video.fps_count  = pt_config.get("video.fps_counter",        0); // FPS Counter
@@ -209,7 +209,7 @@ void Config::load()
     controls.invert[2]     = pt_config.get("controls.analog.axis.brake.<xmlattr>.invert", 0);
     controls.asettings[0]  = pt_config.get("controls.analog.wheel.zone", 75);
     controls.asettings[1]  = pt_config.get("controls.analog.wheel.dead", 0);
-    
+
     controls.haptic        = pt_config.get("controls.analog.haptic.<xmlattr>.enabled", 0);
     controls.max_force     = pt_config.get("controls.analog.haptic.max_force", 9000);
     controls.min_force     = pt_config.get("controls.analog.haptic.min_force", 8500);
@@ -221,7 +221,7 @@ void Config::load()
 
     engine.dip_time      = pt_config.get("engine.time",    0);
     engine.dip_traffic   = pt_config.get("engine.traffic", 1);
-    
+
     engine.freeze_timer    = engine.dip_time == 4;
     engine.disable_traffic = engine.dip_traffic == 4;
     engine.dip_time    &= 3;
@@ -230,11 +230,11 @@ void Config::load()
     engine.freeplay      = pt_config.get("engine.freeplay",        0) != 0;
     engine.jap           = pt_config.get("engine.japanese_tracks", 0);
     engine.prototype     = pt_config.get("engine.prototype",       0);
-    
+
     // Additional Level Objects
     engine.level_objects   = pt_config.get("engine.levelobjects", 1);
     engine.randomgen       = pt_config.get("engine.randomgen",    1);
-    engine.fix_bugs_backup = 
+    engine.fix_bugs_backup =
     engine.fix_bugs        = pt_config.get("engine.fix_bugs",     1) != 0;
     engine.fix_timer       = pt_config.get("engine.fix_timer",    0) != 0;
     engine.layout_debug    = pt_config.get("engine.layout_debug", 0) != 0;
@@ -334,7 +334,7 @@ bool Config::save()
 
     pt_config.put("time_trial.laps",    ttrial.laps);
     pt_config.put("time_trial.traffic", ttrial.traffic);
-    pt_config.put("continuous.traffic", cont_traffic), 
+    pt_config.put("continuous.traffic", cont_traffic),
 
     ttrial.laps    = pt_config.get("time_trial.laps",    5);
     ttrial.traffic = pt_config.get("time_trial.traffic", 3);
@@ -373,21 +373,21 @@ void Config::load_scores(bool original_mode)
         std::cout << e.what() << std::endl;
         return;
     }
-    
+
     // Game Scores
     for (int i = 0; i < ohiscore.NO_SCORES; i++)
     {
         score_entry* e = &ohiscore.scores[i];
-        
+
         std::string xmltag = "score";
-        xmltag += Utils::to_string(i);  
-    
+        xmltag += Utils::to_string(i);
+
         e->score    = Utils::from_hex_string(pt.get<std::string>(xmltag + ".score",    "0"));
         e->initial1 = pt.get(xmltag + ".initial1", ".")[0];
         e->initial2 = pt.get(xmltag + ".initial2", ".")[0];
         e->initial3 = pt.get(xmltag + ".initial3", ".")[0];
         e->maptiles = Utils::from_hex_string(pt.get<std::string>(xmltag + ".maptiles", "20202020"));
-        e->time     = Utils::from_hex_string(pt.get<std::string>(xmltag + ".time"    , "0")); 
+        e->time     = Utils::from_hex_string(pt.get<std::string>(xmltag + ".time"    , "0"));
 
         if (e->initial1 == '.') e->initial1 = 0x20;
         if (e->initial2 == '.') e->initial2 = 0x20;
@@ -406,14 +406,14 @@ void Config::save_scores(bool original_mode)
 
     // Create empty property tree object
     ptree pt;
-        
+
     for (int i = 0; i < ohiscore.NO_SCORES; i++)
     {
         score_entry* e = &ohiscore.scores[i];
-    
+
         std::string xmltag = "score";
-        xmltag += Utils::to_string(i);    
-        
+        xmltag += Utils::to_string(i);
+
         pt.put(xmltag + ".score",    Utils::to_hex_string(e->score));
         pt.put(xmltag + ".initial1", e->initial1 == 0x20 ? "." : Utils::to_string((char) e->initial1)); // use . to represent space
         pt.put(xmltag + ".initial2", e->initial2 == 0x20 ? "." : Utils::to_string((char) e->initial2));
@@ -421,7 +421,7 @@ void Config::save_scores(bool original_mode)
         pt.put(xmltag + ".maptiles", Utils::to_hex_string(e->maptiles));
         pt.put(xmltag + ".time",     Utils::to_hex_string(e->time));
     }
-    
+
     try
     {
         write_xml(filename, pt, std::locale(), xml_writer_settings('\t', 1)); // Tab space 1
@@ -505,7 +505,7 @@ void Config::set_fps(int fps)
     video.fps = fps;
     // Set core FPS to 30fps or 60fps
     this->fps = video.fps == 0 ? 30 : 60;
-    
+
     // Original game ticks sprites at 30fps but background scroll at 60fps
     tick_fps  = video.fps < 2 ? 30 : 60;
 

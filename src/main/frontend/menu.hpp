@@ -1,7 +1,7 @@
 /***************************************************************************
     Front End Menu System.
 
-    This file is part of Cannonball. 
+    This file is part of Cannonball.
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -96,7 +96,7 @@ private:
     std::vector<std::string> menu_s_enhance;        // smartypi specific
 
     std::vector<std::string> text_redefine;
-    
+
     void populate_for_pc();
     void populate_controls();
     void populate_for_cabinet();

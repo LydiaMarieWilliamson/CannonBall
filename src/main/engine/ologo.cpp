@@ -1,8 +1,8 @@
 /***************************************************************************
     Attract Mode: Animated OutRun Logo Graphic
-    
+
     The logo is built from multiple sprite components.
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -45,7 +45,7 @@ void OLogo::enable(int16_t y)
     palm_frames[6] = outrun.adr.sprite_logo_palm3;
     palm_frames[7] = outrun.adr.sprite_logo_palm2;
 
-    setup_sprite1(); 
+    setup_sprite1();
     setup_sprite2();
     setup_sprite3();
     setup_sprite4();
@@ -258,12 +258,12 @@ void OLogo::sprite_logo_bird2()
 
 void OLogo::sprite_logo_road()
 {
-    osprites.do_spr_order_shadows(&osprites.jump_table[entry_start + 4]); 
+    osprites.do_spr_order_shadows(&osprites.jump_table[entry_start + 4]);
 }
 
 void OLogo::sprite_logo_palm()
 {
-    oentry *e = &osprites.jump_table[entry_start + 5]; 
+    oentry *e = &osprites.jump_table[entry_start + 5];
     e->reload++; // Increment frame number
     e->addr = palm_frames[(e->reload & 0xE) >> 1];
     osprites.do_spr_order_shadows(e);
@@ -271,7 +271,7 @@ void OLogo::sprite_logo_palm()
 
 void OLogo::sprite_logo_text()
 {
-    osprites.do_spr_order_shadows(&osprites.jump_table[entry_start + 6]); 
+    osprites.do_spr_order_shadows(&osprites.jump_table[entry_start + 6]);
 }
 
 // Blit Only: Used when frame skipping

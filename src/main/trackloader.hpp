@@ -7,7 +7,7 @@
     - Handles levels (path, width, height, scenery)
     - Handles additional level sections (road split, end section)
     - Handles road/level related palettes
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -106,7 +106,7 @@ public:
     void init_path_end();
 
     uint32_t read_pal_sky_table(uint16_t entry);
-    uint32_t read_pal_gnd_table(uint16_t entry);    
+    uint32_t read_pal_gnd_table(uint16_t entry);
     uint32_t read_heightmap_table(uint16_t entry);
     uint32_t read_scenerymap_table(uint16_t entry);
 
@@ -122,7 +122,7 @@ public:
     Level* get_level(uint32_t);
 
     inline int32_t read32(uint8_t* data, uint32_t* addr)
-    {    
+    {
         int32_t value = (data[*addr] << 24) | (data[*addr+1] << 16) | (data[*addr+2] << 8) | (data[*addr+3]);
         *addr += 4;
         return value;
@@ -137,11 +137,11 @@ public:
 
     inline int8_t read8(uint8_t* data, uint32_t* addr)
     {
-        return data[(*addr)++]; 
+        return data[(*addr)++];
     }
 
     inline int32_t read32(uint8_t* data, uint32_t addr)
-    {    
+    {
         return (data[addr] << 24) | (data[addr+1] << 16) | (data[addr+2] << 8) | data[addr+3];
     }
 
@@ -161,12 +161,12 @@ private:
 
     int mode;
 
-    Level* levels;         // Normal Stages 
+    Level* levels;         // Normal Stages
     Level* level_split;    // Split Section
     Level* levels_end;     // End Section
 
     uint8_t* current_path; // CPU 1 Road Path
-    
+
     void setup_level(Level* l, RomLoader* data, const int STAGE_ADR);
     void setup_section(Level* l, RomLoader* data, const int STAGE_ADR);
 };

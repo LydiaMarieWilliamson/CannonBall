@@ -265,7 +265,7 @@ void Input::handle_axis(const uint8_t ax, const int16_t value)
 
 // ------------------------------------------------------------------------------------------------
 // Scale the trigger value to be between 0 and 0xFF
-// 
+//
 // This is based on whether this is an SDL Controller or Joystick.
 // Controllers: Trigger axis values range from 0 to SDL_JOYSTICK_AXIS_MAX (32767)
 // Joysticks:   Undefined, but usually between -32768 to 32767
@@ -346,7 +346,7 @@ void Input::handle_controller_up(SDL_ControllerButtonEvent* evt)
 }
 
 void Input::handle_joy(const uint8_t button, const bool is_pressed)
-{	
+{
     if (button == pad_config[0])   keys[ACCEL]     = is_pressed;
     if (button == pad_config[1])   keys[BRAKE]     = is_pressed;
     if (button == pad_config[2])   keys[GEAR1]     = is_pressed;
@@ -359,7 +359,7 @@ void Input::handle_joy(const uint8_t button, const bool is_pressed)
     if (button == pad_config[9])   keys[DOWN]      = is_pressed;
     if (button == pad_config[10])  keys[LEFT]      = is_pressed;
     if (button == pad_config[11])  keys[RIGHT]     = is_pressed;
-   
+
     // Limit Input Switches
     if (button == pad_config[12])  motor_limits[SW_LEFT]   = is_pressed;
     if (button == pad_config[13])  motor_limits[SW_CENTRE] = is_pressed;

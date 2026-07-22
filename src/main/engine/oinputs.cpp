@@ -1,9 +1,9 @@
 /***************************************************************************
     Process Inputs.
-    
+
     - Read & Process inputs and controls.
     - Note, this class does not contain platform specific code.
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -238,7 +238,7 @@ void OInputs::adjust_inputs()
     brake_adjust = ((brake - 0x30) * 0x100) / 0x61;
 }
 
-// Simplified version of do credits routine. 
+// Simplified version of do credits routine.
 // I have not ported the coin chute handling code, or dip switch routines.
 //
 // Returns: 0 (No Coin Inserted)

@@ -1,6 +1,6 @@
 /***************************************************************************
-    Open GL Video Rendering.  
-    
+    Open GL Video Rendering.
+
     Useful References:
     http://www.sdltutorials.com/sdl-opengl-tutorial-basics
     http://www.opengl.org/wiki/Common_Mistakes
@@ -23,7 +23,7 @@ struct __ShaderInfo
    GLint a_position; // vertex_coord;
    GLint a_texcoord; //	tex_coord;
    GLint a_color;    // color
-   
+
    GLint lut_tex_coord;
 
    GLint input_size;
@@ -37,7 +37,7 @@ class Render : public RenderBase
 public:
     Render();
     ~Render();
-    bool init(int src_width, int src_height, 
+    bool init(int src_width, int src_height,
               int scale,
               int video_mode,
               int scanlines);
@@ -56,9 +56,9 @@ private:
     GLuint buffers[3];
     GLuint texture;
 
-    struct __ShaderInfo shader; 
-   
-    void gles2_init_shaders (unsigned texture_width, unsigned texture_height, 
+    struct __ShaderInfo shader;
+
+    void gles2_init_shaders (unsigned texture_width, unsigned texture_height,
 	unsigned output_width, unsigned output_height, int scanlines);
 
     GLuint CreateProgram(const char *vertex_shader_src, const char *fragment_shader_src);

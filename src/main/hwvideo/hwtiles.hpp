@@ -31,7 +31,7 @@ public:
 
 private:
     int16_t x_clamp;
-    
+
     // S16 Width, ignoring widescreen related scaling.
     uint16_t s16_width_noscale;
 
@@ -47,66 +47,66 @@ private:
 
     static const uint16_t NUM_TILES = 0x2000; // Length of graphic rom / 24
     static const uint16_t TILEMAP_COLOUR_OFFSET = 0x1c00;
-    
+
     void (hwtiles::*render8x8_tile_mask)(
         uint16_t *buf,
-        uint16_t nTileNumber, 
-        uint16_t StartX, 
-        uint16_t StartY, 
-        uint16_t nTilePalette, 
-        uint16_t nColourDepth, 
-        uint16_t nMaskColour, 
-        uint16_t nPaletteOffset); 
-        
+        uint16_t nTileNumber,
+        uint16_t StartX,
+        uint16_t StartY,
+        uint16_t nTilePalette,
+        uint16_t nColourDepth,
+        uint16_t nMaskColour,
+        uint16_t nPaletteOffset);
+
     void (hwtiles::*render8x8_tile_mask_clip)(
         uint16_t *buf,
-        uint16_t nTileNumber, 
-        int16_t StartX, 
-        int16_t StartY, 
-        uint16_t nTilePalette, 
-        uint16_t nColourDepth, 
-        uint16_t nMaskColour, 
-        uint16_t nPaletteOffset); 
-        
+        uint16_t nTileNumber,
+        int16_t StartX,
+        int16_t StartY,
+        uint16_t nTilePalette,
+        uint16_t nColourDepth,
+        uint16_t nMaskColour,
+        uint16_t nPaletteOffset);
+
     void render8x8_tile_mask_lores(
         uint16_t *buf,
-        uint16_t nTileNumber, 
-        uint16_t StartX, 
-        uint16_t StartY, 
-        uint16_t nTilePalette, 
-        uint16_t nColourDepth, 
-        uint16_t nMaskColour, 
-        uint16_t nPaletteOffset); 
+        uint16_t nTileNumber,
+        uint16_t StartX,
+        uint16_t StartY,
+        uint16_t nTilePalette,
+        uint16_t nColourDepth,
+        uint16_t nMaskColour,
+        uint16_t nPaletteOffset);
 
     void render8x8_tile_mask_clip_lores(
         uint16_t *buf,
-        uint16_t nTileNumber, 
-        int16_t StartX, 
-        int16_t StartY, 
-        uint16_t nTilePalette, 
-        uint16_t nColourDepth, 
-        uint16_t nMaskColour, 
+        uint16_t nTileNumber,
+        int16_t StartX,
+        int16_t StartY,
+        uint16_t nTilePalette,
+        uint16_t nColourDepth,
+        uint16_t nMaskColour,
         uint16_t nPaletteOffset);
-        
+
     void render8x8_tile_mask_hires(
         uint16_t *buf,
-        uint16_t nTileNumber, 
-        uint16_t StartX, 
-        uint16_t StartY, 
-        uint16_t nTilePalette, 
-        uint16_t nColourDepth, 
-        uint16_t nMaskColour, 
-        uint16_t nPaletteOffset); 
-        
+        uint16_t nTileNumber,
+        uint16_t StartX,
+        uint16_t StartY,
+        uint16_t nTilePalette,
+        uint16_t nColourDepth,
+        uint16_t nMaskColour,
+        uint16_t nPaletteOffset);
+
     void render8x8_tile_mask_clip_hires(
         uint16_t *buf,
-        uint16_t nTileNumber, 
-        int16_t StartX, 
-        int16_t StartY, 
-        uint16_t nTilePalette, 
-        uint16_t nColourDepth, 
-        uint16_t nMaskColour, 
+        uint16_t nTileNumber,
+        int16_t StartX,
+        int16_t StartY,
+        uint16_t nTilePalette,
+        uint16_t nColourDepth,
+        uint16_t nMaskColour,
         uint16_t nPaletteOffset);
-        
+
     inline void set_pixel_x4(uint16_t *buf, uint32_t data);
 };

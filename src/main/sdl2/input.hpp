@@ -29,11 +29,11 @@ public:
         START = 8,
         COIN  = 9,
         VIEWPOINT = 10,
-        
+
         PAUSE = 11,
         STEP  = 12,
         TIMER = 13,
-        MENU = 14,     
+        MENU = 14,
     };
 
     bool keys[15];
@@ -42,8 +42,8 @@ public:
     enum limits
     {
         SW_LEFT   = 0,
-        SW_CENTRE = 1,   
-        SW_RIGHT  = 2,   
+        SW_CENTRE = 1,
+        SW_RIGHT  = 2,
     };
     bool motor_limits[3];
 

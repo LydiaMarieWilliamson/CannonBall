@@ -2,12 +2,12 @@
     Road Rendering & Control
 
     This is a complete port of the 68000 SUB CPU Program ROM.
-    
+
     The original code consists of a shared Sega library and some routines
     which are OutRun specific.
-    
+
     Some of the original code is not used and is therefore not ported.
-    
+
     This is the most complex area of the game code, and an area of the code
     in need of refactoring.
 
@@ -31,11 +31,11 @@ public:
 	//
 	// Stage Map:
 	//
-	// 24  23  22  21  20 
+	// 24  23  22  21  20
 	//   1B  1A  19  18
 	//     12  11  10
-	//       09  08 
-	//         00 
+	//       09  08
+	//         00
 	//
 	// Increments by 8 each stage.
 	// Also increments by +1 during the road split section from the values shown above.
@@ -55,27 +55,27 @@ public:
     // 0x4E: Car X Backup
 	int16_t car_x_bak;
 
-    // 0x66: Road Height Lookup 
+    // 0x66: Road Height Lookup
 	uint16_t height_lookup;
 
     // 0x722 - [word] Road Height Index. Working copy of 60066.
 	uint16_t height_lookup_wrk;
 
     // 0x6C: Change in road position
-    int32_t road_pos_change; 
-	
+    int32_t road_pos_change;
+
 	// 0x5E: Instruct CPU 1 to load end section road. Set Bit 1.
 	uint8_t road_load_end;
 
 	// 0x306: Road Control
 	uint8_t road_ctrl;
-	enum 
+	enum
 	{
 		ROAD_OFF = 0,         // Both Roads Off
 		ROAD_R0 = 1,          // Road 0
 		ROAD_R1 = 2,          // Road 1
 		ROAD_BOTH_P0 = 3,     // Both Roads (Road 0 Priority) [DEFAULT]
-		ROAD_BOTH_P1 = 4,     // Both Roads (Road 1 Priority) 
+		ROAD_BOTH_P1 = 4,     // Both Roads (Road 1 Priority)
 		ROAD_BOTH_P0_INV = 5, // Both Roads (Road 0 Priority) (Road Split. Invert Road 1)
 		ROAD_BOTH_P1_INV = 6, // Both Roads (Road 1 Priority) (Road Split. Invert Road 1)
 		ROAD_R0_SPLIT = 7,    // Road 0 (Road Split.)
@@ -114,7 +114,7 @@ public:
 	// 0x53C: Granular Position. More fine than other positioning info. Used to choose road background colour.
 	uint16_t pos_fine;
 
-    // 0x732 - [long] Base Horizon Y-Offset. Adjusting this almost has the effect of raising the camera. 
+    // 0x732 - [long] Base Horizon Y-Offset. Adjusting this almost has the effect of raising the camera.
     // Stage 1 is 0x240
     // Higher values = higher horizon.
     // Note: This is adjusted mid-stage for Stage 2, but remains constant for Stage 1.
@@ -131,14 +131,14 @@ public:
 
 	// 60C00 - 60FFF: Road 0 H-Scroll Adjusted Positions
 	int16_t road0_h[ARRAY_LENGTH];
-	
+
 	// 61000 - 613FF: Road 1 H-Scroll Adjusted Positions
 	int16_t road1_h[ARRAY_LENGTH];
 
 	// 61400 - 617FF: Not sure what this is yet
 	int16_t road_unk[ARRAY_LENGTH];
 
-	// 61800 - 637FF: Road Y-Positions	
+	// 61800 - 637FF: Road Y-Positions
     //
     // Consists of three separate blocks of data:
     //
@@ -184,15 +184,15 @@ private:
     //                0 = Clear Road Height Segment
     //                1 = Init Next Road Height Segment
     //                2 = Use Elevation
-    //                3 = 
-    //                4 = 
+    //                3 =
+    //                4 =
     //                5 = Set Base Horizon
 	uint16_t height_ctrl;
 
 	// 0x542: Granular Position Backup.
 	uint16_t pos_fine_old;
 
-	// 0x544 - [word] Difference between granular positions. 
+	// 0x544 - [word] Difference between granular positions.
 	int16_t pos_fine_diff;
 
 	// 0x70E - [word] Counter. Counts to 7. Denotes Interpolated track section currently being written.
@@ -210,7 +210,7 @@ private:
 	// 0x716 - [word] Increment Value For 0x710 to adjust lookup from height data
 	uint16_t height_inc;
 
-	// 0x718 - [word] This stores the position into the current road segment we're on. 
+	// 0x718 - [word] This stores the position into the current road segment we're on.
     // Derived from the granular position and used in conjunction with road height.
     // As a hack try wpset 60718,2,r,1,{w@60718 = 0x6b5; g;}
     // you'll stall at a position on the current road segment after value is set.
@@ -225,14 +225,14 @@ private:
 	// 0x720 - [word] Elevation Flag
 	int16_t elevation;
 	enum {DOWN = -1, NO_CHANGE = 0, UP = 1};
-								 
+
 	// 0x724 - [word] Ascend/Descent Hold
 	int16_t height_delay;
 
 	// 0x726 - [word] Speed at which to adjust height_step
 	uint16_t step_adjust;
 
-	// 0x728 
+	// 0x728
 	uint16_t do_height_inc;
 
 	// 0x72A - [word] Distance into section of track, for height #2
@@ -274,7 +274,7 @@ private:
 	void do_road();
 	void rotate_values();
 	void check_load_road();
-	
+
 	void setup_road_x();
 	void setup_x_data(uint32_t);
 	void set_tilemap_x(uint32_t);
@@ -305,10 +305,10 @@ private:
 
 	void set_horizon_y();
 	void do_road_data();
-	
+
 	void blit_roads();
 	void blit_road(uint32_t);
-	
+
 	void output_hscroll(int16_t*, uint32_t);
 	void copy_bg_color();
 };

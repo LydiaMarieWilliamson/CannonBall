@@ -1,6 +1,6 @@
 /***************************************************************************
     Smoke & Spray Control.
-    
+
     Animate the smoke and spray below the Ferrari's wheels.
 
     Copyright Chris White.

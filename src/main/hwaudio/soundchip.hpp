@@ -1,5 +1,5 @@
 /***************************************************************************
-    Sound Chip  
+    Sound Chip
 
     This is an abstract class, used by the Sega PCM and YM2151 chips.
     It facilitates writing to a buffer of sound data.
@@ -57,5 +57,5 @@ private:
     int16_t* buffer;
 
     // Frames per second
-    uint32_t fps; 
+    uint32_t fps;
 };

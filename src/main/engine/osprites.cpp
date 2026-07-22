@@ -1,13 +1,13 @@
 /***************************************************************************
     Sprite Handling Routines.
-    
+
     - Initializing Sprites from level data.
     - Mapping palettes to sprites.
     - Ordering sprites by priority.
     - Adding shadows to sprites where appropriate.
     - Clipping sprites based on priority in relation to road hardware.
     - Conversion from internal format to output format required by hardware.
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -64,14 +64,14 @@ void OSprites::init()
     jump_table[SPRITE_SMOKE2].init(SPRITE_SMOKE2);
 
     oferrari.init(&jump_table[SPRITE_FERRARI], &jump_table[SPRITE_PASS1], &jump_table[SPRITE_PASS2], &jump_table[SPRITE_SHADOW]);
-    
+
     // ------------------------------------------------------------------------
     // Traffic in Right Hand Lane At Start of Stage 1
     // ------------------------------------------------------------------------
 
     for (uint8_t i = SPRITE_TRAFF1; i <= SPRITE_TRAFF8; i++)
     {
-        jump_table[i].init(i);      
+        jump_table[i].init(i);
         jump_table[i].control |= SHADOW;
         jump_table[i].addr = outrun.adr.sprite_porsche; // Initial offset of traffic sprites. Will be changed.
     }
@@ -93,15 +93,15 @@ void OSprites::init()
     jump_table[SPRITE_CRASH_PASS2_S].shadow     = 7;
     jump_table[SPRITE_CRASH_PASS2_S].draw_props = oentry::BOTTOM;
     jump_table[SPRITE_CRASH_PASS2_S].addr       = outrun.adr.shadow_data;
-    
+
     jump_table[SPRITE_CRASH_SHADOW].shadow     = 7;
     jump_table[SPRITE_CRASH_SHADOW].zoom       = 0x80;
     jump_table[SPRITE_CRASH_SHADOW].draw_props = oentry::BOTTOM;
     jump_table[SPRITE_CRASH_SHADOW].addr       = outrun.adr.shadow_data;
 
     ocrash.init(
-        &jump_table[SPRITE_CRASH], 
-        &jump_table[SPRITE_CRASH_SHADOW], 
+        &jump_table[SPRITE_CRASH],
+        &jump_table[SPRITE_CRASH_SHADOW],
         &jump_table[SPRITE_CRASH_PASS1],
         &jump_table[SPRITE_CRASH_PASS1_S],
         &jump_table[SPRITE_CRASH_PASS2],
@@ -114,7 +114,7 @@ void OSprites::init()
 
     jump_table[SPRITE_FLAG].init(SPRITE_FLAG);
     oanimseq.init(jump_table);
-    
+
     seg_pos             = 0;
     seg_total_sprites   = 0;
     seg_sprite_freq     = 0;
@@ -130,7 +130,7 @@ void OSprites::init()
     spr_cnt_shadow      = 0;
 
     spr_col_pal         = 0;
-    pal_copy_count      = 0;    
+    pal_copy_count      = 0;
 }
 
 // Swap Sprite RAM And Update Palette Data
@@ -164,11 +164,11 @@ void OSprites::tick()
 // Notes:
 // - Setup Jump Table Entry #2, the sprite control. This in turn is used to control and setup all the sprites.
 // - Read 4 Byte Entry From Road_Seg_Adr1 which indicates the upcoming block of sprite data for the level
-// - This first block of data specifies the position, total number of sprites in the block we want to try rendering 
+// - This first block of data specifies the position, total number of sprites in the block we want to try rendering
 //   and appropriate lookup for the sprite number/frequency info.
 //
-// - This second table in memory specifies the frequency and number of sprites in the sequence. 
-//  
+// - This second table in memory specifies the frequency and number of sprites in the sequence.
+//
 // - The second table also contains the actual sprite info (x,y,palette,type). This can be multipled sprites.
 //
 // ----------------------------------
@@ -191,7 +191,7 @@ void OSprites::tick()
 // -------------------------------------------------
 // [+0] [Byte] Bit 0 = H-Flip Sprite
 //             Bit 1 = Enable Shadows
-//            
+//
 //             Bits 4-7 = Routine Draw Number
 // [+1] [Byte] Sprite X World Position
 // [+2] [Word] Sprite Y World Position
@@ -219,7 +219,7 @@ void OSprites::sprite_control()
         seg_total_sprites = trackloader.read_total_sprites();                   // Number of Sprites In Segment
         uint8_t pattern_index = trackloader.read_sprite_pattern_index();        // Block Of Sprites
         trackloader.scenery_offset += 4;                                        // Advance to next scenery point
-        
+
         uint32_t a0 = trackloader.read_scenerymap_table(pattern_index);         // Get Address of Scenery Pattern
         seg_sprite_freq = trackloader.read16(trackloader.scenerymap_data, &a0); // Scenery Frequency
         seg_spr_offset2 = trackloader.read16(trackloader.scenerymap_data, &a0); // Reload value for scenery pattern
@@ -247,7 +247,7 @@ void OSprites::sprite_control()
             seg_spr_offset1 = seg_spr_offset2; // Reload sprite info offset value
         olevelobjs.setup_sprites(0x10400);
     }
- 
+
     if (seg_total_sprites == 0)
     {
         seg_pos++;
@@ -282,7 +282,7 @@ void OSprites::clear_palette_data()
 
 
 // Copy Sprite Palette Data To Palette RAM On Vertical Interrupt
-// 
+//
 // Source Address: 0x858E
 // Input:          Source address in rom of data format
 // Output:         None
@@ -305,7 +305,7 @@ void OSprites::copy_palette_data()
 }
 
 // Map Palettes from ROM to Palette RAM for a particular sprite.
-// 
+//
 // Source Address: 0x75EA
 // Input:          Sprite
 // Output:         None
@@ -313,7 +313,7 @@ void OSprites::copy_palette_data()
 // Prepares RAM for copy_palette_data routine on vint
 
 // Notes:
-// 1. Checks lookup table to determine whether relevant palette info is copied to ram. 
+// 1. Checks lookup table to determine whether relevant palette info is copied to ram.
 //    Return if already cached
 // 2. Otherwise set the mapping between ROM and the HW Palette to be used
 // 3. pal_copy_count contains the number of entries we need to copy
@@ -337,7 +337,7 @@ void OSprites::map_palette(oentry* spr)
 
     // Increment hw colour palette entry to use
     if (++spr_col_pal > 0x7F) return;
-    
+
     spr->pal_dst = spr_col_pal; // Set next available hw sprite colour palette
     pal_lookup[spr->pal_src] = spr_col_pal;
 
@@ -348,7 +348,7 @@ void OSprites::map_palette(oentry* spr)
 }
 
 // Setup Sprite Ordering Table & Shadows
-// 
+//
 // Source Address: 0x77A8
 // Input:          Sprite To Copy
 // Output:         None
@@ -381,7 +381,7 @@ void OSprites::do_spr_order_shadows(oentry* input)
     }
 
     // Code to handle shadows under sprites
-    // test_shadow: 
+    // test_shadow:
     if (!(input->control & SHADOW)) return;
 
     // LayOut specific fix to avoid memory crash on over populated scenery segments
@@ -390,14 +390,14 @@ void OSprites::do_spr_order_shadows(oentry* input)
 
     input->dst_index = spr_cnt_shadow;
     spr_cnt_shadow++;                       // Increment total shadow count
-    
+
     uint8_t pal_dst = input->pal_dst;       // Backup Sprite Colour Palette
     uint8_t shadow = input->shadow;         // and priority and shadow settings
     int16_t x = input->x;                   // and x position
     uint32_t addr = input->addr;            // and original sprite data address
     input->pal_dst = 0;                     // clear colour palette
     input->shadow = 7;                      // Set NEW priority & shadow settings
-    
+
     input->x += (input->road_priority * shadow_offset) >> 9; // d0 = sprite z / distance into screen
 
     if (input->control & TRAFFIC_SPRITE)
@@ -411,7 +411,7 @@ void OSprites::do_spr_order_shadows(oentry* input)
     }
 
     do_sprite(input);           // Create Shadowed Version Of Sprite For Hardware
-    
+
     input->pal_dst = pal_dst;   // Restore Sprite Colour Palette
     input->shadow = shadow;     // ...and other values
     input->x = x;
@@ -419,7 +419,7 @@ void OSprites::do_spr_order_shadows(oentry* input)
 }
 
 // Sprite Copying Routine
-// 
+//
 // Source Address: 0x78B0
 // Input:          None
 // Output:         None
@@ -462,7 +462,7 @@ void OSprites::sprite_copy()
             do
             {
                 // Sprite Index To Draw
-                sprite_order2[dst_index++] = sprite_order[src_offset++];                
+                sprite_order2[dst_index++] = sprite_order[src_offset++];
                 if (--spr_cnt_main_copy == 0) break; // Loop continues until this is zero.
             }
             // Decrement number of bytes to copy
@@ -470,7 +470,7 @@ void OSprites::sprite_copy()
         }
 
         // Clear number of bytes to copy
-        sprite_order[src_addr] = 0; 
+        sprite_order[src_addr] = 0;
     }
 
     // cont2:
@@ -490,7 +490,7 @@ void OSprites::sprite_copy()
 }
 
 // Was originally labelled set_end_marker
-// 
+//
 // Source Address: 0x7942
 // Input:          None
 // Output:         None
@@ -499,7 +499,7 @@ void OSprites::sprite_copy()
 void OSprites::finalise_sprites()
 {
     sprite_count = spr_cnt_main + spr_cnt_shadow;
-    
+
     // Set end sprite marker
     sprite_entries[sprite_count].data[0] = 0xFFFF;
     sprite_entries[sprite_count].data[1] = 0xFFFF;
@@ -514,8 +514,8 @@ void OSprites::finalise_sprites()
     do_sprite_swap = true;
 }
 
-// Copy Sprite Data to Sprite RAM 
-// 
+// Copy Sprite Data to Sprite RAM
+//
 // Source Address: 0x97E4
 // Input:          None
 // Output:         None
@@ -544,7 +544,7 @@ void OSprites::blit_sprites()
 }
 
 // Convert Sprite From Internal Software Format To Hardware Format
-// 
+//
 // Source Address: 0x94EC
 // Input:          Sprite To Copy
 // Output:         None
@@ -555,7 +555,7 @@ void OSprites::blit_sprites()
 //
 // 0x11ED2: Table of Sprite Addresses for Hardware. Contains:
 //
-// 5 x 10 bytes. One block for each sprite size lookup. 
+// 5 x 10 bytes. One block for each sprite size lookup.
 // The exact sprite is selected using the ozoom_lookup.hpp table.
 //
 // + 0 : [Byte] Unused
@@ -588,7 +588,7 @@ void OSprites::do_sprite(oentry* input)
     // Sprite Width/Height Settings
     uint16_t width = 0;
     uint16_t height = 0;
-    
+
     // Set real h/v zoom values
     uint32_t index = (input->zoom * 4);
     output->set_vzoom(ZOOM_LOOKUP[index]); // note we don't increment src_rom here
@@ -598,7 +598,7 @@ void OSprites::do_sprite(oentry* input)
     // Set width & height values using lookup
     // -------------------------------------------------------------------------
     uint16_t lookup_mask = ZOOM_LOOKUP[index++]; // Width/Height lookup helper
-    
+
     // This is the address of the frame required for the level of zoom we're using
     // There are 5 unique frames that are typically used for zoomed sprites.
     // which correspond to different screen sizes
@@ -607,7 +607,7 @@ void OSprites::do_sprite(oentry* input)
     uint16_t d0 = input->draw_props | (input->zoom << 8);
     uint16_t top_bit = d0 & 0x8000;
     d0 &= 0x7FFF; // Clear top bit
-    
+
     if (top_bit == 0)
     {
         if (ZOOM_LOOKUP[index] != SIZE1) // Not largest sized sprite
@@ -631,7 +631,7 @@ void OSprites::do_sprite(oentry* input)
         width = roms.rom0p->read8(WH_TABLE + d0);
         d0 &= 0xFF;
         width += d0;
-        
+
         h |= roms.rom0p->read8(src_offsets + 3);
         height = roms.rom0p->read8(WH_TABLE + h);
         h &= 0xFF;
@@ -640,12 +640,12 @@ void OSprites::do_sprite(oentry* input)
     }
     // loc 9582:
     input->width = width;
-    
+
     // -------------------------------------------------------------------------
     // Set Sprite X & Y Values
     // -------------------------------------------------------------------------
     set_sprite_xy(input, output, width, height);
-    
+
     // Here we need the entire value set by above routine, not just top 0x1FF mask!
     int16_t sprite_x1 = output->get_x();
     int16_t sprite_x2 = sprite_x1 + width;
@@ -657,7 +657,7 @@ void OSprites::do_sprite(oentry* input)
 
     // Hide Sprite if off screen (note bug fix to solve shadow wrapping issue on original game)
     // I think this bug might be permanently fixed with the introduction of widescreen mode
-    // as I had to change the storage size of the x-cordinate. 
+    // as I had to change the storage size of the x-cordinate.
     // Unsetting fix_bugs may no longer revert to the original behaviour.
     if (sprite_y2 < 256 || sprite_y1 > 479 ||
         sprite_x2 < x2_bounds || (config.engine.fix_bugs ? sprite_x1 >= x1_bounds : sprite_x1 > x1_bounds))
@@ -690,7 +690,7 @@ void OSprites::do_sprite(oentry* input)
     {
         output->set_height((uint8_t) height);
     }
-    
+
     // -------------------------------------------------------------------------
     // Set Sprite Height Taking Elevation Of Road Into Account For Clipping Purposes
     //
@@ -702,7 +702,7 @@ void OSprites::do_sprite(oentry* input)
 
     // Start of priority elevation data in road ram
     uint16_t road_y_index = oroad.road_p0 + 0x280;
-    
+
     // Priority List Not Populated (Flat Elevation)
     if (oroad.road_y[road_y_index + 0] == 0 && oroad.road_y[road_y_index + 1] == 0)
     {
@@ -761,7 +761,7 @@ void OSprites::do_sprite(oentry* input)
 
     // cont2:
     set_hrender(input, output, roms.rom0p->read16(src_offsets + 4), width);
-    
+
     // -------------------------------------------------------------------------
     // Set Sprite Pitch & Priority
     // -------------------------------------------------------------------------
@@ -777,7 +777,7 @@ void OSprites::hide_hwsprite(oentry* input, osprite* output)
 }
 
 // Sets Sprite Render Point
-// 
+//
 // Source Address: 0x967C
 // Input:          Jump Table Entry, Output Sprite Entry, Width & Height
 // Output:         Updated Sprite Output Entry
@@ -802,7 +802,7 @@ void OSprites::set_sprite_xy(oentry* input, osprite* output, uint16_t width, uin
             y -= height;
             output->set_y(y + 256);
             break;
-            
+
         // Anchor Left
         case 1:
             output->set_y(y + 256);
@@ -830,7 +830,7 @@ void OSprites::set_sprite_xy(oentry* input, osprite* output, uint16_t width, uin
             x -= width;
             output->set_x(x + 352);
             break;
-            
+
         // Anchor Left
         case 1:
             output->set_x(x + 352);
@@ -845,7 +845,7 @@ void OSprites::set_sprite_xy(oentry* input, osprite* output, uint16_t width, uin
 }
 
 // Determines whether to render sprite left-to-right or right-to-left
-// 
+//
 // Source Address: 0x96E4
 // Input:          Jump Table Entry, Output Sprite Entry, Offset
 // Output:         Updated Sprite Output Entry

@@ -1,25 +1,25 @@
 /***************************************************************************
     Sprite Entry.
-    
+
     This class represents a single sprite object, commonly used by OutRun.
-    
-    In the original codebase, each object consists of a 64 byte block of 
-    memory. Each of these blocks forms part of a jump table that is iterated 
+
+    In the original codebase, each object consists of a 64 byte block of
+    memory. Each of these blocks forms part of a jump table that is iterated
     each tick. The sprite referenced the address of the routine it used.
-    
-    Unfortunately, the system is messy and the usage of each 64 byte 
-    entry differs dependent on the game object. 
-    
+
+    Unfortunately, the system is messy and the usage of each 64 byte
+    entry differs dependent on the game object.
+
     However, the majority are similar. And as such, I've tried to convert
     this structure to a more manageable class. For the conversion, rather
     than dynamically editing a jump table, I've called the sprite routines
     from the main code.
-    
+
     It's not perfect, but struck a reasonable balance between clarity and
     being able to debug the conversion.
-    
+
     All in-game objects that populate the gameworld use this structure.
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -56,7 +56,7 @@ public:
 	// Default = 3
 	uint8_t shadow;
 
-	// +08 [Byte] Entry Number For Zoom Lookup Table 
+	// +08 [Byte] Entry Number For Zoom Lookup Table
     //            Looked up from ROM [0x30000 + (offset * 8)]
     //            0 = Hide Sprite
 	uint8_t zoom;
@@ -98,12 +98,12 @@ public:
 	// +14 [Word] Sprite to Sprite Priority (Lower Number = Draw Earlier)
 	uint16_t priority;
 
-	// +16 [Word] Entry Number In Sprite Destination Table 
+	// +16 [Word] Entry Number In Sprite Destination Table
 	// This is the offset address in memory we want to copy the sprite to.
 	// And is necessary because it ties in with sprite ordering.
 	uint16_t dst_index;
 
-	// +18 [Long] Address of actual sprite data we want to render. Offset 1/2 into ROM[0x20000]. 
+	// +18 [Long] Address of actual sprite data we want to render. Offset 1/2 into ROM[0x20000].
 	uint32_t addr;
 
 	// +1C [Word] Distance into screen or Sprite to Road Priority (High Number = Closer to camera)
@@ -133,7 +133,7 @@ public:
     // +2E [Word] Bit 2 - Denote car is close to other traffic [z-axis]
     //            Bit 1 - Denote traffic on RHS
     //            Bit 0 - Denote traffic on LHS
-           
+
     // Note: Set to 0xFF on collision
     uint8_t traffic_proximity;
 

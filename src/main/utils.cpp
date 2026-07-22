@@ -36,7 +36,7 @@ std::string Utils::to_hex_string(int i)
 // Convert hex string to unsigned int
 uint32_t Utils::from_hex_string(std::string s)
 {
-    unsigned int x;   
+    unsigned int x;
     std::stringstream ss;
     ss << std::hex << s;
     ss >> x;

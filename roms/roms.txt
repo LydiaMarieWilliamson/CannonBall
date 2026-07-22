@@ -34,7 +34,7 @@ opr-10267.100
 opr-10268.99
 
 -------------------------------------------------------------------------------
-The original Japanese release of OutRun featured slightly different tracks 
+The original Japanese release of OutRun featured slightly different tracks
 and course ordering.
 
 Optionally, you can include the following files from the Japanese version to

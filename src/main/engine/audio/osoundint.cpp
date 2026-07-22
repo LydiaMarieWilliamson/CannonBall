@@ -4,7 +4,7 @@
 
     Also abstracted here, so the more complex OSound class isn't exposed
     to the main code directly
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -30,7 +30,7 @@ OSoundInt::~OSoundInt()
 void OSoundInt::init()
 {
     if (pcm == NULL)
-        pcm = new SegaPCM(SOUND_CLOCK, &roms.pcm, pcm_ram, SegaPCM::BANK_512);       
+        pcm = new SegaPCM(SOUND_CLOCK, &roms.pcm, pcm_ram, SegaPCM::BANK_512);
 
     if (ym == NULL)
         ym = new YM2151(0.5f, SOUND_CLOCK);
@@ -67,7 +67,7 @@ void OSoundInt::tick()
     // The audio code is updated 125 times per second
     audio_ticks += (125.0 / config.fps);
 
-    // Ticks per frame will vary between 2 and 3 at 60fps. 
+    // Ticks per frame will vary between 2 and 3 at 60fps.
     const int max_ticks = (int) audio_ticks;
 
     for (int i = 0; i < max_ticks; i++)
@@ -95,7 +95,7 @@ void OSoundInt::play_queued_sound()
         return;
     }
 
-    // Process the lot in one go. 
+    // Process the lot in one go.
     for (int counter = 0; counter < 8; counter++)
     {
         // Process queued sound

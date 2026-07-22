@@ -1,6 +1,6 @@
 /***************************************************************************
-    Open GL Video Rendering.  
-    
+    Open GL Video Rendering.
+
     Useful References:
     http://www.sdltutorials.com/sdl-opengl-tutorial-basics
     http://www.opengl.org/wiki/Common_Mistakes
@@ -19,7 +19,7 @@ class Render : public RenderBase
 {
 public:
     Render();
-    bool init(int src_width, int src_height, 
+    bool init(int src_width, int src_height,
               int scale,
               int video_mode,
               int scanlines);

@@ -1,7 +1,7 @@
 /***************************************************************************
     Front End Menu System.
 
-    This file is part of Cannonball. 
+    This file is part of Cannonball.
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -228,7 +228,7 @@ void Menu::populate_for_cabinet()
 }
 
 void Menu::init(bool init_main_menu)
-{   
+{
     // If we got a new high score on previous time trial, then save it!
     if (outrun.ttrial.new_high_score)
     {
@@ -347,7 +347,7 @@ void Menu::tick_ui()
         message_counter--;
         ohud.blit_text_new(0, 1, msg.c_str(), ohud.GREY);
     }
-     
+
     // Shift horizon
     if (oroad.horizon_base > HORIZON_DEST)
     {
@@ -371,8 +371,8 @@ void Menu::tick_ui()
             oroad.road_pos = 0;
         oinitengine.update_road();
         oinitengine.set_granular_position();
-        oroad.road_width_bak = oroad.road_width >> 16; 
-        oroad.car_x_bak = -oroad.road_width_bak; 
+        oroad.road_width_bak = oroad.road_width >> 16;
+        oroad.car_x_bak = -oroad.road_width_bak;
         oinitengine.car_x_pos = oroad.car_x_bak;
     }
 
@@ -395,7 +395,7 @@ void Menu::draw_menu_options()
 {
     int8_t x = 0;
 
-    // Find central column in screen. 
+    // Find central column in screen.
     int8_t y = 13 + ((ROWS - 13) >> 1) - (((int)menu_selected->size() * 2) >> 1);
 
     for (int i = 0; i < (int) menu_selected->size(); i++)
@@ -425,7 +425,7 @@ void Menu::draw_text(std::string s)
     // Centre text
     int8_t x = 20 - ((int)s.length() >> 1);
 
-    // Find central column in screen. 
+    // Find central column in screen.
     int8_t y = 13 + ((ROWS - 13) >> 1) - 1;
 
     ohud.blit_text_new(x, y, s.c_str(), ohud.GREEN);

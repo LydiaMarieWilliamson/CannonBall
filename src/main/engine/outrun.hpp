@@ -25,7 +25,7 @@
 #include "audio/osoundint.hpp"
 
 // Globals
-enum 
+enum
 {
 	GS_INIT = 0,				// Initalize Game
 	GS_ATTRACT = 1,				// Attract Mode
@@ -169,7 +169,7 @@ struct adr_t
     uint32_t road_seg_table;
     uint32_t road_seg_end;
     uint32_t road_seg_split;
-    
+
     // CPU 1
     uint32_t road_height_lookup;
 };
@@ -190,7 +190,7 @@ public:
     const static uint8_t MODE_TTRIAL   = 1; // Enhanced Time Trial Mode
     const static uint8_t MODE_CONT     = 2; // Enhanced Continuous Mode
 
-    // Max traffic level for custom modes 
+    // Max traffic level for custom modes
     uint8_t custom_traffic;
 
     // Time trial data

@@ -1,5 +1,5 @@
 /***************************************************************************
-    Sound Chip  
+    Sound Chip
 
     This is an abstract class, used by the Sega PCM and YM2151 chips.
     It facilitates writing to a buffer of sound data.
@@ -33,7 +33,7 @@ void SoundChip::init(uint8_t channels, int32_t sample_freq, int32_t fps)
 
     if (initalized)
         delete[] buffer;
-    
+
     buffer = new int16_t[buffer_size];
 
     initalized = true;
@@ -42,9 +42,9 @@ void SoundChip::init(uint8_t channels, int32_t sample_freq, int32_t fps)
 // Set soundchip volume (0 = Off, 10 = Loudest)
 void SoundChip::set_volume(uint8_t v)
 {
-    if (v > 10) 
+    if (v > 10)
         return;
-    
+
     volume = (float) (v / 10.0);
 }
 

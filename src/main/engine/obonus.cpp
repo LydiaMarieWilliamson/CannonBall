@@ -1,8 +1,8 @@
 /***************************************************************************
     Bonus Points Code.
-    
+
     This is the code that displays your bonus points on completing the game.
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -65,7 +65,7 @@ void OBonus::do_bonus_text()
 void OBonus::init_bonus_text()
 {
     bonus_state = BONUS_TEXT_SECONDS;
-    
+
     int16_t time_counter_bak = ostats.time_counter << 8;
     ostats.time_counter = 0x30;
 
@@ -131,10 +131,10 @@ void OBonus::decrement_bonus_secs()
 
     // Increment Score by 100K points
     ostats.update_score(0x100000);
-    
+
     // Blit bonus seconds remaining
     blit_bonus_secs();
-    
+
     if (--bonus_secs < 0)
     {
         bonus_counter = -1;
@@ -181,7 +181,7 @@ void OBonus::blit_bonus_secs()
     {
         video.write_text16(text_addr, TILE_ZERO);
         video.write_text16(text_addr | COL2, TILE_ZERO);
-        text_addr += 2;        
+        text_addr += 2;
     }
 
     // Blit Digit 2

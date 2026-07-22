@@ -1,12 +1,12 @@
 /***************************************************************************
     Heads-Up Display (HUD) Code
-    
+
     - Score Rendering
     - Timer Rendering
     - Rev Rendering
     - Minimap Rendering
     - Text Rendering
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -32,7 +32,7 @@ OHud::~OHud(void)
 }
 
 // Draw Text Labels For HUD
-// 
+//
 // Source: 0xB462
 void OHud::draw_main_hud()
 {
@@ -90,7 +90,7 @@ void OHud::do_mini_map()
 {
     if (outrun.game_state == GS_ATTRACT)
         return;
-    
+
     uint32_t tile_addr = setup_mini_map();
     draw_mini_map(tile_addr);
 }
@@ -98,7 +98,7 @@ void OHud::do_mini_map()
 // Setup Appropriate Tile Address For Minimap.
 //
 // Returns start address of block of 4 tiles. Represents square of route on mini-map screen.
-// 
+//
 // Source: 0x8B68
 uint32_t OHud::setup_mini_map()
 {
@@ -116,7 +116,7 @@ uint32_t OHud::setup_mini_map()
     };
 
     return TILES_MINIMAP + (ROUTE_MAPPING[ostats.route_info] << 2);
-} 
+}
 
 void OHud::draw_mini_map(uint32_t tile_addr)
 {
@@ -162,7 +162,7 @@ void OHud::draw_timer1(uint16_t time)
         const uint16_t PAL = 0x8AA0;
         const uint16_t O = (('O' - 0x41) * 2) + PAL; // Convert character to real index (D0-0x41) so A is 0x01
         const uint16_t F = (('F' - 0x41) * 2) + PAL;
-        
+
         video.write_text16(&dst_addr,       O);     // Write first row to text ram
         video.write_text16(0x7E + dst_addr, O + 1); // Write second row to text ram
         video.write_text16(&dst_addr,       F);     // Write first row to text ram
@@ -344,7 +344,7 @@ void OHud::draw_rev_counter()
     // Return in attract mode and don't draw rev counter
     if (outrun.game_state <= GS_INIT_GAME) return;
     uint16_t revs = oferrari.rev_stop_flag ? oferrari.revs_post_stop : oferrari.revs >> 16;
-    
+
     // Boost revs during countdown phase, so the bar goes further into the red
     if (oinitengine.car_increment >> 16 == 0)
         revs += (revs >> 2);
@@ -352,7 +352,7 @@ void OHud::draw_rev_counter()
     revs >>= 4;
 
     uint32_t addr = 0x110DB4; // Address of rev counter
-        
+
     const uint16_t REV_OFF = 0x8120; // Rev counter: Off (Blank Tile)
     const uint16_t REV_ON1 = 0x81FE; // Rev counter: On (Single Digit)
     const uint16_t REV_ON2 = 0x81FD; // Rev counter: On (Double Digit)
@@ -363,17 +363,17 @@ void OHud::draw_rev_counter()
     for (int8_t i = 0; i <= 0x13; i++)
     {
         uint16_t tile = 0;
-        
+
         if (revs > i)
         {
-            tile = REV_ON2; 
+            tile = REV_ON2;
             if (i >= 0xE) tile |= RED;
             else if (i <= 9) tile |= WHITE;
             else tile |= GREEN;
         }
         else if (revs != i)
         {
-            tile = REV_OFF | WHITE; 
+            tile = REV_OFF | WHITE;
         }
         else
         {
@@ -382,7 +382,7 @@ void OHud::draw_rev_counter()
             else if (i <= 9) tile |= WHITE;
             else tile |= GREEN;
         }
-        
+
         video.write_text16(addr, tile);
 
         // On odd indexes, we don't increment to next word - to effectively shorten the length of the rev counter
@@ -423,7 +423,7 @@ void OHud::blit_speed(uint32_t dst_addr, uint16_t speed)
     // Blit Top Line Of Tiles
     digit1 <<= 1;
     digit1 += TILE_BASE;
-    
+
     video.write_text16(&dst_addr, digit3);
     video.write_text16(&dst_addr, digit2);
     video.write_text16(dst_addr, digit1);
@@ -450,7 +450,7 @@ void OHud::blit_large_digit(uint32_t* addr, uint8_t digit)
 }
 
 // Draw Copyright Text to text ram
-// 
+//
 // Source Address: 0xB844
 // Input:          None
 // Output:         None
@@ -490,9 +490,9 @@ void OHud::draw_insert_coin()
             {
                 uint32_t dst_addr = 0x110ACC;
                 const static uint8_t PRESS_START[] = {0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x28};
-                
+
                 if (outrun.tick_counter & BIT_4)
-                {                
+                {
                     // Blit each tile
                     for (uint16_t i = 0; i < sizeof(PRESS_START); i++)
                         video.write_text16(&dst_addr, (0x8700 | PRESS_START[i]));
@@ -526,7 +526,7 @@ void OHud::draw_credits()
 }
 
 // Blit Tiles to text ram layer (Single Row)
-// 
+//
 // Source Address: 0xB844
 // Input:          Source address in rom of data format
 // Output:         None
@@ -546,7 +546,7 @@ void OHud::draw_credits()
 //
 // MSB          LSB
 // p???cccnnnnnnnnn
-// 
+//
 // p : Priority. If 0, sprites with priority level 3 are shown over the text.
 //               If 1, the text layer is shown over sprites regardless of priority.
 // c : Color palette
@@ -558,7 +558,7 @@ void OHud::blit_text1(uint32_t src_addr)
     uint32_t dst_addr = roms.rom0.read32(&src_addr); // Text RAM destination address
     uint16_t counter = roms.rom0.read16(&src_addr);  // Number of tiles to blit
     uint16_t data = roms.rom0.read16(&src_addr);     // Tile data to blit
-    
+
     // Blit each tile
     for (uint16_t i = 0; i <= counter; i++)
     {
@@ -583,7 +583,7 @@ void OHud::blit_text1(uint8_t x, uint8_t y, uint32_t src_addr)
 }
 
 // Blit Tiles to text ram layer (Double Row)
-// 
+//
 // Source Address: 0xB844
 // Input:          Source address in rom of data format
 // Output:         None
@@ -601,7 +601,7 @@ void OHud::blit_text2(uint32_t src_addr)
 {
     uint32_t dst_addr = 0x110000 + roms.rom0.read16(&src_addr); // Text RAM destination address
 
-    uint16_t pal = roms.rom0.read8(&src_addr); 
+    uint16_t pal = roms.rom0.read8(&src_addr);
     pal = 0x80A0 | ((pal << 9) | (pal >> 7) & 1);
     // same as ror 7 and extending to word
     uint16_t counter = roms.rom0.read8(&src_addr); // Number of tiles to blit
@@ -610,7 +610,7 @@ void OHud::blit_text2(uint32_t src_addr)
     for (uint16_t i = 0; i <= counter; i++)
     {
         uint16_t data = roms.rom0.read8(&src_addr); // Tile data to blit
-        
+
         // Blank space
         if (data == 0x20)
         {
@@ -647,7 +647,7 @@ void OHud::draw_debug_info(uint32_t pos, uint16_t height_pat, uint8_t sprite_pat
     ohud.blit_text_new(16, 6, Utils::to_string((int)sprite_pat).c_str(), OHud::PINK);
 }
 
-// Big Yellow Text. Always Centered. 
+// Big Yellow Text. Always Centered.
 void OHud::blit_text_big(const uint8_t Y, const char* text, bool do_notes)
 {
     uint16_t length = (uint16_t) strlen(text);
@@ -699,14 +699,14 @@ void OHud::blit_text_big(const uint8_t Y, const char* text, bool do_notes)
         }
         // Normal character
         if (c >= 'A' && c <= 'Z')
-        {           
+        {
             const uint16_t pal = do_notes ? 0x8AA0 : 0x8CA0;
             // Convert character to real index (D0-0x41) so A is 0x01
             c -= 0x41;
             c = (c * 2);
             video.write_text16(&dst_addr,       c + pal);     // Write first row to text ram
             video.write_text16(0x7E + dst_addr, c + pal + 1); // Write second row to text ram
-        }       
+        }
     }
 }
 
@@ -719,7 +719,7 @@ void OHud::blit_text_big(const uint8_t Y, const char* text, bool do_notes)
 // Normal font: 41 onwards
 void OHud::blit_text_new(uint16_t x, uint16_t y, const char* text, uint16_t pal)
 {
-    uint32_t dst_addr = translate(x, y); 
+    uint32_t dst_addr = translate(x, y);
     uint16_t length = (uint16_t) strlen(text);
 
     for (uint16_t i = 0; i < length; i++)

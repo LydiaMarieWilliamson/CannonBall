@@ -66,7 +66,7 @@ namespace channel
     const static uint16_t PCM_FX7 = 0x2A0; // faa0: Voices
     const static uint16_t PCM_FX8 = 0x2C0;
 
-    // Channel Mapping Info. Used to play sound effects and music at the same time. 
+    // Channel Mapping Info. Used to play sound effects and music at the same time.
     const static uint16_t MAP1 = 0x2E0;
     const static uint16_t MAP2 = 0x300;
     const static uint16_t MAP3 = 0x320;
@@ -99,10 +99,10 @@ namespace channel
 //              c = Corresponding music channel is enabled
 //              5 = Pitch Bend (Only used by Step On Beat track, not the standard music)
 //              6 = ???
-//              e = channel enable (1 = active, 0 = disabled). 
+//              e = channel enable (1 = active, 0 = disabled).
 //+0x01: [Byte] Flags -m---ccc
 //	            c = YM Channel Number
-//              m = possibly a channel mute? 
+//              m = possibly a channel mute?
 //                  Counters and positions still tick.  (1 = active, 0 = disabled).
 //+0x02: [Byte] Used as end marker when bit 1 of 0x0D is set
 //+0x03: [Word] Position in sequence
@@ -122,18 +122,18 @@ namespace channel
 //+0x10: [Byte] Offset into Phase and Amplitude Modulation Sensitivity Table (see 0x1DF)
 //+0x11: [Byte] Volume: Left Channel
 //+0x12: [Byte] Volume: Right Channel
-//+0x13: [Word] PCM: Wave Start Address / Loop Address 
+//+0x13: [Word] PCM: Wave Start Address / Loop Address
 //              FM:  Note & Octave Info (top bit denotes noise channel?)
 //+0x14: [Byte] FM Channels only. Phase and Amplitude Modulation Sensitivity
 //+0x15: [Byte] Wave End Address HIGH 8 bits
 //+0x16: [Byte] PCM Pitch
 //+0x17: [Byte] Flags m-bbccla
-//              a = active (0 = active,  1 = inactive) 
+//              a = active (0 = active,  1 = inactive)
 //              l = loop   (0 = enabled, 1 = disabled)
 //              c = channel pair select
 //              b = bank
 //              m = Music Sample (Drums etc.)
-//+0x18: [Byte] FM Loop Counter. Specifies number of times to trigger command sequence. 
+//+0x18: [Byte] FM Loop Counter. Specifies number of times to trigger command sequence.
 //              Counter used at 0x45f
 //
 //+0x1C: [Word] Sequence Address #1
@@ -175,14 +175,14 @@ namespace ch
 // +0x00: [Byte] Engine Volume
 // +0x01: [Byte] Engine Volume (seems same as 0x00)
 // +0x02: [Byte] Flags -6543210
-//               6 = 
+//               6 =
 //               5 = Set mutes channel completely
-//               4 = 
+//               4 =
 //               3 = Set denotes loop address has been set
 //               2 = Set denotes loop disabled
 //               1 = Denote engine volume set
 //               0 = Set denotes start address / end address has been set
-// +0x03: [Byte] Engine Sample Loop counter (0 - 8) 
+// +0x03: [Byte] Engine Sample Loop counter (0 - 8)
 //               Used as offset into separate 0x20 block to store data at (e.g. Engine Pitch1, Pitch2, Vol)
 // +0x04: [Byte] Engine Pitch Low
 // +0x05: [Byte] Engine Pitch High
@@ -248,9 +248,9 @@ public:
     // [+1] Engine pitch high
     // [+2] Engine pitch low
     // [+3] Engine pitch vol
-    // [+4] Traffic data #1 
-    // [+5] Traffic data #2 
-    // [+6] Traffic data #3 
+    // [+4] Traffic data #1
+    // [+5] Traffic data #2
+    // [+6] Traffic data #3
     // [+7] Traffic data #4
     uint8_t engine_data[8];
 
@@ -277,53 +277,53 @@ private:
 
     // RAM DESCRIPTION ===============
     //
-    // 0x00 - 0x07, 0x80 - 0x87 : CHANNEL #1  
+    // 0x00 - 0x07, 0x80 - 0x87 : CHANNEL #1
     // 0x08 - 0x0F, 0x88 - 0x8F : CHANNEL #2
-    // 0x10 - 0x17, 0x90 - 0x97 : CHANNEL #3  
+    // 0x10 - 0x17, 0x90 - 0x97 : CHANNEL #3
     // 0x18 - 0x1F, 0x98 - 0x9F : CHANNEL #4
-    // 0x20 - 0x27, 0xA0 - 0xA7 : CHANNEL #5  
+    // 0x20 - 0x27, 0xA0 - 0xA7 : CHANNEL #5
     // 0x28 - 0x2F, 0xA8 - 0xAF : CHANNEL #6
-    // 0x30 - 0x37, 0xB0 - 0xB7 : CHANNEL #7  
+    // 0x30 - 0x37, 0xB0 - 0xB7 : CHANNEL #7
     // 0x38 - 0x3F, 0xB8 - 0xBF : CHANNEL #8
-    // 0x40 - 0x47, 0xC0 - 0xC7 : CHANNEL #9  
+    // 0x40 - 0x47, 0xC0 - 0xC7 : CHANNEL #9
     // 0x48 - 0x4F, 0xC8 - 0xCF : CHANNEL #10
-    // 0x50 - 0x57, 0xD0 - 0xD7 : CHANNEL #11 
+    // 0x50 - 0x57, 0xD0 - 0xD7 : CHANNEL #11
     // 0x58 - 0x5F, 0xD8 - 0xDF : CHANNEL #12
-    // 0x60 - 0x67, 0xE0 - 0xE7 : CHANNEL #13 
+    // 0x60 - 0x67, 0xE0 - 0xE7 : CHANNEL #13
     // 0x68 - 0x6F, 0xE8 - 0xEF : CHANNEL #14
-    // 0x70 - 0x77, 0xF0 - 0xF7 : CHANNEL #15 
+    // 0x70 - 0x77, 0xF0 - 0xF7 : CHANNEL #15
     // 0x78 - 0x7F, 0xF8 - 0xFF : CHANNEL #16
     //
     //
     // CHANNEL DESCRIPTION ===================
-    //  
-    // OFFS | BITS     | DESCRIPTION 
+    //
+    // OFFS | BITS     | DESCRIPTION
     // -----+----------+---------------------------------
     // 0x00 | -------- | (unknown) <- scratch space for pitch engine 1 noise or vol
     // 0x01 | -------- | (unknown) <- scratch space for pitch engine 2 noise or vol
-    // 0x02 | vvvvvvvv | Volume LEFT 
-    // 0x03 | vvvvvvvv | Volume RIGHT 
-    // 0x04 | aaaaaaaa | Wave Start Address LOW 8 bits 
-    // 0x05 | aaaaaaaa | Wave Start Address HIGH 8 bits 
-    // 0x06 | eeeeeeee | Wave End Address HIGH 8 bits 
-    // 0x07 | dddddddd | Delta (pitch) 
+    // 0x02 | vvvvvvvv | Volume LEFT
+    // 0x03 | vvvvvvvv | Volume RIGHT
+    // 0x04 | aaaaaaaa | Wave Start Address LOW 8 bits
+    // 0x05 | aaaaaaaa | Wave Start Address HIGH 8 bits
+    // 0x06 | eeeeeeee | Wave End Address HIGH 8 bits
+    // 0x07 | dddddddd | Delta (pitch)
     // 0x80 | -------- | (unknown) Traffic Volume Boost & Pitch Table Entry (Distance of Traffic)
     //      |          |           OR for Engine Channels: Offset into engine_adr_table [Start addresses]
     // 0x81 | -------- | (unknown) Traffic Panning Table Entry
-    // 0x82 | -------- | (unknown) <- scratch space. 
+    // 0x82 | -------- | (unknown) <- scratch space.
     //      |          |           bit 5: Mute channel (engine sounds)
     //      |          |           bit 4: pitch slide.
     //      |          |           bit 3: set to enable traffic sound
-    //      |          |           bit 2: set to denote wave start/end address setup. 
+    //      |          |           bit 2: set to denote wave start/end address setup.
     //      |          |           bit 1: set to denote traffic pan is unchanged. unset denotes change.
     //      |          |           bit 0: set to denote traffic vol is unchanged. unset denotes change.
     //      |          |
     //      |          |           OR for Engine Channels:
-    //      |          |           bit 2: clear to denote offset into engine_adr_table has been reset. 
+    //      |          |           bit 2: clear to denote offset into engine_adr_table has been reset.
     // 0x83 | -------- | (unknown) Traffic Volume Multiplier (read from table specified by 0x80).
     // 0x84 | llllllll | Wave Loop Address LOW 8 bits
-    // 0x85 | llllllll | Wave Loop Address HIGH 8 bits 
-    // 0x86 | ------la | Flags: a = active (0 = active, 1 = inactive) 
+    // 0x85 | llllllll | Wave Loop Address HIGH 8 bits
+    // 0x86 | ------la | Flags: a = active (0 = active, 1 = inactive)
     //      |          |        l = loop   (0 = enabled, 1 = disabled)
 
     // Reference to 0xFF bytes of PCM Chip RAM
@@ -426,7 +426,7 @@ private:
     void engine_read_data(uint8_t* chan, uint8_t* pcm);
 
     // ----------------------------------------------------------------------------
-    //                               PASSING TRAFFIC FX 
+    //                               PASSING TRAFFIC FX
     // ----------------------------------------------------------------------------
     void traffic_process();
     void traffic_process_chan(uint8_t* pcm);

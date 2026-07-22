@@ -1,12 +1,12 @@
 /***************************************************************************
     Yamaha YM2151 driver (version 2.150 final beta) - May, 11th 2002
-    
+
     (c) 1997-2002 Jarek Burczynski (s0246@poczta.onet.pl, bujar@mame.net)
     Some of the optimizing ideas by Tatsuyuki Satoh
-    
-    This driver is based upon the MAME source code, with some minor 
-    modifications to integrate it into the Cannonball framework. 
-    
+
+    This driver is based upon the MAME source code, with some minor
+    modifications to integrate it into the Cannonball framework.
+
     See http://mamedev.org/source/docs/license.txt for more details.
 ***************************************************************************/
 

@@ -1,7 +1,7 @@
 /***************************************************************************
     Shared Sound Commands.
     Used by both the ported 68K and Z80 program code.
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -40,7 +40,7 @@ namespace sound
         BEEP1 = 0x99,            // YM Beep
         UFO = 0x9A,              // Unused sound. Note that the z80 code to play this is not implemented in this conversion.
         BEEP2 = 0x9B,            // YM Double Beep
-        INIT_CHEERS2     = 0x9C, // Cheers (Looped)   
+        INIT_CHEERS2     = 0x9C, // Cheers (Looped)
         VOICE_CHECKPOINT = 0x9D, // Voice: Checkpoint
         VOICE_CONGRATS   = 0x9E, // Voice: Congratulations
         VOICE_GETREADY   = 0x9F, // Voice: Get Ready

@@ -1,12 +1,12 @@
 /***************************************************************************
     Core Game Engine Routines.
-    
+
     - The main loop which advances the level onto the next segment.
     - Code to directly control the road hardware. For example, the road
       split and bonus points routines.
     - Code to determine whether to initialize certain game modes
-      (Crash state, Bonus points, road split state) 
-    
+      (Crash state, Bonus points, road split state)
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -39,7 +39,7 @@ public:
     // 8 = Init Road Merge before checkpoint sign
     // 9 = Road Merge before checkpoint sign
     // A = Unknown
-    // B = Checkpoint sign 
+    // B = Checkpoint sign
     // C = Unused
     // D = Unused
     // E = Unused
@@ -68,11 +68,11 @@ public:
 
     uint32_t car_increment; // NEEDS REPLACING. Implementing here as a quick hack so routine works
 
-    // Car X Position              
+    // Car X Position
     // 0000 = Centre of two road generators
     //
     // Turning Right REDUCES value, Turning Left INCREASES value
-    //    
+    //
     // 0xxx [pos] = Road Generator 1 Position (0 - xxx from centre)
     // Fxxx [neg] = Road Generator 2 Position (0 + xxx from centre)
     int16_t car_x_pos;
@@ -99,7 +99,7 @@ public:
     // But confusingly, these values get swapped by a not instruction
     int8_t route_selected;
 
-    // Road Width Change 
+    // Road Width Change
     // 0 = No
     // -1 = In Progress
     int16_t change_width;
@@ -137,7 +137,7 @@ private:
 
     // Used by road merge logic, to control width of road
     int16_t road_width_merge;
-    
+
     // ------------------------------------------------------------------------
     // Route Information
     // ------------------------------------------------------------------------
@@ -146,7 +146,7 @@ private:
     // 0 = Route Info Not Updated
     // 1 = Route Info Updated
     int8_t route_updated;
-    
+
     void setup_stage1();
     void check_road_split();
     void check_stage();

@@ -1,12 +1,12 @@
 /***************************************************************************
     Yamaha YM2151 driver (version 2.150 final beta) - May, 11th 2002
-    
+
     (c) 1997-2002 Jarek Burczynski (s0246@poczta.onet.pl, bujar@mame.net)
     Some of the optimizing ideas by Tatsuyuki Satoh
-    
-    This driver is based upon the MAME source code, with some minor 
-    modifications to integrate it into the Cannonball framework. 
-    
+
+    This driver is based upon the MAME source code, with some minor
+    modifications to integrate it into the Cannonball framework.
+
     See http://mamedev.org/source/docs/license.txt for more details.
 ***************************************************************************/
 
@@ -410,7 +410,7 @@ static FILE *sample[9];
 
 YM2151::YM2151(float volume, uint32_t clock)
 {
-    this->volume = volume;  
+    this->volume = volume;
     this->clock = clock;
 }
 
@@ -621,7 +621,7 @@ void YM2151::init_chip_tables()
             timer_A_time[i] = pom;
         #else
             //tim_A_tab[i] = pom.as_double() * (double)sampfreq * mult;  /* number of samples that timer period takes (fixed point) */
-            tim_A_tab[i] = (int)(pom * (double)sampfreq * mult); 
+            tim_A_tab[i] = (int)(pom * (double)sampfreq * mult);
         #endif
     }
     for (i=0; i<256; i++)
@@ -633,7 +633,7 @@ void YM2151::init_chip_tables()
             timer_B_time[i] = pom;
         #else
             //tim_B_tab[i] = pom.as_double() * (double)sampfreq * mult;  /* number of samples that timer period takes (fixed point) */
-            tim_B_tab[i] = (int)(pom * (double)sampfreq * mult); 
+            tim_B_tab[i] = (int)(pom * (double)sampfreq * mult);
         #endif
     }
 
@@ -2079,7 +2079,7 @@ void YM2151::stream_update()
             else if (outl < MINOUT) outl = MINOUT;
         if (outr > MAXOUT) outr = MAXOUT;
             else if (outr < MINOUT) outr = MINOUT;
-        
+
         write_buffer(LEFT,  i, (int16_t) (outl * volume));
         write_buffer(RIGHT, i, (int16_t) (outr * volume));
 

@@ -4,7 +4,7 @@
 
     Also abstracted here, so the more complex OSound class isn't exposed
     to the main code directly
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -33,9 +33,9 @@ public:
     // [+1] Engine pitch high
     // [+2] Engine pitch low
     // [+3] Engine pitch vol
-    // [+4] Traffic data #1 
-    // [+5] Traffic data #2 
-    // [+6] Traffic data #3 
+    // [+4] Traffic data #1
+    // [+5] Traffic data #2
+    // [+6] Traffic data #3
     // [+7] Traffic data #4
     uint8_t engine_data[8];
 

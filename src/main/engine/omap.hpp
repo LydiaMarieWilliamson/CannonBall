@@ -1,13 +1,13 @@
 /***************************************************************************
-    Course Map Logic & Rendering. 
-    
-    This is the full-screen map that is displayed at the end of the game. 
-    
+    Course Map Logic & Rendering.
+
+    This is the full-screen map that is displayed at the end of the game.
+
     The logo is built from multiple sprite components.
-    
-    The course map itself is made up of sprites and pieced together. 
+
+    The course map itself is made up of sprites and pieced together.
     It's not a tilemap.
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/

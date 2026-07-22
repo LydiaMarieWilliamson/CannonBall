@@ -1,12 +1,12 @@
 /***************************************************************************
-    Tilemap Handling Code. 
+    Tilemap Handling Code.
 
     Logic for the foreground and background tilemap layers.
 
     - Read and render tilemaps
     - H-Scroll & V-Scroll
     - Palette Initialization
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -20,7 +20,7 @@ class video;
 
 class OTiles
 {
-public:       
+public:
     // + 0x21: Tilemap Control
 	// 0 = Clear Tile Table 1 & Init Default Tilemap (Stage 1)
 	// 1 = Scroll Tilemap
@@ -44,7 +44,7 @@ public:
 	void write_tilemap_hw();
     void set_scroll(int16_t h_scroll = 0, int16_t v_scroll = 0);
 
-private:	
+private:
     // Page to use for tilemap. Alternates between 0 and 1 dependent on stage number
     // to handle switch between tilemaps at stage end.
     int8_t page;
@@ -56,7 +56,7 @@ private:
     int16_t vswap_off;
 
     // -----------------------------------------------------------------------
-    // TILEMAP VARIABLES 
+    // TILEMAP VARIABLES
     // -----------------------------------------------------------------------
 
     // Scroll values to write to foreground & background tilemaps
@@ -82,7 +82,7 @@ private:
 	// FG & BG Tilemap ROM Address [long]
 	uint32_t fg_addr;
 	uint32_t bg_addr;
-	
+
     // + 0x20: Toggle between loading palette and loading tiles
     uint8_t tilemap_setup;
     enum { SETUP_TILES, SETUP_PAL };
@@ -97,7 +97,7 @@ private:
     uint16_t h_scroll_lookup;
 
     // -----------------------------------------------------------------------
-    
+
     void clear_tile_info();
     void init_tilemap(int16_t stage_id = 0);
     void init_tilemap_props(uint16_t);

@@ -1,6 +1,6 @@
 /***************************************************************************
     Ferrari AI and Logic Routines.
-    Used by Attract Mode and the end of game Bonus Sequence. 
+    Used by Attract Mode and the end of game Bonus Sequence.
 
     This code contains a port of the original AI and a new enhanced AI.
 
@@ -9,8 +9,8 @@
     - AI is much better at driving tracks without crashing into scenery.
     - No weird juddering when turning corners.
     - No brake light flickering.
-    - Can drive any stage in the game competently. 
-    - Selects a true random route, rather than a pre-defined route. 
+    - Can drive any stage in the game competently.
+    - Selects a true random route, rather than a pre-defined route.
     - Can handle split tracks correctly.
 
     It still occasionally collides with scenery on the later stages, but
@@ -19,24 +19,24 @@
     Notes on the original AI:
     -------------------------
     The final behaviour of the AI differs from the original game.
-    
+
     This is because the core Ferrari logic the AI relies on is in turn
     dependent on timing behaviour between the two 68k CPUs.
-    
-    Differences in timing lead to subtle differences in the road x position 
-    at that particular point of time. Over time, these differences are 
-    magnified. 
-    
+
+    Differences in timing lead to subtle differences in the road x position
+    at that particular point of time. Over time, these differences are
+    magnified.
+
     MAME does not accurately reproduce the arcade machine with regard to
     this. And the Saturn conversion also exhibits different behaviour.
-    
+
     The differences are relatively minor but noticeable.
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
 
-#include <cstdlib> 
+#include <cstdlib>
 #include <time.h>
 
 #include "engine/oattractai.hpp"
@@ -73,16 +73,16 @@ void OAttractAI::tick_ai_enhanced()
     // --------------------------------------------------------------------------------------------
 
     if (last_stage != ostats.cur_stage)
-    {     
+    {
         last_stage           = ostats.cur_stage;
-        oferrari.sprite_ai_x = std::rand() & 1;     
+        oferrari.sprite_ai_x = std::rand() & 1;
     }
 
     // --------------------------------------------------------------------------------------------
     // Steering
     // --------------------------------------------------------------------------------------------
-    int16_t future_x; 
-    
+    int16_t future_x;
+
     // Select road at road split
     if (oinitengine.rd_split_state > 0 && oinitengine.rd_split_state < 8)
         future_x = oferrari.sprite_ai_x ? oroad.road0_h[0x40] : oroad.road1_h[0x40];
@@ -110,7 +110,7 @@ void OAttractAI::tick_ai_enhanced()
     {
         int16_t x = oinitengine.car_x_pos;
         uint16_t road_width = oroad.road_width >> 16;
-  
+
         // Single Road
         if (oroad.road_ctrl == ORoad::ROAD_R0 || oroad.road_ctrl == ORoad::ROAD_R1)
         {
@@ -137,9 +137,9 @@ void OAttractAI::tick_ai_enhanced()
                 static int16_t FAR = 0x104 - 0x4A;
                 road_width += FAR;
                 if (x < 0) x = -x;
-                if (x > road_width)             
+                if (x > road_width)
                     oinputs.brake_adjust = OInputs::BRAKE_THRESHOLD4;  // Both Wheels Nearly Off
-                else if (x > road_width - 0x30) 
+                else if (x > road_width - 0x30)
                     oinputs.brake_adjust = OInputs::BRAKE_THRESHOLD3;  // One Wheel Nearly Off
             }
         }
@@ -174,11 +174,11 @@ void OAttractAI::tick_ai()
 {
     // Check upcoming road segment for straight/curve.
     // Choose route from pre defined table at road split.
-    check_road();    
-    
+    check_road();
+
     // Set steering value based on upcoming road segment
-    set_steering();  
-  
+    set_steering();
+
     oinputs.brake_adjust = 0;
 
     // If speed is below a certain amount, just accelerate
@@ -187,20 +187,20 @@ void OAttractAI::tick_ai()
         oinputs.acc_adjust = 0xFF; // max value
         return;
     }
-  
+
     // If AI Traffic is close, set brake on
     if (otraffic.ai_traffic)
     {
         otraffic.ai_traffic = 0;
         oinputs.brake_adjust = OInputs::BRAKE_THRESHOLD3;
     }
-  
+
     // If either wheel of the car is off-road, set brake on
     else if (oferrari.wheel_state != OFerrari::WHEELS_ON)
     {
         oinputs.brake_adjust = OInputs::BRAKE_THRESHOLD3;
     }
-  
+
     // Upcoming road: Straight Road
     if (oinitengine.road_curve_next == 0)
     {
@@ -212,9 +212,9 @@ void OAttractAI::tick_ai()
         // Increment AI Curve Counter
         if (++oferrari.sprite_ai_counter == 1)
         {
-            // Set road curve value based on hard coded road data. 
+            // Set road curve value based on hard coded road data.
             // High value = Sharper Bend
-            int16_t sprite_ai_curve = 0x96 - oinitengine.road_curve_next; 
+            int16_t sprite_ai_curve = 0x96 - oinitengine.road_curve_next;
             if (sprite_ai_curve >= 0)
                 oferrari.sprite_ai_curve = sprite_ai_curve;
         }
@@ -225,7 +225,7 @@ void OAttractAI::tick_ai()
                  oinputs.brake_adjust = OInputs::BRAKE_THRESHOLD2;
 
             oferrari.sprite_ai_curve--;
-        }   
+        }
     }
 
     // Set accelerator to max value
@@ -296,7 +296,7 @@ void OAttractAI::set_steering()
     int16_t x_change = 0;   // d2
     int16_t x = 0;          // d3
     int16_t car_x = 0;      // d4
-    
+
     // Mid Road Split
     if (oinitengine.rd_split_state >= 4)
     {
@@ -322,7 +322,7 @@ void OAttractAI::set_steering()
     // A404
     x = x_change;
     x_change = (x_change < 0) ? -x_change : x_change;
-    if (x_change > 6) 
+    if (x_change > 6)
         x_change = 6;
     // A414 RHS Of Road
     if (x >= 0)
@@ -378,7 +378,7 @@ void OAttractAI::set_steering()
     x_change++;
 
     steering = (steering * x_change) + oferrari.sprite_ai_steer;
-    
+
     if (steering > 0x7F)
         steering = 0x7F;
     else if (steering < -0x7F)
@@ -405,7 +405,7 @@ void OAttractAI::check_road_bonus()
     {
         if (oinitengine.road_type_next == OInitEngine::ROAD_STRAIGHT)
         {
-            oferrari.sprite_ai_x = oinitengine.road_type == OInitEngine::ROAD_RIGHT ? -0xB4 : 0xB4; // different from check_road() 
+            oferrari.sprite_ai_x = oinitengine.road_type == OInitEngine::ROAD_RIGHT ? -0xB4 : 0xB4; // different from check_road()
         }
         else // NO CHANGE
         {

@@ -7,7 +7,7 @@
     - Handles levels (path, width, height, scenery)
     - Handles additional level sections (road split, end section)
     - Handles road/level related palettes
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -30,8 +30,8 @@
 // 0x19 = Devils Canyon Variant
 // ------------------------------------------------------------------------------------------------
 
-static uint8_t STAGE_MAPPING_USA[] = 
-{ 
+static uint8_t STAGE_MAPPING_USA[] =
+{
     0x3C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // Stage 1
     0x1E, 0x3B, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // Stage 2
     0x20, 0x2F, 0x2A, 0x00, 0x00, 0x00, 0x00, 0x00,  // Stage 3
@@ -39,8 +39,8 @@ static uint8_t STAGE_MAPPING_USA[] =
     0x32, 0x23, 0x38, 0x22, 0x26, 0x00, 0x00, 0x00,  // Stage 5
 };
 
-static uint8_t STAGE_MAPPING_JAP[] = 
-{ 
+static uint8_t STAGE_MAPPING_JAP[] =
+{
     0x3C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // Stage 1
     0x20, 0x35, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // Stage 2
     0x1E, 0x2F, 0x2A, 0x00, 0x00, 0x00, 0x00, 0x00,  // Stage 3
@@ -85,7 +85,7 @@ bool TrackLoader::set_layout_track(const char* filename)
         delete layout;
 
     layout = new RomLoader();
-    
+
     if (layout->load_binary(filename))
         return false;
 
@@ -106,11 +106,11 @@ void TrackLoader::init_original_tracks(bool jap)
 
     // Height Map Entries
     heightmap_offset  = outrun.adr.road_height_lookup;
-    heightmap_data    = &roms.rom1p->rom[0];  
+    heightmap_data    = &roms.rom1p->rom[0];
 
     // Scenery Map Entries
     scenerymap_offset = outrun.adr.sprite_master_table;
-    scenerymap_data   = &roms.rom0p->rom[0]; 
+    scenerymap_data   = &roms.rom0p->rom[0];
 
     // Palette Entries
     pal_sky_offset    = PAL_SKY_TABLE;
@@ -123,10 +123,10 @@ void TrackLoader::init_original_tracks(bool jap)
     // Iterate and setup 15 stages
     // --------------------------------------------------------------------------------------------
 
-    static const uint32_t STAGE_ORDER[] = { 0, 
-                                            0x8, 0x9, 
-                                            0x10, 0x11, 0x12, 
-                                            0x18, 0x19, 0x1A, 0x1B, 
+    static const uint32_t STAGE_ORDER[] = { 0,
+                                            0x8, 0x9,
+                                            0x10, 0x11, 0x12,
+                                            0x18, 0x19, 0x1A, 0x1B,
                                             0x20, 0x21, 0x22, 0x23, 0x24};
 
     for (int i = 0; i < STAGES; i++)
@@ -139,7 +139,7 @@ void TrackLoader::init_original_tracks(bool jap)
 
         // CPU 1 Data
         const uint32_t PATH_ADR = roms.rom1p->read32(ROAD_DATA_LOOKUP + STAGE_OFFSET);
-        levels[i].path = &roms.rom1p->rom[PATH_ADR];        
+        levels[i].path = &roms.rom1p->rom[PATH_ADR];
     }
 
     // --------------------------------------------------------------------------------------------
@@ -180,11 +180,11 @@ void TrackLoader::init_layout_tracks(bool jap)
 
     // Height Map Entries
     heightmap_offset  = layout->read32(LayOut::HEIGHT_MAPS);
-    heightmap_data    = &layout->rom[0];  
+    heightmap_data    = &layout->rom[0];
 
     // Scenery Map Entries
     scenerymap_offset = layout->read32(LayOut::SPRITE_MAPS);
-    scenerymap_data   = &layout->rom[0]; 
+    scenerymap_data   = &layout->rom[0];
 
     // Palette Entries
     pal_sky_offset    = layout->read32(LayOut::PAL_SKY);

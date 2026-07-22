@@ -1,8 +1,8 @@
 /***************************************************************************
     Attract Mode: Animated OutRun Logo Graphic
-    
+
     The logo is built from multiple sprite components.
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -25,12 +25,12 @@ private:
 
 	// Background Palette Entries
 	static const uint8_t bg_pal[];
-	
+
     uint8_t entry_start;
 
     // Y Offset To Draw Logo At
     int16_t y_off;
-	
+
 	void setup_sprite1();
 	void setup_sprite2();
 	void setup_sprite3();

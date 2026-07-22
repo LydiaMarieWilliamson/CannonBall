@@ -21,7 +21,7 @@ namespace cannonball
 
     // Engine Master State
     extern int state;
-    
+
     enum
     {
         STATE_BOOT,

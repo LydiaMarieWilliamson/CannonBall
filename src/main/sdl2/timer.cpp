@@ -2,7 +2,7 @@
 
 /***************************************************************************
     SDL Based Timer.
-    
+
     Will need to be replaced if SDL library is replaced.
 
     Copyright Chris White.

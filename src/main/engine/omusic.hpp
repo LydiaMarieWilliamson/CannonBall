@@ -53,7 +53,7 @@ private:
     int8_t preview_counter;
 
     const static short HAND_LEFT = 0, HAND_CENTRE = 1, HAND_RIGHT = 2;
-    
+
 	void setup_sprite1();
 	void setup_sprite2();
 	void setup_sprite3();

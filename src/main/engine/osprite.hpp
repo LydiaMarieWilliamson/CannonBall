@@ -1,6 +1,6 @@
 /***************************************************************************
     Hardware Sprites.
-    
+
     This class stores sprites in the converted format expected by the
     OutRun graphics hardware.
 
@@ -8,7 +8,7 @@
     See license.txt for more details.
 ***************************************************************************/
 
-#include "stdint.hpp" 
+#include "stdint.hpp"
 
 class osprite
 {

@@ -1,5 +1,5 @@
 /***************************************************************************
-    OutRun Utility Functions & Assembler Helper Functions. 
+    OutRun Utility Functions & Assembler Helper Functions.
 
     Common OutRun library functions.
     Helper functions used to facilitate 68K to C++ porting process.

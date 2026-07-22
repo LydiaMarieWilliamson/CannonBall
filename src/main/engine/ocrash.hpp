@@ -1,22 +1,22 @@
 /***************************************************************************
-    Collision & Crash Code. 
-    
+    Collision & Crash Code.
+
     There are two types of collision: Scenery & Traffic.
-    
+
     1/ Traffic: The Ferrari will spin after a collision.
     2/ Scenery: There are three types of scenery collision:
        - Low speed bump. Car rises slightly in the air and stalls.
        - Mid speed spin. Car spins and slides after collision.
        - High speed flip. If slightly slower, car rolls into screen.
          Otherwise, grows towards screen and vanishes
-         
+
     Known Issues With Original Code:
     - Passenger sprites flicker if they land moving in the water on Stage 1
-    
+
     The Ferrari sprite is used differently by the crash code.
     As there's only one of them, I've rolled the additional variables into
-    this class. 
-    
+    this class.
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -92,7 +92,7 @@ public:
     //
     // 0 = No crash has taken place yet
     // 1 = Crash has taken place this level
-    // 2 = Crash. First Spin/Flip. 
+    // 2 = Crash. First Spin/Flip.
     // 3 = Crash. Second Spin/Flip.
     // 4 = Crash. Third Spin/Flip.
     int16_t crash_spin_count;
@@ -111,7 +111,7 @@ public:
 private:
 
     // This is the rolled Ferrari sprite, which is configured differently for
-    // the crash code. 
+    // the crash code.
     // The offsets indicate the original offsets in memory.
 
     //+1E [Word] Spins/Flips Remaining
@@ -147,7 +147,7 @@ private:
     int8_t crash_type;
     enum { CRASH_BUMP = 0, CRASH_SPIN = 1, CRASH_FLIP = 2 };
 
-    // Delay counter after crash. 
+    // Delay counter after crash.
     // Show animation (e.g. girl pointing finger, before car is repositioned)
     int16_t crash_delay;
 

@@ -1,6 +1,6 @@
 /***************************************************************************
     Smoke & Spray Control.
-    
+
     Animate the smoke and spray below the Ferrari's wheels.
 
     Copyright Chris White.
@@ -38,7 +38,7 @@ void OSmoke::init()
 // [+0] Long: Sprite Data Address
 // [+4] Byte: Sprite Z value of smoke (bigger value means in front of car, and zoomed further)
 // [+5] Byte: Sprite Palette
-// [+6] Byte: Sprite X (Bottom 4 bits) 
+// [+6] Byte: Sprite X (Bottom 4 bits)
 //            Sprite Y (Top 4 bits)
 // [+7] Byte: Bit 0: H-Flip sprite
 //            Bit 1: Zoom shift value
@@ -52,7 +52,7 @@ void OSmoke::draw_ferrari_smoke(oentry *sprite)
 
     if (outrun.game_state != GS_ATTRACT)
     {
-        if (outrun.game_state < GS_START1 || outrun.game_state >= GS_INIT_GAMEOVER) return; 
+        if (outrun.game_state < GS_START1 || outrun.game_state >= GS_INIT_GAMEOVER) return;
     }
 
     if (ocrash.crash_counter && !ocrash.crash_z) return;
@@ -70,7 +70,7 @@ void OSmoke::draw_ferrari_smoke(oentry *sprite)
     // Enhancement: When not displaying car, don't draw smoke effects
     if (oroad.get_view_mode() == ORoad::VIEW_INCAR && !ocrash.is_flip())
         return;
-    
+
     // ------------------------------------------------------------------------
     // Car Slipping/Skidding
     // ------------------------------------------------------------------------
@@ -96,7 +96,7 @@ void OSmoke::draw_ferrari_smoke(oentry *sprite)
         // Right Wheel Only
         else if (sprite == &osprites.jump_table[OSprites::SPRITE_SMOKE1] && oferrari.wheel_state == OFerrari::WHEELS_RIGHT_OFF)
             tick_smoke_anim(sprite, 1, smoke_adr);
-        
+
         // Both Wheels
         else if (oferrari.wheel_state == OFerrari::WHEELS_OFF)
             tick_smoke_anim(sprite, 1, smoke_adr);
@@ -105,7 +105,7 @@ void OSmoke::draw_ferrari_smoke(oentry *sprite)
     }
 
     // test_crash_intro:
-    
+
     // Normal
     if (oferrari.car_state == OFerrari::CAR_NORMAL)
     {
@@ -146,8 +146,8 @@ void OSmoke::setup_smoke_sprite(bool force_load)
     }
 
     // Set Smoke Colour When On Road
-    const static uint8_t ONROAD_SMOKE[] = 
-    { 
+    const static uint8_t ONROAD_SMOKE[] =
+    {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // Stage 1
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // Stage 2
         0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, // Stage 3
@@ -159,8 +159,8 @@ void OSmoke::setup_smoke_sprite(bool force_load)
     smoke_type_slip = smoke_type_onroad;
 
     // Set Smoke Colour When Off Road
-    const static uint8_t OFFROAD_SMOKE[] = 
-    { 
+    const static uint8_t OFFROAD_SMOKE[] =
+    {
         0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // Stage 1
         0x09, 0x09, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // Stage 2
         0x02, 0x09, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, // Stage 3
@@ -235,7 +235,7 @@ void OSmoke::tick_smoke_anim(oentry* sprite, int8_t anim_ctrl, uint32_t addr)
                     }
                     else
                     {
-                        sprite->y -= 10;    
+                        sprite->y -= 10;
                     }
                 }
             } // End trigger smoke cloud
@@ -243,7 +243,7 @@ void OSmoke::tick_smoke_anim(oentry* sprite, int8_t anim_ctrl, uint32_t addr)
             int16_t z_shift = ocrash.crash_spin_count - 1;
             if (z_shift == 0) z_shift = 1;
             sprite->z = 0xFF >> z_shift;
-        } 
+        }
     }
     // ------------------------------------------------------------------------
     // Use car speed to set sprite counter reload value
@@ -258,7 +258,7 @@ void OSmoke::tick_smoke_anim(oentry* sprite, int8_t anim_ctrl, uint32_t addr)
 
     // Return if stationary and not in animation sequence
     if (oferrari.car_state != OFerrari::CAR_ANIM_SEQ && oinitengine.car_increment >> 16 == 0)
-        return; 
+        return;
 
     if (outrun.tick_frame)
     {
@@ -330,7 +330,7 @@ void OSmoke::tick_smoke_anim(oentry* sprite, int8_t anim_ctrl, uint32_t addr)
     else
     {
         sprite->draw_props = oentry::BOTTOM | oentry::RIGHT; // Anchor bottom right
-        x = -x;        
+        x = -x;
     }
     sprite->x += (x * zoom) >> 8;
 
@@ -348,15 +348,15 @@ void OSmoke::draw(oentry* sprite)
 {
     if (outrun.game_state != GS_ATTRACT)
     {
-        if (outrun.game_state < GS_START1 || outrun.game_state >= GS_INIT_GAMEOVER) return; 
+        if (outrun.game_state < GS_START1 || outrun.game_state >= GS_INIT_GAMEOVER) return;
     }
 
     if (ocrash.crash_counter && !ocrash.crash_z) return;
 
     // Return if stationary and not in animation sequence
     if (oferrari.car_state != OFerrari::CAR_ANIM_SEQ && oinitengine.car_increment >> 16 == 0)
-        return; 
-    
+        return;
+
     osprites.map_palette(sprite);
     osprites.do_spr_order_shadows(sprite);
 }

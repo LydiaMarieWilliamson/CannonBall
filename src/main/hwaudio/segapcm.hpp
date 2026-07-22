@@ -1,12 +1,12 @@
 /***************************************************************************
     Sega 8-Bit PCM Driver
-    
-    This driver is based upon the MAME source code, with some minor 
+
+    This driver is based upon the MAME source code, with some minor
     modifications to integrate it into the Cannonball framework.
 
     Note, that I've altered this driver to output at a fixed 44,100Hz.
-    This is to avoid the need for downsampling.  
-    
+    This is to avoid the need for downsampling.
+
     See http://mamedev.org/source/docs/license.txt for more details.
 ***************************************************************************/
 

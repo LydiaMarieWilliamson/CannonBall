@@ -1,12 +1,12 @@
 /***************************************************************************
     Heads-Up Display (HUD) Code
-    
+
     - Score Rendering
     - Timer Rendering
     - Rev Rendering
     - Minimap Rendering
     - Text Rendering
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -20,7 +20,7 @@ class OHud
 public:
 
     // Colours for default text palette
-    enum 
+    enum
     {
         GREY  = 0x84,
         PINK  = 0x86,

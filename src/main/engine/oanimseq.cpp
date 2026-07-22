@@ -1,14 +1,14 @@
 /***************************************************************************
     Animation Sequences.
-    
+
     Used in three areas of the game:
     - The sequence at the start with the Ferrari driving in from the side
     - Flag Waving Man
     - 5 x End Sequences
-    
+
     See "oanimsprite.hpp" for the specific format used by animated sprites.
     It is essentially a deviation from the normal sprites in the game.
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -35,7 +35,7 @@
 // +07 [Byte] Bit 7: Set To Load Next Block Of Sprite Animation Data To 0x1E
 //            Bit 6: Set For H-Flip
 //            Bit 4:
-//            Bits 0-3: Animation Frame Delay 
+//            Bits 0-3: Animation Frame Delay
 //                     (Before Incrementing To Next Block Of 8 Bytes)
 // ----------------------------------------------------------------------------
 
@@ -138,7 +138,7 @@ void OAnimSeq::flag_seq()
             anim_flag.anim_frame  = 0;
         }
 
-        // Wave Flag 
+        // Wave Flag
         if (outrun.game_state <= GS_INGAME)
         {
             uint32_t index = anim_flag.anim_addr_curr + (anim_flag.anim_frame << 3);
@@ -150,7 +150,7 @@ void OAnimSeq::flag_seq()
 	        uint32_t value = roms.rom0p->read32(addr);
 	        anim_flag.sprite->z += value;
             uint16_t z16 = anim_flag.sprite->z >> 16;
-	    
+
             if (z16 >= 0x200)
 	        {
                 anim_flag.sprite->control &= ~OSprites::ENABLE;
@@ -206,7 +206,7 @@ void OAnimSeq::flag_seq()
 }
 
 // Setup Ferrari Animation Sequence
-// 
+//
 // Source: 0x6036
 void OAnimSeq::ferrari_seq()
 {
@@ -326,7 +326,7 @@ void OAnimSeq::init_end_seq()
     oferrari.state = OFerrari::FERRARI_END_SEQ;
 
     // Setup Ferrari Sprite
-    anim_ferrari.sprite->control |= OSprites::ENABLE; 
+    anim_ferrari.sprite->control |= OSprites::ENABLE;
     anim_ferrari.sprite->id = 0;
     anim_ferrari.sprite->draw_props = oentry::BOTTOM;
     anim_ferrari.anim_frame = 0;
@@ -348,7 +348,7 @@ void OAnimSeq::tick_end_seq()
         case 0: // init
             if (outrun.tick_frame) init_end_sprites();
             else return;
-            
+
         case 1: // tick & blit
             anim_seq_outro_ferrari();                           // Ferrari Sprite
             anim_seq_outro(&anim_obj1, oferrari.ferrari_pal);   // Car Door Opening Animation
@@ -356,7 +356,7 @@ void OAnimSeq::tick_end_seq()
             anim_seq_shadow(&anim_ferrari, &anim_obj3);         // Car Shadow
                                                                 // Man Sprite
             // Fix Wrong Palette Bug: Only occurs on 3 of the 5 possible end sequences (0 and 3 are ok)
-            anim_seq_outro(&anim_pass1, config.engine.fix_bugs ? 10 : -1);                        
+            anim_seq_outro(&anim_pass1, config.engine.fix_bugs ? 10 : -1);
             anim_seq_shadow(&anim_pass1, &anim_obj4);           // Man Shadow
             anim_seq_outro(&anim_pass2);                        // Female Sprite
             anim_seq_shadow(&anim_pass2, &anim_obj5);           // Female Shadow
@@ -379,7 +379,7 @@ void OAnimSeq::init_end_sprites()
     anim_ferrari.anim_addr_curr = roms.rom0p->read32(&addr);
     anim_ferrari.anim_addr_next = roms.rom0p->read32(&addr);
     ferrari_stopped = false;
-    
+
     // 0x58A4: Car Door Opening Animation [seq_sprite_entry]
     anim_obj1.sprite->control |= OSprites::ENABLE;
     anim_obj1.sprite->id = 1;
@@ -391,7 +391,7 @@ void OAnimSeq::init_end_sprites()
     addr = outrun.adr.anim_endseq_obj2 + (end_seq << 3);
     anim_obj1.anim_addr_curr = roms.rom0p->read32(&addr);
     anim_obj1.anim_addr_next = roms.rom0p->read32(&addr);
-    
+
     // 0x58EC: Interior of Ferrari (Note this wobbles a little when passengers exit) [seq_sprite_entry]
     anim_obj2.sprite->control |= OSprites::ENABLE;
     anim_obj2.sprite->id = 2;
@@ -497,7 +497,7 @@ void OAnimSeq::init_end_sprites()
     addr = outrun.adr.anim_endseq_obj7 + (end_seq << 3);
     anim_obj8.anim_addr_curr = roms.rom0p->read32(&addr);
     anim_obj8.anim_addr_next = roms.rom0p->read32(&addr);
-    
+
     end_seq_state = 1;
 }
 
@@ -522,27 +522,27 @@ void OAnimSeq::anim_seq_outro_ferrari()
     anim_seq_outro(&anim_ferrari, oferrari.ferrari_pal);
 }
 
-// End Sequence: Setup Animated Sprites 
+// End Sequence: Setup Animated Sprites
 // Source: 0x5B42
 void OAnimSeq::anim_seq_outro(oanimsprite* anim, int pal_override)
 {
     oinputs.steering_adjust = 0;
 
     // Return if no animation data to process
-    if (!read_anim_data(anim)) 
+    if (!read_anim_data(anim))
         return;
 
     // Process Animation Data
     uint32_t index = anim->anim_addr_curr + (anim->anim_frame << 3);
 
-    anim->sprite->addr          = roms.rom0p->read32(index) & 0xFFFFF;   
+    anim->sprite->addr          = roms.rom0p->read32(index) & 0xFFFFF;
     // Override palette to overcome bugs / recolour Ferrari
-    anim->sprite->pal_src       = pal_override != -1 ? pal_override : roms.rom0p->read8(index); 
+    anim->sprite->pal_src       = pal_override != -1 ? pal_override : roms.rom0p->read8(index);
     anim->sprite->zoom          = roms.rom0p->read8(6 + index) >> 1;
     anim->sprite->road_priority = roms.rom0p->read8(6 + index) << 1;
     anim->sprite->priority      = anim->sprite->road_priority - ((roms.rom0p->read16(index) & 0x70) >> 4); // (bits 4-6)
     anim->sprite->x             = (roms.rom0p->read8(4 + index) * anim->sprite->priority) >> 9;
-    
+
     if (roms.rom0p->read8(1 + index) & BIT_7)
         anim->sprite->x = -anim->sprite->x;
 
@@ -576,7 +576,7 @@ void OAnimSeq::anim_seq_outro(oanimsprite* anim, int pal_override)
             anim->frame_delay = roms.rom0p->read8(0x0F + index) & 0x3F;
             anim->anim_frame++;
         }
-    } 
+    }
     osprites.map_palette(anim->sprite);
     // Order sprites
     osprites.do_spr_order_shadows(anim->sprite);
@@ -588,11 +588,11 @@ void OAnimSeq::anim_seq_outro(oanimsprite* anim, int pal_override)
 void OAnimSeq::anim_seq_shadow(oanimsprite* parent, oanimsprite* anim)
 {
     // Return if no animation data to process
-    if (!read_anim_data(anim)) 
+    if (!read_anim_data(anim))
         return;
 
     if (outrun.tick_frame)
-    {  
+    {
         uint8_t zoom_shift = 3;
 
         // Car Shadow
@@ -607,9 +607,9 @@ void OAnimSeq::anim_seq_shadow(oanimsprite* parent, oanimsprite* anim)
         uint16_t priority  = parent->sprite->road_priority >> zoom_shift;
         anim->sprite->zoom = priority - (priority >> 2);
         anim->sprite->y    = oroad.get_road_y(parent->sprite->road_priority);
-    
+
         // Chris - The following extra line seems necessary due to the way I set the sprites up.
-        // Actually, I think it's a bug in the original game, relying on this being setup by 
+        // Actually, I think it's a bug in the original game, relying on this being setup by
         // the crash code previously. But anyway!
         anim->sprite->road_priority = parent->sprite->road_priority;
     }
@@ -628,7 +628,7 @@ bool OAnimSeq::read_anim_data(oanimsprite* anim)
     int16_t end_pos =   roms.rom0p->read16(2 + addr); // d3
 
     int16_t pos = seq_pos; // d1
-    
+
     // Global Sequence Position: Advance to next position
     // Not particularly clean embedding this here obviously!
     if (outrun.tick_frame && anim->anim_props & 0xFF00)
@@ -660,7 +660,7 @@ bool OAnimSeq::read_anim_data(oanimsprite* anim)
 
     // check_seq_pos:
     // Sequence: Start Position
-    // ret_set_frame_delay: 
+    // ret_set_frame_delay:
     if (pos == start_pos)
     {
         // If current animation block is set, extract frame delay
@@ -676,7 +676,7 @@ bool OAnimSeq::read_anim_data(oanimsprite* anim)
     // Sequence: In Progress
     else if (pos < end_pos)
         return PROCESS;
-    
+
     // Sequence: End Position
     else
     {

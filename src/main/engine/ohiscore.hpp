@@ -25,7 +25,7 @@ class OHiScore
 public:
     // Number of score entries in table
     const static uint8_t NO_SCORES = 20;
-    
+
     // 20 Score Entries
     score_entry scores[NO_SCORES];
 
@@ -83,7 +83,7 @@ private:
         STATE_DONE      // Score Done
     };
 
-    // Mini-car data format. 
+    // Mini-car data format.
     // These are the mini cars that move across and reveal the high score entries
     struct minicar_entry
     {

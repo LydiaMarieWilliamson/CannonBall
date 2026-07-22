@@ -1,12 +1,12 @@
 /***************************************************************************
-    Tilemap Handling Code. 
+    Tilemap Handling Code.
 
     Logic for the foreground and background tilemap layers.
 
     - Read and render tilemaps
     - H-Scroll & V-Scroll
     - Palette Initialization
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -39,7 +39,7 @@ void OTiles::set_vertical_swap()
 
 
 // Write Tilemap Values To Hardware On Vertical Interrupt
-// 
+//
 // Source Address: 0xD790
 // Input:          None
 // Output:         None
@@ -55,7 +55,7 @@ void OTiles::write_tilemap_hw()
 }
 
 // Setup Default Palette Settings
-// 
+//
 // Source Address: 0x85EA
 // Input:          None
 // Output:         None
@@ -73,7 +73,7 @@ void OTiles::setup_palette_hud()
 }
 
 // Setup default palette for tilemaps for stages 1,3,5 and music select
-// 
+//
 // Source Address: 0x8602
 // Input:          None
 // Output:         None
@@ -82,12 +82,12 @@ void OTiles::setup_palette_tilemap()
 {
     uint32_t src_addr = 0x16FD8;
     uint32_t pal_addr = S16_PALETTE_BASE + (8 * 16); // Palette Entry 8
-    
+
     for (int i = 0; i < 120; i++)
-    {    
+    {
         uint16_t offset = roms.rom0.read8(&src_addr) << 4;
         uint32_t tile_data_addr = 0x17050 + offset;
-        
+
         // Write 4 x longs of palette data. Read from ROM.
         video.write_pal32(&pal_addr, roms.rom0.read32(&tile_data_addr));
         video.write_pal32(&pal_addr, roms.rom0.read32(&tile_data_addr));
@@ -100,7 +100,7 @@ void OTiles::setup_palette_tilemap()
 void OTiles::setup_palette_widescreen()
 {
     // Duplicate 10 palette entries from index 44 onwards.
-    // This is needed due to the new tiles created for widescreen mode and the sharing of 
+    // This is needed due to the new tiles created for widescreen mode and the sharing of
     // palette / tile indexes in the data structure.
     uint32_t src_addr = S16_PALETTE_BASE + (44 * 16);
     uint32_t pal_addr = S16_PALETTE_BASE + ((64 + 44) * 16);
@@ -114,7 +114,7 @@ void OTiles::setup_palette_widescreen()
     }
 
     // Create new palette (Entry 72).
-    // Use Palette 53 as a basis for this. 
+    // Use Palette 53 as a basis for this.
     // This is needed for some of the new Widescreen tiles
     src_addr = S16_PALETTE_BASE + (53 * 16);
     pal_addr = S16_PALETTE_BASE + (72 * 16);
@@ -186,18 +186,18 @@ void OTiles::update_tilemaps(int8_t p)
 void OTiles::clear_tile_info()
 {
     // 1. Clear portion of RAM containing tilemap info (60F00 - 60F1F)
-    fg_h_scroll = 
-    bg_h_scroll = 
-    fg_v_scroll = 
+    fg_h_scroll =
+    bg_h_scroll =
+    fg_v_scroll =
     bg_v_scroll =   // +4 words
-    fg_psel = 
-    bg_psel = 
-    tilemap_v_scr = 
+    fg_psel =
+    bg_psel =
+    tilemap_v_scr =
     tilemap_h_scr = // +5 words
-    fg_v_tiles = 
-    bg_v_tiles = 
+    fg_v_tiles =
+    bg_v_tiles =
     tilemap_v_off = // +3 words
-    fg_addr = 
+    fg_addr =
     bg_addr = 0;    // +4 words
 
     // 2. Clear portion of TEXT RAM containing tilemap info (110E80 - 110FFF)
@@ -267,12 +267,12 @@ void OTiles::init_tilemap_props(uint16_t stage_id)
     bg_v_tiles    = roms.rom0p->read8(&addr);   // Write Default BG Tilemap Height
     fg_addr       = roms.rom0p->read32(&addr);  // Write Default FG Tilemap Address
     bg_addr       = roms.rom0p->read32(&addr);  // Write Default BG Tilemap Address
-    tilemap_v_off = roms.rom0p->read16(&addr);  // Set Tilemap v-scroll offset   
+    tilemap_v_off = roms.rom0p->read16(&addr);  // Set Tilemap v-scroll offset
 }
 
 
 // Copy Foreground Tiles
-// 
+//
 // - Initalise the foreground tilemap
 // - Uncompress the tilemap from ROM and place into Tile RAM
 // - The FG tilemap is defined by a 128x64 virtual name table, which is itself composed of four smaller 64x32 name tables.
@@ -305,7 +305,7 @@ void OTiles::copy_fg_tiles(uint32_t dst_addr)
                 {
                     uint16_t value = roms.rom0.read16(&src_addr); // tile index to copy
                     uint16_t count = roms.rom0.read16(&src_addr); // number of times to copy value
-                
+
                     // copy_compressed:
                     for (uint16_t i = 0; i <= count; i++)
                     {
@@ -336,7 +336,7 @@ void OTiles::copy_fg_tiles(uint32_t dst_addr)
 }
 
 // Copy Background Tiles
-// 
+//
 // Note, this is virtually the same as the foreground method,
 // aside from only copying 3 nametables, instead of 4.
 //
@@ -367,7 +367,7 @@ void OTiles::copy_bg_tiles(uint32_t dst_addr)
                 {
                     uint16_t value = roms.rom0.read16(&src_addr); // tile index to copy
                     uint16_t count = roms.rom0.read16(&src_addr); // number of times to copy value
-                
+
                     // copy_compressed:
                     for (uint16_t i = 0; i <= count; i++)
                     {
@@ -401,8 +401,8 @@ void OTiles::copy_bg_tiles(uint32_t dst_addr)
 void OTiles::scroll_tilemaps()
 {
     // Yes, OutRun contains a lot of crappy code. Return when car moving into start line
-    if (outrun.game_state != GS_BEST1 && 
-        outrun.game_state != GS_ATTRACT && 
+    if (outrun.game_state != GS_BEST1 &&
+        outrun.game_state != GS_ATTRACT &&
         outrun.game_state != GS_INGAME &&
         (outrun.game_state < GS_START1 || outrun.game_state > GS_INGAME)) // Added GS_START1 - 3 here for view enhancement code
     {
@@ -458,7 +458,7 @@ void OTiles::scroll_tilemaps()
 
     h_scroll_tilemaps();        // Set H-Scroll values for Tilemaps
 
-    // Denote road not splitting (used by UpdateFGPage and UpdateBGPage)    
+    // Denote road not splitting (used by UpdateFGPage and UpdateBGPage)
     if (oinitengine.rd_split_state == oinitengine.SPLIT_NONE)
         page_split = false;
 
@@ -512,7 +512,7 @@ void OTiles::clear_old_name_table()
 //
 // The first routine scrolls during the road-split, using a lookup table of predefined values.
 // The second routine scrolls during normal gameplay.
-// 
+//
 // Source: 0xDAA8
 
 void OTiles::h_scroll_tilemaps()
@@ -522,14 +522,14 @@ void OTiles::h_scroll_tilemaps()
     {
         // Road position is used as an offset into the table. (Note it's reset at beginning of road split)
         h_scroll_lookup = roms.rom0.read16(H_SCROLL_TABLE + ((oroad.road_pos >> 16) << 1));
-        
+
         int32_t tilemap_h_target = h_scroll_lookup << 5;
         tilemap_h_target <<= 16;
         int32_t tilemap_x = tilemap_h_target - (tilemap_h_scr << 5);
-        if (tilemap_x != 0) 
+        if (tilemap_x != 0)
         {
             tilemap_x >>= 8;
-            if (tilemap_x == 0) 
+            if (tilemap_x == 0)
                 tilemap_h_scr = (tilemap_h_scr & 0xFFFF) | (h_scroll_lookup << 16);
             else
                 tilemap_h_scr += tilemap_x;
@@ -544,31 +544,31 @@ void OTiles::h_scroll_tilemaps()
     else
     {
         // scroll_tilemap:
-        if (oinitengine.rd_split_state != OInitEngine::SPLIT_NONE && 
+        if (oinitengine.rd_split_state != OInitEngine::SPLIT_NONE &&
             oinitengine.rd_split_state <= 4) return;
 
         int32_t tilemap_h_target = (oroad.tilemap_h_target << 5) & 0xFFFF;
         tilemap_h_target <<= 16;
         int32_t tilemap_x = tilemap_h_target - (tilemap_h_scr << 5);
-        if (tilemap_x != 0) 
+        if (tilemap_x != 0)
         {
             tilemap_x >>= 8;
-            if (tilemap_x == 0) 
+            if (tilemap_x == 0)
                 tilemap_h_scr = (tilemap_h_scr & 0xFFFF) | (oroad.tilemap_h_target << 16);
             else
                 tilemap_h_scr += tilemap_x;
-        }   
+        }
         else
         {
             // DB1E
             tilemap_h_scr += (tilemap_x >> 8);
-        }   
+        }
     }
 }
 
 // V-Scroll Tilemap Code
 //
-// Scroll the tilemaps. 
+// Scroll the tilemaps.
 //
 // Inputs:
 // a6 = 0x60F00
@@ -607,11 +607,11 @@ void OTiles::update_fg_page()
         h = -h;
 
     fg_h_scroll = h;
-    
+
     // Choose Page 0 - 3
     int32_t rol7 = h << 7;
     h = ((rol7 >> 16) & 3) << 1;
-    
+
     uint8_t cur_stage = page_split ? page + 1 : page;
 
     cur_stage &= 1;
@@ -629,7 +629,7 @@ void OTiles::update_bg_page()
 
     h &= 0x7FF;
     h = (h + (h << 1)) >> 2;
-    
+
     bg_h_scroll = h;
 
     // Choose Page 0 - 3
@@ -652,7 +652,7 @@ void OTiles::init_next_tilemap()
     clear_name_tables = false;
     page_split = false;
     opalette.pal_manip_ctrl = 1; // Enable palette fade routines to transition between levels
-    
+
     switch (tilemap_setup & 1)
     {
         // Setup New Tilemaps

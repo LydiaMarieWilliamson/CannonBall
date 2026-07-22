@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------------
 # CannonBall Windows Setup
 #
-# Extra libraries are required to use OpenGLES on Windows. 
+# Extra libraries are required to use OpenGLES on Windows.
 # Quite a long install process.
 # Download & Compile Angle: https://opensource.google/projects/angle
 #

@@ -1,9 +1,9 @@
 /***************************************************************************
     Process Inputs.
-    
+
     - Read & Process inputs and controls.
     - Note, this class does not contain platform specific code.
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -34,7 +34,7 @@ public:
     int16_t steering_adjust;
     int16_t acc_adjust;
     int16_t brake_adjust;
-    
+
     // True = High Gear. False = Low Gear.
     bool gear;
 
@@ -78,7 +78,7 @@ private:
     const static uint8_t STEERING_MIN = 0x48;
     const static uint8_t STEERING_MAX = 0xB8;
     const static uint8_t STEERING_CENTRE = 0x80;
-    
+
     // Current steering value
     int16_t steering_old;
     int16_t steering_change;

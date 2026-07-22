@@ -1,15 +1,15 @@
 /***************************************************************************
     Level Object Logic
-    
+
     This class handles rendering most of the objects that comprise a typical
-    level. 
-    
-    - Configures rendering properties (co-ordinates, zoom etc.) 
+    level.
+
+    - Configures rendering properties (co-ordinates, zoom etc.)
     - Object specific logic, including collision checks & start lights etc.
 
     The original codebase contains a large amount of code duplication,
     much of which is duplicated here.
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -39,7 +39,7 @@ OLevelObjs::~OLevelObjs(void)
 void OLevelObjs::init_startline_sprites()
 {
     // Return if Music Selection Screen
-    if (outrun.game_state == GS_MUSIC) return; 
+    if (outrun.game_state == GS_MUSIC) return;
     init_entries(outrun.adr.sprite_def_props1, 0, DEF_SPRITE_ENTRIES);
 }
 
@@ -68,7 +68,7 @@ void OLevelObjs::init_entries(uint32_t a4, const uint8_t start_index, const uint
         sprite->pal_src    = roms.rom0p->read8(&a4);
         sprite->type       = roms.rom0p->read16(&a4);
         sprite->addr       = roms.rom0p->read32(outrun.adr.sprite_type_table + sprite->type);
-        sprite->xw1        = 
+        sprite->xw1        =
         sprite->xw2        = roms.rom0p->read16(&a4);
         sprite->yw         = roms.rom0p->read16(&a4);
 
@@ -112,7 +112,7 @@ void OLevelObjs::init_entries(uint32_t a4, const uint8_t start_index, const uint
         else if (i >= 48 && i <= 67)
             sprite->function_holder = 8; // SpriteNoCollisionZ2;
 
-        osprites.map_palette(sprite);    
+        osprites.map_palette(sprite);
     }
 }
 
@@ -143,7 +143,7 @@ void OLevelObjs::setup_sprites(uint32_t z)
 //
 // +0: [Byte] Bit 0 = H-Flip Sprite
 //            Bit 1 = Enable Shadows
-//            
+//
 //            Bits 4-7 = Routine Draw Number
 // +1: [Byte] Sprite X World Position
 // +2: [Word] Sprite Y World Position
@@ -159,19 +159,19 @@ void OLevelObjs::setup_sprite(oentry* sprite, uint32_t z)
     uint32_t addr = osprites.seg_spr_addr + osprites.seg_spr_offset1;
 
     // Set sprite x,y (world coordinates)
-    sprite->xw1     = 
+    sprite->xw1     =
     sprite->xw2     = READ8(addr + 1) << 4;
     sprite->yw      = READ16(addr + 2) << 7;
     sprite->type    = ((uint8_t) READ8 (addr + 5)) << 2;
     sprite->addr    = roms.rom0p->read32(outrun.adr.sprite_type_table + sprite->type);
     sprite->pal_src = (uint8_t) (READ8 (addr + 7));
-   
+
     osprites.map_palette(sprite);
 
     sprite->width = 0;
     sprite->reload = 0;
     sprite->z = z; // Set default zoom
-    
+
     if (READ8(addr + 0) & 1)
         sprite->control |= OSprites::HFLIP;
     else
@@ -202,7 +202,7 @@ void OLevelObjs::setup_sprite_routine(oentry* sprite)
             sprite->shadow = 7;
             sprite->draw_props |= 8; // x = anchor centre, y = anchor bottom
             break;
-        
+
         case 1: // Grass Sprite
         case 11:  // Stone Strips
             sprite->shadow = 7;
@@ -213,7 +213,7 @@ void OLevelObjs::setup_sprite_routine(oentry* sprite)
             break;
 
         // Overhead Clouds
-        case 2: 
+        case 2:
             sprite->shadow = 3;
             if (sprite->control & OSprites::HFLIP)
                 sprite->draw_props |= 0xA;
@@ -236,7 +236,7 @@ void OLevelObjs::setup_sprite_routine(oentry* sprite)
             else
                 sprite->draw_props |= 1; // anchor x left
             break;
-        
+
         case 4: // Sprite Lights
         case 5: // Checkpoint Bottom
         case 6: // Checkpoint Top
@@ -245,7 +245,7 @@ void OLevelObjs::setup_sprite_routine(oentry* sprite)
             sprite->shadow = 7;
             sprite->draw_props |= 8; // x = anchor centre, y = anchor bottom
             break;
-        
+
         // Draw From Top Left Collision Check
         case 7:
             sprite->shadow = 7;
@@ -264,7 +264,7 @@ void OLevelObjs::setup_sprite_routine(oentry* sprite)
             else
                 sprite->draw_props |= 1;
             break;
-    
+
         // Mini Tree
         case 12:
             sprite->shadow = 7;
@@ -319,7 +319,7 @@ void OLevelObjs::do_sprite_routine()
                 case 4:
                     sprite_lights(sprite);
                     break;
-                
+
                 // 5 - Checkpoint (Bottom Of Sign)
                 case 5:
                     set_spr_zoom_priority(sprite, 1);
@@ -362,7 +362,7 @@ void OLevelObjs::do_sprite_routine()
                 case 12:
                     sprite_minitree(sprite);
                     break;
-                
+
                 // Track Debris on Stage 3a
                 case 13:
                     sprite_debris(sprite);
@@ -395,7 +395,7 @@ void OLevelObjs::sprite_normal(oentry *sprite, uint8_t zoom)
     // First read collision offsets from table
     uint32_t offset_addr = SPRITE_X_OFFS + sprite->type;
     int16_t x1;
-    int16_t x2; 
+    int16_t x2;
 
     // H-Flip - swap x co-ordinates
     if (sprite->control & OSprites::HFLIP)
@@ -423,7 +423,7 @@ void OLevelObjs::sprite_normal(oentry *sprite, uint8_t zoom)
     set_spr_zoom_priority(sprite, zoom);
 }
 
-// Identical to sprite_normal, but calls the countdown routine at the end. 
+// Identical to sprite_normal, but calls the countdown routine at the end.
 //
 // Source: 0x4658
 void OLevelObjs::sprite_lights(oentry *sprite)
@@ -439,7 +439,7 @@ void OLevelObjs::sprite_lights(oentry *sprite)
     // First read collision offsets from table
     uint32_t offset_addr = SPRITE_X_OFFS + sprite->type;
     int16_t x1;
-    int16_t x2; 
+    int16_t x2;
 
     // H-Flip - swap x co-ordinates
     if (sprite->control & OSprites::HFLIP)
@@ -479,7 +479,7 @@ void OLevelObjs::sprite_lights_countdown(oentry *sprite)
         sprite->pal_src = (uint8_t) countdown_pal;
         osprites.map_palette(sprite);
     }
-    
+
     set_spr_zoom_priority(sprite, 1); // WIDE_ROAD must be set for this to work.
 }
 
@@ -500,7 +500,7 @@ void OLevelObjs::set_spr_zoom_priority(oentry *sprite, uint8_t zoom)
         return;
     }
     sprite->road_priority = z16;
-    sprite->priority = z16;        
+    sprite->priority = z16;
     sprite->zoom = z16 >> zoom;
 
     // Set Sprite Y Position [SCREEN]
@@ -520,14 +520,14 @@ void OLevelObjs::set_spr_zoom_priority(oentry *sprite, uint8_t zoom)
     //    Set Sprite X Position [SCREEN]
     //    1/ Use X Offset From Road Position [Screen]
     //    2/ Use Sprite X World Data
-    
+
     int16_t road_x = oroad.road0_h[z16];
     int16_t xw1 = sprite->xw1;
-   
+
     if (xw1 >= 0)
     {
         // Bit of a hack here to avoid code duplication
-        if (sprite->function_holder >= 4 && sprite->function_holder <= 6) 
+        if (sprite->function_holder >= 4 && sprite->function_holder <= 6)
             xw1 += (oroad.road_width >> 16) << 1;
         else
         {
@@ -545,7 +545,7 @@ void OLevelObjs::set_spr_zoom_priority(oentry *sprite, uint8_t zoom)
 // Seems to be identical to sprite_normal
 //
 // Source: 0x4828
-// 
+//
 // - Zoom Shift: 1
 // - Test For Collision
 void OLevelObjs::sprite_collision_z1c(oentry* sprite)
@@ -561,7 +561,7 @@ void OLevelObjs::sprite_collision_z1c(oentry* sprite)
     // First read collision offsets from table
     uint32_t offset_addr = SPRITE_X_OFFS + sprite->type;
     int16_t x1;
-    int16_t x2; 
+    int16_t x2;
 
     // H-Flip - swap x co-ordinates
     if (sprite-> control & OSprites::HFLIP)
@@ -594,9 +594,9 @@ void OLevelObjs::sprite_collision_z1c(oentry* sprite)
 }
 
 // Almost identical to set_spr_zoom_priority
-// 
-// Differences highlighted below. 
-// 
+//
+// Differences highlighted below.
+//
 // Set Sprite Priority To Other Sprites
 // Set Sprite Priority To Road
 // Set Index To Lookup Sprite Settings (Width/Height) From Zoom Value
@@ -614,7 +614,7 @@ void OLevelObjs::set_spr_zoom_priority2(oentry *sprite, uint8_t zoom)
         return;
     }
     sprite->road_priority = z16;
-    sprite->priority = z16;    
+    sprite->priority = z16;
     sprite->zoom = z16 >> zoom;
 
     // Code differs from below
@@ -692,11 +692,11 @@ void OLevelObjs::sprite_grass(oentry* sprite)
     do_thickness_sprite(sprite, outrun.adr.sprite_grass);
 }
 
-// Sprite: MiniTrees 
+// Sprite: MiniTrees
 //
 // - Rows of short tree/shrubs found on Stage 5
 // - Frame Changes Based On Current Y Position Of Sprite
-// 
+//
 // Note: This routine is very similar to do_thickness_sprites and can probably be refactored
 //
 // Source: 0x428A
@@ -712,9 +712,9 @@ void OLevelObjs::sprite_minitree(oentry* sprite)
         hide_sprite(sprite);
         return;
     }
-     
+
     sprite->road_priority = z16;
-    sprite->priority = z16;    
+    sprite->priority = z16;
 
     // 44c4
     int16_t road_x = oroad.road0_h[z16];
@@ -737,7 +737,7 @@ void OLevelObjs::sprite_minitree(oentry* sprite)
 
     uint16_t z = z16 >> 1;
 
-    if (z >= 0x80) 
+    if (z >= 0x80)
     {
         // don't choose a custom frame
         sprite->zoom = (uint8_t) z; // Set Entry Number For Zoom Lookup Table
@@ -761,7 +761,7 @@ void OLevelObjs::sprite_minitree(oentry* sprite)
     osprites.do_spr_order_shadows(sprite);
 }
 
-// Source: 
+// Source:
 void OLevelObjs::sprite_debris(oentry* sprite)
 {
     const uint8_t zoom = 2;
@@ -775,7 +775,7 @@ void OLevelObjs::sprite_debris(oentry* sprite)
     // First read collision offsets from table
     uint32_t offset_addr = SPRITE_X_OFFS + sprite->type;
     int16_t x1;
-    int16_t x2; 
+    int16_t x2;
 
     // H-Flip - swap x co-ordinates
     if (sprite->control & OSprites::HFLIP)
@@ -825,7 +825,7 @@ void OLevelObjs::sprite_clouds(oentry* sprite)
         hide_sprite(sprite);
         return;
     }
-     
+
     sprite->road_priority = z16;
     sprite->priority      = z16;
     sprite->y = -((z16 * oroad.horizon_y2) >> 9) + oroad.horizon_y2; // muls (two 16 bit values, 32 bit result)
@@ -835,7 +835,7 @@ void OLevelObjs::sprite_clouds(oentry* sprite)
     sprite->type = road_x;
     road_x -= type;
     type = (z16 >> 2);
-    
+
     if (type != 0)
     {
         //41b6
@@ -886,7 +886,7 @@ void OLevelObjs::sprite_clouds(oentry* sprite)
     }
     // end
     osprites.map_palette(sprite);
-    osprites.do_spr_order_shadows(sprite);  
+    osprites.do_spr_order_shadows(sprite);
 }
 
 void OLevelObjs::do_thickness_sprite(oentry* sprite, const uint32_t sprite_table_address)
@@ -900,9 +900,9 @@ void OLevelObjs::do_thickness_sprite(oentry* sprite, const uint32_t sprite_table
         hide_sprite(sprite);
         return;
     }
-     
+
     sprite->road_priority = z16;
-    sprite->priority = z16;    
+    sprite->priority = z16;
 
     // 44c4
     int16_t road_x = oroad.road0_h[z16];
@@ -927,7 +927,7 @@ void OLevelObjs::do_thickness_sprite(oentry* sprite, const uint32_t sprite_table
 
     uint16_t z = z16 >> 1;
 
-    if (z >= 0x80) 
+    if (z >= 0x80)
     {
         //use_large_frame (don't choose a custom frame)
         sprite->zoom = (uint8_t) z; // Set Entry Number For Zoom Lookup Table
@@ -948,11 +948,11 @@ void OLevelObjs::do_thickness_sprite(oentry* sprite, const uint32_t sprite_table
 // SpriteWideRocks
 // ---------------
 //
-// Note doesn't do same adjustment of y position using z 
+// Note doesn't do same adjustment of y position using z
 // Used for rocks on Stage 2 (rightmost route)
 //
 // Similar routine to SpriteCollisionZ1 (0x4048) but with additional width checks
-// 
+//
 // TODO: Merge with sprite_normal routine and then pass in the set_spr_zoom_priority_rocks routine as an argument
 //
 // Source: 0x492A
@@ -971,7 +971,7 @@ void OLevelObjs::sprite_rocks(oentry *sprite)
     // First read collision offsets from table
     uint32_t offset_addr = SPRITE_X_OFFS + sprite->type;
     int16_t x1;
-    int16_t x2; 
+    int16_t x2;
 
     // H-Flip - swap x co-ordinates
     if (sprite->control & OSprites::HFLIP)
@@ -1016,7 +1016,7 @@ void OLevelObjs::set_spr_zoom_priority_rocks(oentry *sprite, uint8_t zoom)
         return;
     }
     sprite->road_priority = z16;
-    sprite->priority = z16;        
+    sprite->priority = z16;
     sprite->zoom = z16 >> zoom;
 
     // Set Sprite Y Position [SCREEN]
@@ -1029,10 +1029,10 @@ void OLevelObjs::set_spr_zoom_priority_rocks(oentry *sprite, uint8_t zoom)
     //    Set Sprite X Position [SCREEN]
     //    1/ Use X Offset From Road Position [Screen]
     //    2/ Use Sprite X World Data
-    
+
     int16_t road_x = oroad.road0_h[z16];
     int16_t xw1 = sprite->xw1;
-   
+
     if (xw1 >= 0 && (sprite->control & OSprites::WIDE_ROAD) == 0)
     {
         xw1 +=  ((int16_t) (oroad.road_width >> 16)) << 1;

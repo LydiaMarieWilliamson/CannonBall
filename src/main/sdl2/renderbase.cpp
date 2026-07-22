@@ -18,8 +18,8 @@ bool RenderBase::sdl_screen_size()
     {
 	    SDL_DisplayMode info;
 	    SDL_GetCurrentDisplayMode(0, &info);
-        
-        orig_width  = info.w; 
+
+        orig_width  = info.w;
         orig_height = info.h;
     }
 
@@ -46,7 +46,7 @@ void RenderBase::convert_palette(uint32_t adr, uint32_t r1, uint32_t g1, uint32_
     r = r1 * shadow_multi / 31;
     g = g1 * shadow_multi / 31;
     b = b1 * shadow_multi / 31;
-        
+
     rgb[adr + S16_PALETTE_ENTRIES] = CURRENT_RGB(); // Add to the end of the array
 
     // Highlight colour code would be added here, but unused.

@@ -1,7 +1,7 @@
 /***************************************************************************
     Time Trial Mode Front End.
 
-    This file is part of Cannonball. 
+    This file is part of Cannonball.
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/

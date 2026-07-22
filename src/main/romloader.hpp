@@ -1,6 +1,6 @@
 /***************************************************************************
-    Binary File Loader. 
-    
+    Binary File Loader.
+
     Handles loading an individual binary file to memory.
     Supports reading bytes, words and longs from this area of memory.
 
@@ -39,7 +39,7 @@ public:
     // ----------------------------------------------------------------------------
 
     inline uint32_t read32(uint32_t* addr)
-    {    
+    {
         uint32_t data = (rom[*addr] << 24) | (rom[*addr+1] << 16) | (rom[*addr+2] << 8) | (rom[*addr+3]);
         *addr += 4;
         return data;
@@ -54,11 +54,11 @@ public:
 
     inline uint8_t read8(uint32_t* addr)
     {
-        return rom[(*addr)++]; 
+        return rom[(*addr)++];
     }
 
     inline uint32_t read32(uint32_t addr)
-    {    
+    {
         return (rom[addr] << 24) | (rom[addr+1] << 16) | (rom[addr+2] << 8) | rom[addr+3];
     }
 
@@ -86,7 +86,7 @@ public:
 
     inline uint8_t read8(uint16_t* addr)
     {
-        return rom[(*addr)++]; 
+        return rom[(*addr)++];
     }
 
     inline uint16_t read16(uint16_t addr)

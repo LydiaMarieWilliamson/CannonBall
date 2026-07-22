@@ -92,14 +92,14 @@ bool Render::init(int src_width, int src_height,
 
     // Create the window and rendering context: no longer setting video mode on SDL2.
     surface = SDL_CreateRGBSurface(0, 0, 0, 32, 0, 0, 0, 0);
-    
+
     if (!surface) {
 	    std::cerr << "Can't create rendering memory surface: " << SDL_GetError() << std::endl;
 	    return false;
     }
 
     SDL_ShowCursor(SDL_DISABLE);
-    
+
     // scn_* values will be ignored if we pass any of the FULLSCREEN flags, as expected.
     // So these are here just for the windowed modes, and ignored otherwise.
     window = SDL_CreateWindow(
@@ -249,7 +249,7 @@ void Render::disable()
 
     // Deinit SDL2 GL context
     SDL_DestroyWindow(window);
-    SDL_GL_DeleteContext(glcontext); 
+    SDL_GL_DeleteContext(glcontext);
 }
 
 bool Render::start_frame()

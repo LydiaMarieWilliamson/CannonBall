@@ -1,18 +1,18 @@
 /***************************************************************************
     Ferrari Rendering & Handling Code.
-       
-    Much of the handling code is very messy. As such, the translated code 
+
+    Much of the handling code is very messy. As such, the translated code
     isn't great as I tried to focus on accuracy rather than refactoring.
-    
+
     A good example of the randomness is a routine I've named
       do_sound_score_slip()
     which performs everything from updating the score, setting the audio
     engine tone, triggering smoke effects etc. in an interwoven fashion.
-    
+
     The Ferrari sprite has different properties to other game objects
     As there's only one of them, I've rolled the additional variables into
-    this class. 
-    
+    this class.
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -66,20 +66,20 @@ public:
 
         // Tick In-Game Logic
         FERRARI_LOGIC = 3,
-        
+
         // Ferrari End Sequence Logic
         FERRARI_END_SEQ = 4,
     };
 
     // Which routine is in use
-    uint8_t state; 
+    uint8_t state;
 
     // Unused counter. Implemented on original game so could be useful for debug.
     uint16_t counter;
 
     int16_t steering_old;
     bool car_ctrl_active;
-    
+
     // Car State
     //
     // -1 = Animation Sequence (Crash / Drive In)
@@ -100,8 +100,8 @@ public:
     //
     // Increments between the values
     //
-    // Gets set based on what gear we're in 
-    uint8_t torque_index; 
+    // Gets set based on what gear we're in
+    uint8_t torque_index;
     int16_t torque;
     int32_t revs;
 
@@ -159,7 +159,7 @@ public:
     // This is used to adjust the rev boost when returning to game
     int16_t rev_stop_flag;
 
-    // Rev boost when we switch back to ingame engine and hand user control. 
+    // Rev boost when we switch back to ingame engine and hand user control.
     // Set by user being on revs before initialization.
     int16_t revs_post_stop;
 
@@ -189,7 +189,7 @@ public:
 
     // *28 [Word] AI Steering Adjustment
     int16_t sprite_ai_steer;
-    
+
     // *2A [Word] Car X Position Backup
     int16_t sprite_car_x_bak;
 
@@ -227,7 +227,7 @@ public:
     void do_sound_score_slip();
     void shake();
     void do_skid();
-    
+
 private:
     // Max speed of car
     const static uint32_t MAX_SPEED = 0x1260000;
@@ -244,7 +244,7 @@ private:
 	// -------------------------------------------------------------------------
 	// Controls
 	// -------------------------------------------------------------------------
-    
+
     int16_t accel_value;
     int16_t accel_value_bak;
     int16_t brake_value;
@@ -269,7 +269,7 @@ private:
 
     // Previous rev adjustment (stored)
     int32_t rev_adjust;
-    
+
 	// -------------------------------------------------------------------------
 	// Smoke
 	// -------------------------------------------------------------------------

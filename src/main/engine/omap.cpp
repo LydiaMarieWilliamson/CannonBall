@@ -1,13 +1,13 @@
 /***************************************************************************
-    Course Map Logic & Rendering. 
-    
-    This is the full-screen map that is displayed at the end of the game. 
-    
+    Course Map Logic & Rendering.
+
+    This is the full-screen map that is displayed at the end of the game.
+
     The logo is built from multiple sprite components.
-    
-    The course map itself is made up of sprites and pieced together. 
+
+    The course map itself is made up of sprites and pieced together.
     It's not a tilemap.
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -98,7 +98,7 @@ void OMap::tick()
                     uint16_t route_info = ostats.routes[1 + map_stage1];
                     if (route_info)
                     {
-                        map_route = roms.rom0.read8(MAP_ROUTE_LOOKUP + route_info);                      
+                        map_route = roms.rom0.read8(MAP_ROUTE_LOOKUP + route_info);
                     }
                     else
                     {
@@ -116,17 +116,17 @@ void OMap::tick()
                 }
             }
             break;
-        
+
         // Do Final Segment Of Route [Car still moving]
         case MAP_ROUTE_FINAL:
             do_route_final();
             break;
 
-        // Route Concluded       
+        // Route Concluded
         case MAP_ROUTE_DONE:
             end_route();
             break;
-        
+
         // Init Delay Counter For Map Display
         case MAP_INIT_DELAY:
             init_map_delay();
@@ -137,7 +137,7 @@ void OMap::tick()
             map_display();
             break;
 
-        // Clear Course Map        
+        // Clear Course Map
         case MAP_CLEAR:
             outrun.init_best_outrunners();
             return;
@@ -208,9 +208,9 @@ void OMap::position_ferrari(uint8_t index)
 }
 
 // Initalize Course Map Sprites
-// 
+//
 // Notes: Index 26 is start of water that needs to be changed for widescreen
-// 
+//
 // Source: 0x33F4
 void OMap::load_sprites()
 {
@@ -240,8 +240,8 @@ void OMap::load_sprites()
         sprite->x          = roms.rom0p->read16(&adr);
         sprite->y          = roms.rom0p->read16(&adr);
         sprite->addr       = roms.rom0p->read32(&adr);
-        sprite->counter    = 0;  
-        
+        sprite->counter    = 0;
+
         adr += 4; // throw this address away
 
         osprites.map_palette(sprite);
@@ -271,7 +271,7 @@ void OMap::do_route_final()
 {
     int16_t pos = oroad.road_pos >> 16;
     if (oinitengine.rd_split_state)
-        pos += 0x79C;   
+        pos += 0x79C;
 
     pos = (pos * 0x1B) / 0x94D;
     map_pos_final = pos;
@@ -368,7 +368,7 @@ void OMap::move_mini_car(oentry* sprite)
     {
         // Remember that the minimap is angled, so we still need to adjust both the x and y positions
         uint32_t movement_table = (map_route & 1) ? MAP_MOVEMENT_RIGHT : MAP_MOVEMENT_LEFT;
-        
+
         int16_t pos = (map_stage1 < 4) ? map_pos : map_pos >> 1;
         pos <<= 1; // do not try to merge with previous line
 

@@ -1,7 +1,7 @@
 /***************************************************************************
     Time Trial Mode Front End.
 
-    This file is part of Cannonball. 
+    This file is part of Cannonball.
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -19,13 +19,13 @@
 
 // Track Selection: Ferrari Position Per Track
 // This is a link to a sprite object that represents part of the course map.
-static const uint8_t FERRARI_POS[] = 
+static const uint8_t FERRARI_POS[] =
 {
     1,5,3,11,9,7,19,17,15,13,24,23,22,21,20
 };
 
-// Map Stage Number to Internal Lookup 
-static const uint8_t STAGE_LOOKUP[] = 
+// Map Stage Number to Internal Lookup
+static const uint8_t STAGE_LOOKUP[] =
 {
     0x00,
     0x09, 0x08,

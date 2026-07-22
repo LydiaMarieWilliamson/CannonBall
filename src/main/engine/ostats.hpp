@@ -4,7 +4,7 @@
     - Route Info
     - Speed to Score Conversion
     - Bonus Time Increment
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -23,8 +23,8 @@ public:
     // 3    = Stage 4
     // 4    = Stage 5
     // -1   = Bonus Points Section
-    //                  
-    // A good way to quickly see the end sequence is to set this to '4' and play 
+    //
+    // A good way to quickly see the end sequence is to set this to '4' and play
     // through the first level.
     int8_t cur_stage;
 
@@ -33,7 +33,7 @@ public:
 
     // Store info on the route taken by the player
     //
-    // +10 For each stage. 
+    // +10 For each stage.
     //
     // Then increment by the following when Left Hand route selected at each stage.
     //
@@ -48,13 +48,13 @@ public:
 
     // Stores route_info for each stage. Used by course map screen
     // First entry stores upcoming stage number
-    uint16_t routes[0x8]; 
+    uint16_t routes[0x8];
 
     // Frame Counter Reset/Load Value.
     // Load frame counter with this value when the counter has decremented and expired.
     // Note: Values stored and used in hex.
     int16_t frame_counter;
-    const static int16_t frame_reset = 30; 
+    const static int16_t frame_reset = 30;
 
     // Time Counter (Frames). Counts downwards from 30.
     // Used in correspondence with 0x60860.

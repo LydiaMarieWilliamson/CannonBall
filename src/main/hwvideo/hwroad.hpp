@@ -16,7 +16,7 @@ public:
     void write_road_control(const uint8_t);
     void (HWRoad::*render_background)(uint16_t*);
     void (HWRoad::*render_foreground)(uint16_t*);
-  
+
 private:
     uint8_t road_control;
     uint16_t color_offset1;

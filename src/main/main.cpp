@@ -1,6 +1,6 @@
 /***************************************************************************
     Cannonball Main Entry Point.
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -146,7 +146,7 @@ static void tick()
         oinputs.tick();           // Do Controls
         oinputs.do_gear();        // Digital Gear
     }
-     
+
     switch (state)
     {
         case STATE_GAME:
@@ -165,7 +165,7 @@ static void tick()
                 osoundint.tick();
             }
             else
-            {                
+            {
                 if (tick_frame) input.frame_done();
             }
         }
@@ -233,14 +233,14 @@ static void main_loop()
 
         // Fill SDL Audio Buffer For Callback
         audio.tick();
-        
+
         // Calculate Timings. Cap Frame Rate. Note this might be trumped by V-Sync
         if (!vsync)
         {
             deltatime += (frame_ms * audio.adjust_speed());
             deltaintegral = (int)deltatime;
             t = frame_time.get_ticks();
-            
+
             if (t < deltatime)
                 SDL_Delay((Uint32)(deltatime - t));
 
@@ -291,7 +291,7 @@ static bool parse_command_line(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
-    // Parse command line arguments (config file location, LayOut data) 
+    // Parse command line arguments (config file location, LayOut data)
     bool ok = parse_command_line(argc, argv);
 
     if (ok)
@@ -332,12 +332,12 @@ int main(int argc, char* argv[])
 
     // Initalize SDL Controls
     input.init(config.controls.pad_id,
-               config.controls.keyconfig, config.controls.padconfig, 
+               config.controls.keyconfig, config.controls.padconfig,
                config.controls.analog,    config.controls.axis, config.controls.invert, config.controls.asettings);
 
-    if (config.controls.haptic) 
+    if (config.controls.haptic)
         config.controls.haptic = forcefeedback::init(config.controls.max_force, config.controls.min_force, config.controls.force_duration);
-        
+
     // Populate menus
     menu = new Menu();
     menu->populate();

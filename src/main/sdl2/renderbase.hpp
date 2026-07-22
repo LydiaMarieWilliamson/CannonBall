@@ -11,7 +11,7 @@ class RenderBase
 public:
     RenderBase();
 
-    virtual bool init(int src_width, int src_height, 
+    virtual bool init(int src_width, int src_height,
                       int scale,
                       int video_mode,
                       int scanlines)          = 0;
@@ -36,12 +36,12 @@ protected:
     uint16_t orig_width, orig_height;
 
     // --------------------------------------------------------------------------------------------
-    // Screen setup properties. Example below: 
+    // Screen setup properties. Example below:
     // ________________________
     // |  |                |  | <- screen size      (e.g. 1280 x 720)
     // |  |                |  |
     // |  |                |<-|--- destination size (e.g. 1027 x 720) to maintain aspect ratio
-    // |  |                |  | 
+    // |  |                |  |
     // |  |                |  |    source size      (e.g. 320  x 224) System 16 proportions
     // |__|________________|__|
     //
@@ -53,7 +53,7 @@ protected:
     // Destination window width and height
     int dst_width, dst_height;
 
-    // Screen width and height 
+    // Screen width and height
     int scn_width, scn_height;
 
     // Full-Screen, Stretch, Window

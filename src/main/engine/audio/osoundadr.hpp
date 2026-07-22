@@ -1,12 +1,12 @@
 /***************************************************************************
-    Z80 Program Code Addresses. 
+    Z80 Program Code Addresses.
     Addresses to data within the Z80 Program ROM.
-    
+
     These are typically large blocks of data that we don't want to include
-    in the codebase. 
-    
+    in the codebase.
+
     For example the music tracks are stored and referenced here.
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/

@@ -58,7 +58,7 @@ const char* vertex_shader_scanlines =
 
 	"vec4 _oPosition1;"
 	"vec4 _r0006;"
-	 
+
 	"void main()"
 	"{"
 	"    vec2 _oTex;"
@@ -149,7 +149,7 @@ void Render::disable()
 
     // Deinit SDL2 EGL context
     SDL_DestroyWindow(window);
-    SDL_GL_DeleteContext(glcontext);   
+    SDL_GL_DeleteContext(glcontext);
 }
 
 bool Render::init(int src_width, int src_height,
@@ -188,7 +188,7 @@ bool Render::init(int src_width, int src_height,
         SDL_FreeSurface(surface);
 
     surface = SDL_CreateRGBSurface(0, 0, 0, 32, 0, 0, 0, 0);
-    
+
     if (!surface) {
 	    std::cerr << "Can't create rendering memory surface: " << SDL_GetError() << std::endl;
 	    return false;
@@ -197,7 +197,7 @@ bool Render::init(int src_width, int src_height,
 
 	// GL_ES only supports full screen mode
 	// Calculate how much to scale screen from its original resolution
-	
+
 	// Full Screen Mode
 	if (video_mode == video_settings_t::MODE_FULL)
 	{
@@ -231,7 +231,7 @@ bool Render::init(int src_width, int src_height,
 		screen_xoff = 0;
 		screen_yoff = 0;
 	}
-   
+
     // The src and scn dimensions are only needed for the scanlines shaders
     gles2_init_shaders(src_width, src_height, scn_width, scn_height, scanlines);
 
@@ -269,17 +269,17 @@ bool Render::init(int src_width, int src_height,
 		src_width, src_height, 0,
 		GL_BGRA_EXT, GL_UNSIGNED_BYTE,
 		NULL); SHOW_ERROR
-  
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear screen and depth buffer
-    
+
     glActiveTexture(GL_TEXTURE0); SHOW_ERROR
-    
+
     // Leave screen texture binded so it's like that when we arrive to draw_frame so we save this call.
     glBindTexture(GL_TEXTURE_2D, texture); SHOW_ERROR
 
     // ---------- GL geometry setup  ------------------
 
-    GLfloat uvs[8];   
+    GLfloat uvs[8];
     GLfloat proj[4][4];
 
     // Setup texture coordinates
@@ -321,13 +321,13 @@ bool Render::init(int src_width, int src_height,
 
     // Set the projection matrix
     SetOrtho(proj, -0.5f, +0.5f, +0.5f, -0.5f, -1.0f, 1.0f, 1, 1);
-    
+
     // Upload the projection matrix to the shader
     glUniformMatrix4fv(shader.u_vp_matrix, 1, GL_FALSE, &proj[0][0]); SHOW_ERROR
-   
+
     // We leave the element array buffer binded so it's binded when we arrive to gles2_draw() on each frame.
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[2]); SHOW_ERROR
- 
+
     return true;
 }
 
@@ -342,12 +342,12 @@ void gles_show_error()
 
 void Render::gles2_init_shaders (unsigned texture_width, unsigned texture_height,
 	unsigned output_width, unsigned output_height, int scanlines) {
-	
+
 	memset(&shader, 0, sizeof(__ShaderInfo));
 
 	// Load custom shaders
    	float input_size[2], output_size[2], texture_size[2];
-	
+
 	if (scanlines)
 		shader.program = CreateProgram(vertex_shader_scanlines, fragment_shader_scanlines);
 	else
@@ -358,7 +358,7 @@ void Render::gles2_init_shaders (unsigned texture_width, unsigned texture_height
 		shader.u_vp_matrix   = glGetUniformLocation(shader.program, "MVPMatrix");
   	 	shader.a_texcoord    = glGetAttribLocation(shader.program, "TexCoord");
 		shader.a_position    = glGetAttribLocation(shader.program, "VertexCoord");
-		
+
 		if (scanlines) {
 			shader.input_size    = glGetUniformLocation(shader.program, "InputSize");
 			shader.output_size   = glGetUniformLocation(shader.program, "OutputSize");
@@ -371,12 +371,12 @@ void Render::gles2_init_shaders (unsigned texture_width, unsigned texture_height
 			texture_size[1] = (float) texture_height;
 		}
 	}
-	else	
+	else
 		exit(0);
 
 	glUseProgram(shader.program); SHOW_ERROR
 
-	if (scanlines) 
+	if (scanlines)
 	{
 		glUniform2fv(shader.input_size, 1, input_size);
 		glUniform2fv(shader.output_size, 1, output_size);
@@ -495,9 +495,9 @@ void Render::draw_frame(uint16_t* pixels)
             GL_BGRA_EXT,                               // format of pixel data
             GL_UNSIGNED_BYTE,               	       // data type of pixel data
             screen_pixels);                            // pointer in image memory
-    
+
     glDrawElements(GL_TRIANGLES, kIndexCount, GL_UNSIGNED_SHORT, 0); SHOW_ERROR
-   
+
     // We pageflip the SDL2 EGL context here
     SDL_GL_SwapWindow(window);
 }

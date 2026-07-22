@@ -39,7 +39,7 @@ endif(TARGET)
 # -----------------------------------------------------------------------------
 # Project Source Files
 # -----------------------------------------------------------------------------
-    
+
 set(src_main
     "${main_cpp_base}/globals.hpp"
     "${main_cpp_base}/romloader.hpp"
@@ -81,12 +81,12 @@ set(src_hwvideo
     "${main_cpp_base}/hwvideo/hwsprites.cpp"
     "${main_cpp_base}/hwvideo/hwtiles.cpp"
     )
-    
+
 set(src_hwaudio
     "${main_cpp_base}/hwaudio/segapcm.hpp"
     "${main_cpp_base}/hwaudio/soundchip.hpp"
     "${main_cpp_base}/hwaudio/ym2151.hpp"
-    
+
     "${main_cpp_base}/hwaudio/segapcm.cpp"
     "${main_cpp_base}/hwaudio/soundchip.cpp"
     "${main_cpp_base}/hwaudio/ym2151.cpp"
@@ -103,7 +103,7 @@ set(src_sdl
 	"${main_cpp_base}/sdl2/input.cpp"
 	"${main_cpp_base}/sdl2/renderbase.cpp"
     )
-   
+
 if(OPENGL)
 	set(src_render
 	    "${main_cpp_base}/sdl2/rendergl.hpp"
@@ -113,7 +113,7 @@ elseif(OPENGLES)
 	set(src_render
 	    "${main_cpp_base}/sdl2/rendergles.hpp"
 	    "${main_cpp_base}/sdl2/rendergles.cpp"
-	)   
+	)
 else()
 	set(src_render
 	    "${main_cpp_base}/sdl2/rendersurface.hpp"
@@ -272,16 +272,16 @@ target_link_libraries(cannonball
 # Copy useful files to build destination
 # -----------------------------------------------------------------------------
 
-configure_file(../res/config.xml ./config.xml 
+configure_file(../res/config.xml ./config.xml
     COPYONLY
 )
 
 configure_file(../res/tilemap.bin ./res/tilemap.bin
-    COPYONLY 
+    COPYONLY
 )
 configure_file(../res/tilepatch.bin ./res/tilepatch.bin
-    COPYONLY 
+    COPYONLY
 )
 configure_file(../res/gamecontrollerdb.txt ./res/gamecontrollerdb.txt
-    COPYONLY 
+    COPYONLY
 )

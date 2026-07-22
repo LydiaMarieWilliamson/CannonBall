@@ -1,6 +1,6 @@
 /***************************************************************************
     Hardware Sprites.
-    
+
     This class stores sprites in the converted format expected by the
     OutRun graphics hardware.
 

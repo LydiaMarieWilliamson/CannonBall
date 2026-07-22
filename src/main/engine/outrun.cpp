@@ -37,9 +37,9 @@ Outrun outrun;
     Known Core Engine Issues:
 
     - Road split. Minor bug on positioning traffic on correct side of screen for one frame or so at the point of split.
-      Most noticeable in 60fps mode. 
+      Most noticeable in 60fps mode.
       The Dreamcast version exhibits a bug where the road renders on the wrong side of the screen for one frame at this point.
-      The original version (and Cannonball) has a problem where the cars face the wrong direction for one frame. 
+      The original version (and Cannonball) has a problem where the cars face the wrong direction for one frame.
 
     Bugs Present In Original 1986 Release:
 
@@ -96,7 +96,7 @@ void Outrun::boot()
     // Initialize default hi-score entries
     ohiscore.init_def_scores();
     // Load saved hi-score entries
-    config.load_scores(cannonball_mode == Outrun::MODE_ORIGINAL);        
+    config.load_scores(cannonball_mode == Outrun::MODE_ORIGINAL);
     ostats.init(cannonball_mode == MODE_TTRIAL);
     init_jump_table();
     oinitengine.init(cannonball_mode == MODE_TTRIAL ? ttrial.level : 0);
@@ -107,7 +107,7 @@ void Outrun::boot()
 void Outrun::tick(bool tick_frame)
 {
     this->tick_frame = tick_frame;
-    
+
     if (tick_frame)
     {
         tick_counter++;
@@ -129,8 +129,8 @@ void Outrun::tick(bool tick_frame)
     // The timing here isn't perfect, as normally the road CPU would run in parallel with the main CPU.
     // We can potentially hack this by calling the road CPU twice.
     // Most noticeable with clipping sprites on hills.
-      
-    // 30 FPS 
+
+    // 30 FPS
     // Updates Game Logic 1/2 frames
     // Updates V-Blank 1/2 frames
     if (config.fps == 30 && config.tick_fps == 30)
@@ -152,7 +152,7 @@ void Outrun::tick(bool tick_frame)
         }
         vint();
     }
-    // 60 FPS. Smooth Mode. 
+    // 60 FPS. Smooth Mode.
     // Updates Game Logic 1/1 frames
     // Updates V-Blank 1/1 frames
     else
@@ -201,7 +201,7 @@ void Outrun::jump_table()
         case GS_REINIT:
         case GS_CALIBRATE_MOTOR:
             break;
- 
+
         // ----------------------------------------------------------------------------------------
         // Couse Map Specific Code
         // ----------------------------------------------------------------------------------------
@@ -247,7 +247,7 @@ void Outrun::jump_table()
         case GS_ATTRACT:
         case GS_BEST1:
             if (tick_frame) check_freeplay_start();
-        
+
         default:
             if (tick_frame) osprites.tick();                // Address #3 Jump_SetupSprites
             olevelobjs.do_sprite_routine();                 // replaces calling each sprite individually
@@ -304,10 +304,10 @@ void Outrun::main_switch()
 {
     switch (game_state)
     {
-        case GS_INIT:  
+        case GS_INIT:
             init_attract();
             // fall through
-            
+
         // ----------------------------------------------------------------------------------------
         // Attract Mode
         // ----------------------------------------------------------------------------------------
@@ -402,7 +402,7 @@ void Outrun::main_switch()
             osoundint.queue_sound(sound::VOICE_GETREADY);
             osoundint.queue_sound(sound::REVS);             // Moved from Z80 Code for extra flexibility
             omusic.play_music();
-            
+
             if (!freeze_timer)
                 ostats.time_counter = ostats.TIME[config.engine.dip_time * 40]; // Set time to begin level with
             else
@@ -602,7 +602,7 @@ void Outrun::main_switch()
                 if (oinitengine.camera_x_off < 0)
                     fork_chosen = -1;
                 else
-                    fork_chosen = 1;        
+                    fork_chosen = 1;
             }
         }
         else if (fork_chosen)
@@ -611,16 +611,16 @@ void Outrun::main_switch()
         // Hack to allow user to choose road fork with left/right
         if (fork_chosen == -1)
         {
-            oroad.road_width_bak = oroad.road_width >> 16; 
-            oroad.car_x_bak = -oroad.road_width_bak; 
+            oroad.road_width_bak = oroad.road_width >> 16;
+            oroad.car_x_bak = -oroad.road_width_bak;
             oinitengine.car_x_pos = oroad.car_x_bak;
         }
         else
         {
-            oroad.road_width_bak = oroad.road_width >> 16; 
-            oroad.car_x_bak = oroad.road_width_bak; 
+            oroad.road_width_bak = oroad.road_width >> 16;
+            oroad.car_x_bak = oroad.road_width_bak;
             oinitengine.car_x_pos = oroad.car_x_bak;
-        } 
+        }
     }
 }
 
@@ -637,7 +637,7 @@ void Outrun::main_switch()
 // ...
 // Long x: Address x
 //
-// Each address in the jump table is a pointer into ROM containing 0x1F words 
+// Each address in the jump table is a pointer into ROM containing 0x1F words
 // of info (so info is at 0x40 boundary in bytes)
 //
 // RAM Format[0x61800]
@@ -651,7 +651,7 @@ void Outrun::init_jump_table()
     car_inc_bak = 0;
 
     osprites.init();
-    if (cannonball_mode != MODE_TTRIAL) 
+    if (cannonball_mode != MODE_TTRIAL)
     {
         otraffic.init_stage1_traffic();      // Hard coded traffic in right hand lane
         if (trackloader.display_start_line)
@@ -675,7 +675,7 @@ void Outrun::init_jump_table()
 
 // -------------------------------------------------------------------------------
 // Decrement Game Time
-// 
+//
 // Decrements Frame Count, and Overall Time Counter
 //
 // Returns true if timer expired.

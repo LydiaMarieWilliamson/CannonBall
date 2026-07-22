@@ -27,7 +27,7 @@ private:
     static const uint16_t COLOR_BASE = 0x800;
 
     uint32_t sprites[SPRITES_LENGTH]; // Converted sprites
-    
+
     // Two halves of RAM
     uint16_t ram[SPRITE_RAM_SIZE];
     uint16_t ramBuff[SPRITE_RAM_SIZE];

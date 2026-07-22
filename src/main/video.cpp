@@ -1,6 +1,6 @@
 /***************************************************************************
-    Video Rendering. 
-    
+    Video Rendering.
+
     - Renders the System 16 Video Layers
     - Handles Reads and Writes to these layers from the main game code
     - Interfaces with platform specific rendering code
@@ -57,7 +57,7 @@ int Video::init(Roms* roms, video_settings_t* settings)
 
     // Convert S16 tiles to a more useable format
     tile_layer->init(roms->tiles.rom, config.video.hires != 0);
-    
+
     clear_tile_ram();
     clear_text_ram();
     if (roms->tiles.rom)
@@ -132,19 +132,19 @@ int Video::set_video_mode(video_settings_t* settings)
 }
 
 // --------------------------------------------------------------------------------------------
-// Shadow Colours. 
+// Shadow Colours.
 // 63% Intensity is the correct value derived from hardware as follows:
 //
 // 1/ Shadows are just an extra 220 ohm resistor that goes to ground when enabled.
-// 2/ This is in parallel with the resistor-"DAC" (3.9k, 2k, 1k, 0.5k, 0.25k), 
+// 2/ This is in parallel with the resistor-"DAC" (3.9k, 2k, 1k, 0.5k, 0.25k),
 //    and otherwise left floating.
 //
 // Static calculation example:
-// 
-// const float rDAC   = 1.f / (1.f/3900.f + 1.f/2000.f + 1.f/1000.f + 1.f/500.f + 1.f/250.f); 
-// const float rShade = 220.f;                                                             
+//
+// const float rDAC   = 1.f / (1.f/3900.f + 1.f/2000.f + 1.f/1000.f + 1.f/500.f + 1.f/250.f);
+// const float rShade = 220.f;
 // const float shadeAttenuation = rShade / (rShade + rDAC); // 0.63f
-// 
+//
 // (MAME uses an incorrect value which is closer to 78% Intensity)
 // --------------------------------------------------------------------------------------------
 
@@ -262,7 +262,7 @@ void Video::clear_tile_ram()
 void Video::write_tile8(uint32_t addr, const uint8_t data)
 {
     tile_layer->tile_ram[addr & 0xFFFF] = data;
-} 
+}
 
 void Video::write_tile16(uint32_t* addr, const uint16_t data)
 {
@@ -276,7 +276,7 @@ void Video::write_tile16(uint32_t addr, const uint16_t data)
 {
     tile_layer->tile_ram[addr & 0xFFFF] = (data >> 8) & 0xFF;
     tile_layer->tile_ram[(addr+1) & 0xFFFF] = data & 0xFF;
-}   
+}
 
 void Video::write_tile32(uint32_t* addr, const uint32_t data)
 {
@@ -324,7 +324,7 @@ void Video::write_pal8(uint32_t* palAddr, const uint8_t data)
 }
 
 void Video::write_pal16(uint32_t* palAddr, const uint16_t data)
-{    
+{
     uint32_t adr = *palAddr & 0x1fff;
     palette[adr]   = (data >> 8) & 0xFF;
     palette[adr+1] = data & 0xFF;
@@ -333,7 +333,7 @@ void Video::write_pal16(uint32_t* palAddr, const uint16_t data)
 }
 
 void Video::write_pal32(uint32_t* palAddr, const uint32_t data)
-{    
+{
     uint32_t adr = *palAddr & 0x1fff;
 
     palette[adr]   = (data >> 24) & 0xFF;
@@ -348,7 +348,7 @@ void Video::write_pal32(uint32_t* palAddr, const uint32_t data)
 }
 
 void Video::write_pal32(uint32_t adr, const uint32_t data)
-{    
+{
     adr &= 0x1fff;
 
     palette[adr]   = (data >> 24) & 0xFF;

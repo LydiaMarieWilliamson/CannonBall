@@ -1,6 +1,6 @@
 /***************************************************************************
-    SDL2 Hardware Surface Video Rendering.  
-    
+    SDL2 Hardware Surface Video Rendering.
+
     Known Bugs:
     - Missing Scanlines
 
@@ -42,10 +42,10 @@ bool Render::init(int src_width, int src_height,
     // will do that for us, using the rects passed to SDL_RenderCopy().
     // scn_* -> physical screen dimensions OR window dimensions. On FULLSCREEN MODE it has the physical screen
     //		dimensions and in windowed mode it has the window dimensions.
-    // src_* -> real, internal, frame dimensions. Will ALWAYS be 320 or 398 x 224. NEVER CHANGES. 
+    // src_* -> real, internal, frame dimensions. Will ALWAYS be 320 or 398 x 224. NEVER CHANGES.
     // corrected_scn_width_* -> output screen size for scaling.
-    // In windowed mode it's the size of the window. 
-   
+    // In windowed mode it's the size of the window.
+
     // --------------------------------------------------------------------------------------------
     // Full Screen Mode
     // --------------------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ bool Render::init(int src_width, int src_height,
 
 	    // Fullscreen window size: SDL2 ignores w and h in SDL_CreateWindow() if FULLSCREEN flag
 	    // is enable, which is fine, so the window will be fullscreen of the physical videomode
-	    // size, but then, if we want to preserve ratio, we need dst_width bigger than src_width.	
+	    // size, but then, if we want to preserve ratio, we need dst_width bigger than src_width.
 	    scn_width  = orig_width;
         scn_height = orig_height;
 
@@ -63,7 +63,7 @@ bool Render::init(int src_width, int src_height,
 	    src_rect.h = src_height;
 	    src_rect.x = 0;
 	    src_rect.y = 0;
-        
+
         if (video_mode == video_settings_t::MODE_FULL)
         {
             uint32_t w = (scn_width << 16) / src_width;
@@ -74,7 +74,7 @@ bool Render::init(int src_width, int src_height,
             screen_xoff = scn_width - dst_rect.w;
             if (screen_xoff)
                 screen_xoff = (screen_xoff / 2);
-            
+
             screen_yoff = scn_height - dst_rect.h;
             if (screen_yoff)
                 screen_yoff = (screen_yoff / 2) * scn_width;
@@ -93,14 +93,14 @@ bool Render::init(int src_width, int src_height,
 
         SDL_ShowCursor(false);
      }
-   
+
     // --------------------------------------------------------------------------------------------
     // Windowed Mode
     // --------------------------------------------------------------------------------------------
     else
     {
         this->video_mode = video_settings_t::MODE_WINDOW;
-       
+
         scn_width  = src_width  * scale;
         scn_height = src_height * scale;
 
@@ -152,7 +152,7 @@ bool Render::init(int src_width, int src_height,
     // Convert the SDL pixel surface to 32 bit.
     // This is potentially a larger surface area than the internal pixel array.
     screen_pixels = (uint32_t*)surface->pixels;
-    
+
     // SDL Pixel Format Information
     Rshift = surface->format->Rshift;
     Gshift = surface->format->Gshift;

@@ -1,13 +1,13 @@
 /***************************************************************************
-    68000 Program Code Addresses 
+    68000 Program Code Addresses
     Addresses to data within the Master and Sub CPU Program ROMs.
-    
+
     These are typically large blocks of data that we don't want to include
-    in the codebase. 
-    
+    in the codebase.
+
     Where needed addresses from the separate Japanese version are also
     included. These are denoted by entries ending _J
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -365,7 +365,7 @@ const uint32_t SPRITE_SHDW_SMALL   = 0x1193C;
 const uint32_t SPRITE_SHDW_SMALL_J = 0x1139C;
 
 // Sprite Collision X Offsets [Signed]
-// Table is indexed with the type of sprite. 
+// Table is indexed with the type of sprite.
 //
 // Format:
 // Word 1: X-Left Offset
@@ -450,7 +450,7 @@ const uint32_t TRAFFIC_PROPS_J = 0x4CDE;
 // [+0] Straight Frame
 // [+4] Straight Frame (same as above)
 // [+8] Right Frame
-// [+C] Rightmost Frame 
+// [+C] Rightmost Frame
 //
 // [+10] Straight Frame  [uphill version]
 // [+14] Straight Frame  [uphill version] (same as above)
@@ -583,10 +583,10 @@ const uint32_t MUSIC_EQ_PAL = 0xCCAA;
 
 // X,Y Offsets of passenger 1 (Man) from car
 //
-// Format 
+// Format
 //
 // Word 1: Frame 1 X Offset
-// Word 2: Frame 1 Y Offset 
+// Word 2: Frame 1 Y Offset
 // Word 3: Frame 1 X Offset H-FLIP
 // Word 4: Frame 1 Y Offset H-FLIP
 //
@@ -608,7 +608,7 @@ const uint32_t WH_TABLE = 0x20000;
 // - Logo Bird Animation In Attract Mode
 // - Car Flip In Crash Scenario
 //
-// Entries 
+// Entries
 // 0     - 0xFF : X Position
 // 0x100 - 0x1FF: Y Position
 const uint32_t DATA_MOVEMENT = 0x30800;

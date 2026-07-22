@@ -49,7 +49,7 @@
  *******************************************************************************************/
 
 // Enable for hardware pixel accuracy, where sprite shadowing delayed by 1 clock cycle (slower)
-#define PIXEL_ACCURACY 0 
+#define PIXEL_ACCURACY 0
 
 hwsprites::hwsprites()
 {
@@ -149,7 +149,7 @@ void hwsprites::swap()
 //
 // 1/ Sprites Drawn on top of Shadow clears the shadow flags for its opaque pixels.
 // 2/ Either the flag clear or the sprite itself is offset by one pixel horizontally.
-// 
+//
 // Thanks to Alex B. for this implementation.
 
 #define draw_pixel()                                                                                  \
@@ -193,7 +193,7 @@ void hwsprites::render(const uint8_t priority)
 {
     const uint32_t numbanks = SPRITES_LENGTH / 0x10000;
 
-    for (uint16_t data = 0; data < SPRITE_RAM_SIZE; data += 8) 
+    for (uint16_t data = 0; data < SPRITE_RAM_SIZE; data += 8)
     {
         // stop when we hit the end of sprite list
         if ((ramBuff[data+0] & 0x8000) != 0) break;
@@ -203,9 +203,9 @@ void hwsprites::render(const uint8_t priority)
 
         // if hidden, or top greater than/equal to bottom, or invalid bank, punt
         int16_t hide    = (ramBuff[data+0] & 0x5000);
-        int32_t height  = (ramBuff[data+5] >> 8) + 1;       
+        int32_t height  = (ramBuff[data+5] >> 8) + 1;
         if (hide != 0 || height == 0) continue;
-        
+
         int16_t bank    = (ramBuff[data+0] >> 9) & 7;
         int32_t top     = (ramBuff[data+0] & 0x1ff) - 0x100;
         uint32_t addr    = ramBuff[data+1];
@@ -216,10 +216,10 @@ void hwsprites::render(const uint8_t priority)
         int32_t ydelta = ((ramBuff[data+4] & 0x8000) != 0) ? 1 : -1;
         int32_t flip   = (~ramBuff[data+4] >> 14) & 1;
         int32_t xdelta = ((ramBuff[data+4] & 0x2000) != 0) ? 1 : -1;
-        int32_t hzoom    = ramBuff[data+4] & 0x7ff;     
+        int32_t hzoom    = ramBuff[data+4] & 0x7ff;
         int32_t color   = COLOR_BASE + ((ramBuff[data+5] & 0x7f) << 4);
         int32_t x, y, ytarget, yacc = 0, pix;
-            
+
         // adjust X coordinate
         // note: the threshhold below is a guess. If it is too high, rachero will draw garbage
         // If it is too low, smgp won't draw the bottom part of the road
@@ -316,7 +316,7 @@ void hwsprites::render(const uint8_t priority)
                 }
             }
             // accumulate zoom factors; if we carry into the high bit, skip an extra row
-            yacc += vzoom; 
+            yacc += vzoom;
             addr += pitch * (yacc >> 9);
             yacc &= 0x1ff;
         }

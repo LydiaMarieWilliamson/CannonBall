@@ -9,7 +9,7 @@
     - Motor Hardware Test
     - Brake/Start Lamp Test
     - Control Input Test
-    
+
     Copyright Chris White.
     See license.txt for more details.
 ***************************************************************************/
@@ -42,7 +42,7 @@ void CabDiag::reset()
     counter = 0;
 
     video.clear_text_ram();
-    otiles.fill_tilemap_color(0x4F60);  
+    otiles.fill_tilemap_color(0x4F60);
     osprites.disable_sprites();
 
     oroad.horizon_set    = 1;
@@ -137,7 +137,7 @@ bool CabDiag::tick()
     osprites.update_sprites();
     otiles.write_tilemap_hw();
     oroad.tick();
-    
+
     if (press_start_to_exit)
         counter++;
 
@@ -229,7 +229,7 @@ void CabDiag::tick_input()
     ohud.blit_text_new(x, y++, Utils::to_hex_string(input.a_brake).c_str(), 0x80); // BRAKE
     ohud.blit_text_new(x, y, "  H", 0x80);
     ohud.blit_text_new(x, y++, Utils::to_hex_string(input.a_accel).c_str(), 0x80); // ACCEL
-    
+
 }
 
 // ------------------------------------------------------------------------------------------------

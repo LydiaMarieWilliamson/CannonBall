@@ -102,7 +102,7 @@ void hwtiles::init(uint8_t* src_tiles, const bool hires)
 
             uint32_t val = 0;
 
-            for (int ii = 0; ii < 8; ii++) 
+            for (int ii = 0; ii < 8; ii++)
             {
                 uint8_t bit = 7 - ii;
                 uint8_t pix = ((((p0 >> bit)) & 1) | (((p1 >> bit) << 1) & 2) | (((p2 >> bit) << 2) & 4));
@@ -112,7 +112,7 @@ void hwtiles::init(uint8_t* src_tiles, const bool hires)
         }
         memcpy(tiles_backup, tiles, TILES_LENGTH * sizeof(uint32_t));
     }
-    
+
     if (hires)
     {
         s16_width_noscale = config.s16_width >> 1;
@@ -154,7 +154,7 @@ void hwtiles::restore_tiles()
 // Set Tilemap X Clamp
 //
 // This is used for the widescreen mode, in order to clamp the tilemap to
-// a location of the screen. 
+// a location of the screen.
 //
 // In-Game we must clamp right to avoid page scrolling issues.
 //
@@ -190,9 +190,9 @@ void hwtiles::update_tile_values()
 void hwtiles::render_all_tiles(uint16_t* buf)
 {
     uint32_t Code = 0, Colour = 5, x, y;
-    for (y = 0; y < 224; y += 8) 
+    for (y = 0; y < 224; y += 8)
     {
-        for (x = 0; x < 320; x += 8) 
+        for (x = 0; x < 320; x += 8)
         {
             (this->*render8x8_tile_mask)(buf, Code, x, y, Colour, 3, 0, TILEMAP_COLOUR_OFFSET);
             Code++;
@@ -215,9 +215,9 @@ void hwtiles::render_tile_layer(uint16_t* buf, uint8_t page_index, uint8_t prior
     if ((yScroll & 0x8000) != 0)
         yScroll = (text_ram[0xf16 + (0x40 * page_index) + 0] << 8) | text_ram[0xf16 + (0x40 * page_index) + 1];
 
-    for (int my = 0; my < 64; my++) 
+    for (int my = 0; my < 64; my++)
     {
-        for (int mx = 0; mx < 128; mx++) 
+        for (int mx = 0; mx < 128; mx++)
         {
             if (my < 32 && mx < 64)                    // top left
                 ActPage = (EffPage >> 0) & 0x0f;
@@ -234,7 +234,7 @@ void hwtiles::render_tile_layer(uint16_t* buf, uint8_t page_index, uint8_t prior
 
             Priority = (Data >> 15) & 1;
 
-            if (Priority == priority_draw) 
+            if (Priority == priority_draw)
             {
                 uint32_t Code = Data & 0x1fff;
                 Code = tile_banks[Code / 0x1000] * 0x1000 + Code % 0x1000;
@@ -280,32 +280,32 @@ void hwtiles::render_text_layer(uint16_t* buf, uint8_t priority_draw)
 {
     uint16_t mx, my, Code, Colour, x, y, Priority, TileIndex = 0;
 
-    for (my = 0; my < 32; my++) 
+    for (my = 0; my < 32; my++)
     {
-        for (mx = 0; mx < 64; mx++) 
+        for (mx = 0; mx < 64; mx++)
         {
             Code = (text_ram[TileIndex + 0] << 8) | text_ram[TileIndex + 1];
             Priority = (Code >> 15) & 1;
 
-            if (Priority == priority_draw) 
+            if (Priority == priority_draw)
             {
                 Colour = (Code >> 9) & 0x07;
                 Code &= 0x1ff;
                 Code += tile_banks[0] * 0x1000;
                 Code &= (NUM_TILES - 1);
 
-                if (Code != 0) 
+                if (Code != 0)
                 {
                     x = 8 * mx;
                     y = 8 * my;
 
                     x -= 192;
 
-                    // We also adjust the text layer for wide-screen below. But don't allow painting in the 
+                    // We also adjust the text layer for wide-screen below. But don't allow painting in the
                     // wide-screen areas to avoid graphical glitches.
                     if (x > 7 && x < (s16_width_noscale - 8) && y > 7 && y <= (S16_HEIGHT - 8))
                         (this->*render8x8_tile_mask)(buf, Code, x + config.s16_x_off, y, Colour, 3, 0, TILEMAP_COLOUR_OFFSET);
-                    else if (x > -8 && x < s16_width_noscale && y >= 0 && y < S16_HEIGHT) 
+                    else if (x > -8 && x < s16_width_noscale && y >= 0 && y < S16_HEIGHT)
                         (this->*render8x8_tile_mask_clip)(buf, Code, x + config.s16_x_off, y, Colour, 3, 0, TILEMAP_COLOUR_OFFSET);
                 }
             }
@@ -316,23 +316,23 @@ void hwtiles::render_text_layer(uint16_t* buf, uint8_t priority_draw)
 
 void hwtiles::render8x8_tile_mask_lores(
     uint16_t *buf,
-    uint16_t nTileNumber, 
-    uint16_t StartX, 
-    uint16_t StartY, 
-    uint16_t nTilePalette, 
-    uint16_t nColourDepth, 
-    uint16_t nMaskColour, 
-    uint16_t nPaletteOffset) 
+    uint16_t nTileNumber,
+    uint16_t StartX,
+    uint16_t StartY,
+    uint16_t nTilePalette,
+    uint16_t nColourDepth,
+    uint16_t nMaskColour,
+    uint16_t nPaletteOffset)
 {
     uint32_t nPalette = (nTilePalette << nColourDepth) | nMaskColour;
     uint32_t* pTileData = tiles + (nTileNumber << 3);
     buf += (StartY * config.s16_width) + StartX;
 
-    for (int y = 0; y < 8; y++) 
+    for (int y = 0; y < 8; y++)
     {
         uint32_t p0 = *pTileData;
 
-        if (p0 != nMaskColour) 
+        if (p0 != nMaskColour)
         {
             uint32_t c7 = p0 & 0xf;
             uint32_t c6 = (p0 >> 4) & 0xf;
@@ -359,25 +359,25 @@ void hwtiles::render8x8_tile_mask_lores(
 
 void hwtiles::render8x8_tile_mask_clip_lores(
     uint16_t *buf,
-    uint16_t nTileNumber, 
-    int16_t StartX, 
-    int16_t StartY, 
-    uint16_t nTilePalette, 
-    uint16_t nColourDepth, 
-    uint16_t nMaskColour, 
-    uint16_t nPaletteOffset) 
+    uint16_t nTileNumber,
+    int16_t StartX,
+    int16_t StartY,
+    uint16_t nTilePalette,
+    uint16_t nColourDepth,
+    uint16_t nMaskColour,
+    uint16_t nPaletteOffset)
 {
     uint32_t nPalette = (nTilePalette << nColourDepth) | nMaskColour;
     uint32_t* pTileData = tiles + (nTileNumber << 3);
     buf += (StartY * config.s16_width) + StartX;
 
-    for (int y = 0; y < 8; y++) 
+    for (int y = 0; y < 8; y++)
     {
-        if ((StartY + y) >= 0 && (StartY + y) < S16_HEIGHT) 
+        if ((StartY + y) >= 0 && (StartY + y) < S16_HEIGHT)
         {
             uint32_t p0 = *pTileData;
 
-            if (p0 != nMaskColour) 
+            if (p0 != nMaskColour)
             {
                 uint32_t c7 = p0 & 0xf;
                 uint32_t c6 = (p0 >> 4) & 0xf;
@@ -410,23 +410,23 @@ void hwtiles::render8x8_tile_mask_clip_lores(
 // ------------------------------------------------------------------------------------------------
 void hwtiles::render8x8_tile_mask_hires(
     uint16_t *buf,
-    uint16_t nTileNumber, 
-    uint16_t StartX, 
-    uint16_t StartY, 
-    uint16_t nTilePalette, 
-    uint16_t nColourDepth, 
-    uint16_t nMaskColour, 
-    uint16_t nPaletteOffset) 
+    uint16_t nTileNumber,
+    uint16_t StartX,
+    uint16_t StartY,
+    uint16_t nTilePalette,
+    uint16_t nColourDepth,
+    uint16_t nMaskColour,
+    uint16_t nPaletteOffset)
 {
     uint32_t nPalette = (nTilePalette << nColourDepth) | nMaskColour;
     uint32_t* pTileData = tiles + (nTileNumber << 3);
     buf += ((StartY << 1) * config.s16_width) + (StartX << 1);
 
-    for (int y = 0; y < 8; y++) 
+    for (int y = 0; y < 8; y++)
     {
         uint32_t p0 = *pTileData;
 
-        if (p0 != nMaskColour) 
+        if (p0 != nMaskColour)
         {
             uint32_t c7 = p0 & 0xf;
             uint32_t c6 = (p0 >> 4) & 0xf;
@@ -453,25 +453,25 @@ void hwtiles::render8x8_tile_mask_hires(
 
 void hwtiles::render8x8_tile_mask_clip_hires(
     uint16_t *buf,
-    uint16_t nTileNumber, 
-    int16_t StartX, 
-    int16_t StartY, 
-    uint16_t nTilePalette, 
-    uint16_t nColourDepth, 
-    uint16_t nMaskColour, 
-    uint16_t nPaletteOffset) 
+    uint16_t nTileNumber,
+    int16_t StartX,
+    int16_t StartY,
+    uint16_t nTilePalette,
+    uint16_t nColourDepth,
+    uint16_t nMaskColour,
+    uint16_t nPaletteOffset)
 {
     uint32_t nPalette = (nTilePalette << nColourDepth) | nMaskColour;
     uint32_t* pTileData = tiles + (nTileNumber << 3);
     buf += ((StartY << 1) * config.s16_width) + (StartX << 1);
 
-    for (int y = 0; y < 8; y++) 
+    for (int y = 0; y < 8; y++)
     {
-        if ((StartY + y) >= 0 && (StartY + y) < S16_HEIGHT) 
+        if ((StartY + y) >= 0 && (StartY + y) < S16_HEIGHT)
         {
             uint32_t p0 = *pTileData;
 
-            if (p0 != nMaskColour) 
+            if (p0 != nMaskColour)
             {
                 uint32_t c7 = p0 & 0xf;
                 uint32_t c6 = (p0 >> 4) & 0xf;

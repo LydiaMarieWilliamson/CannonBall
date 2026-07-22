@@ -1,9 +1,9 @@
 /***************************************************************************
     Patched version of zoom lookup table which fixes sprite zoom bug.
-    
-    This is used to scale all sprites in the game. 
-    
-    The original game features a bug, which causes sprites at certain z 
+
+    This is used to scale all sprites in the game.
+
+    The original game features a bug, which causes sprites at certain z
     positions to be scaled incorrectly.
 ***************************************************************************/
 
@@ -37,7 +37,7 @@ const static uint16_t ZOOM_LOOKUP[] =
     0x0329, 0x1000, SIZE5, UNUSED,
     0x02A3, 0x2000, SIZE5, UNUSED,
     0x0243, 0x3000, SIZE5, UNUSED,
-  
+
     0x03F0, 0x0000, SIZE4, UNUSED,
     0x0381, 0x0800, SIZE4, UNUSED,
     0x0329, 0x1000, SIZE4, UNUSED,
@@ -46,7 +46,7 @@ const static uint16_t ZOOM_LOOKUP[] =
     0x0270, 0x2800, SIZE4, UNUSED,
     0x0243, 0x3000, SIZE4, UNUSED,
     0x021B, 0x3800, SIZE4, UNUSED,
-  
+
     0x03F0, 0x0000, SIZE3, UNUSED,
     0x03B5, 0x0400, SIZE3, UNUSED,
     0x0381, 0x0800, SIZE3, UNUSED,
@@ -96,7 +96,7 @@ const static uint16_t ZOOM_LOOKUP[] =
     0x0214, 0x3A00, SIZE2, UNUSED,
     0x020C, 0x3C00, SIZE2, UNUSED,
     0x0204, 0x3E00, SIZE2, UNUSED,
-   
+
     0x03F0, 0x0000, SIZE1, UNUSED,
     0x03F0, 0x0000, SIZE1, UNUSED,
     0x03E0, 0x0100, SIZE1, UNUSED,

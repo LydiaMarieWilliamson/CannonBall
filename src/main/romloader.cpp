@@ -1,6 +1,6 @@
 /***************************************************************************
-    Binary File Loader. 
-    
+    Binary File Loader.
+
     Handles loading an individual binary file to memory.
     Supports reading bytes, words and longs from this area of memory.
 
@@ -21,7 +21,7 @@
 // In order to get a cross-platform directory listing I'm using a Visual Studio
 // version of Linux's Dirent from here: https://github.com/tronkko/dirent
 //
-// This appears to be the most lightweight solution available without resorting 
+// This appears to be the most lightweight solution available without resorting
 // to enormous boost libraries or switching to C++17.
 #ifdef _MSC_VER
 #include "windirent.h"
@@ -91,8 +91,8 @@ int RomLoader::load_rom(const char* filename, const int offset, const int length
 
     if (expected_crc != result.checksum())
     {
-        if (verbose) 
-        std::cout << std::hex << 
+        if (verbose)
+        std::cout << std::hex <<
             filename << " has incorrect checksum.\nExpected: " << expected_crc << " Found: " << result.checksum() << std::endl;
 
         return 1;
@@ -243,5 +243,5 @@ int RomLoader::filesize(const char* filename)
     in.seekg(0, std::ifstream::end);
     int size = (int) in.tellg();
     in.close();
-    return size; 
+    return size;
 }
