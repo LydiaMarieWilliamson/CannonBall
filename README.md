@@ -28,12 +28,12 @@ To facilitate this, further changes are going to be made to abstract out the pla
 A movie version of the arcade game is in the works:
 *   [Sega Arcade Racer OutRun Gets Surprise Movie Adaptation From Transformers Director Michael Bay and Madame Web Star Sydney Sweeney - IGN](https://www.ign.com/articles/sega-arcade-racer-outrun-gets-surprise-movie-adaptation-from-transformers-director-michael-bay-and-madame-web-star-sydney-sweeney)
 *   [Michael Bay And Sydney Sweeney Team On Movie Adaptation Of ‘OutRun’ Video Game At Universal - Deadline](https://deadline.com/2025/04/sydney-sweeney-michael-bay-outrun-video-game-universal-1236373036/)
-*   [OutRun Film in the Works at Universal Pictures with Michael Bay and Sydney Sweeney Attached to the Project](https://segabits.com/blog/2025/04/21/outrun-film-in-the-works-at-universal-pictures-with-michael-bay-and-sydney-sweeney-attached-to-the-project/)
+*   [OutRun Film in the Works at Universal Pictures with Michael Bay and Sydney Sweeney Attached to the Project - SegaBits](https://segabits.com/blog/2025/04/21/outrun-film-in-the-works-at-universal-pictures-with-michael-bay-and-sydney-sweeney-attached-to-the-project/)
 *   [Sydney Sweeney and Michael Bay Set ‘OutRun’ Video Game Movie at Universal - Variety](https://variety.com/2025/film/news/michael-bay-sydney-sweeney-outrun-movie-1236374395/)
 
 A re-translation from the binaries may also be carried out, and more variety may be added to the scene layout and music, particularly to include techno tracks.
 I may also add in the ability and option for the female passenger to take the wheel, since she already seems to be rather assertive during the game.
-Some of the extensions in the [cannonball-se](https://github.com/J1mbo/cannonball-se) by J1mbo may be included in this version.
+Some of the extensions in the [cannonball-se](https://github.com/J1mbo/cannonball-se) version by J1mbo may be included in this version.
 
 -- Darth Spectra 2026-07-22
 
