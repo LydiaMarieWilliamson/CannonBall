@@ -2,7 +2,7 @@
 
 # Cannonball - OutRun Engine
 
-CannonBall is an souped up game engine for the OutRun arcade game. The original 68000 and Z80 assembler code has been rewritten in C++. This makes it possible to make improvements suitable for modern platforms, including a higher frame-rate and widescreen support. It requires the original ROMs, as these contain elements including the graphics and audio data.
+CannonBall is a souped up game engine for the OutRun arcade game. The original 68000 and Z80 assembler code has been rewritten in C++. This makes it possible to make improvements suitable for modern platforms, including a higher frame-rate and widescreen support. It requires the original ROMs, as these contain elements including the graphics and audio data.
 
 * For an overview of CannonBall and its features, please read the [manual](https://github.com/djyt/cannonball/wiki).
 * [Reassembler Blog](http://reassembler.blogspot.co.uk/)
@@ -15,11 +15,13 @@ Chris White (Project Creator).
 
 ### Addendum
 
-This version of CannonBall will be focusing on the Linux platform, with support for the Windows version phased out, and the dependency on "cmake" removed.
-This will eventually supersede the [Getting Started](#GettingStarted) and [Build](#Build) sections and render the [Visual Studio 2019 Community Edition](#VisualStudio2019) section superflyous.
+This version of CannonBall is being moved away from the [original version](https://github.com/djyt/cannonball) by djyt, with the file tree flattened and out renamed, with more evocative names and the renaming retrofitted, including here.
+Greater focus placed on the Linux version instead of Windows, the dependency on "cmake" removed in favor of "make", and support for the Windows version phased out.
+These changes will eventually supersede the [Getting Started](#GettingStarted) and [Build](#Build) sections and render the [Visual Studio 2019 Community Edition](#VisualStudio2019) section superfluous.
+
 For now, the "cmake" files are being retained, but only the Linux + OPENGL version has been verified.
-The arcade game has "haptic" support, which is responds to how hard you press or push buttons, knobs and dials on input and jolts the game equipment on output.
-Only the Windows versions supports this.
+The arcade game has "haptic" support, in which it responds to how hard you press, push or turn buttons, knobs and dials on input and jolts the game equipment on output.
+Only the Windows versions supported this in the original and here.
 You may try to add "haptic" support on the Linux versions, if you feel adventurous.
 To facilitate this, further changes are going to be made to abstract out the platform dependencies and regularize the source code.
 
@@ -29,8 +31,8 @@ A movie version of the arcade game is in the works:
 *   [OutRun Film in the Works at Universal Pictures with Michael Bay and Sydney Sweeney Attached to the Project](https://segabits.com/blog/2025/04/21/outrun-film-in-the-works-at-universal-pictures-with-michael-bay-and-sydney-sweeney-attached-to-the-project/)
 *   [Sydney Sweeney and Michael Bay Set ‘OutRun’ Video Game Movie at Universal - Variety](https://variety.com/2025/film/news/michael-bay-sydney-sweeney-outrun-movie-1236374395/)
 
-A re-translation from the binaries may be carried out, and more variety may be added to the scene layout and music, particularly to include techno tracks.
-I may also add in the ability for the female passenger to take the wheel, since she seems to be rather assertive during the game, anyhow.
+A re-translation from the binaries may also be carried out, and more variety may be added to the scene layout and music, particularly to include techno tracks.
+I may also add in the ability and option for the female passenger to take the wheel, since she already seems to be rather assertive during the game.
 Some of the extensions in the [cannonball-se](https://github.com/J1mbo/cannonball-se) by J1mbo may be included in this version.
 
 -- Darth Spectra 2026-07-22
