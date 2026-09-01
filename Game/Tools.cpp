@@ -16,10 +16,9 @@ outils::~outils(void) {
 }
 
 // Generate long random
-//
-// Source Address: 0x6C8E
-// Input:          None
-// Output:         Long Random
+// At: 6c8e
+// Input:	None
+// Output:	Long Random
 
 // Seed for random number generator
 static uint32_t rnd_seed = 0;
@@ -49,9 +48,7 @@ uint32_t outils::random() {
 }
 
 // Square Root Functions
-//
 // Note: This isn't a direct port of the OutRun routine
-//
 // To Do: Test this outputs identical results
 int32_t outils::next(const int32_t n, const int32_t i) {
    return (n + i/n) >> 1;
@@ -154,7 +151,7 @@ void outils::convert_counter_to_time(uint16_t counter, uint8_t *converted) {
 // This is used to convert the speed.
 // So an output of 0x180 would be 180 kp/h directly.
 //
-// Source: 0x7126
+// At: 7126
 uint16_t outils::convert16_dechex(const uint16_t value) {
    int16_t top_byte = -1; // [d3]
    int16_t lookup = value; // [d2]

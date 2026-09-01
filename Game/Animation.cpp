@@ -1,9 +1,9 @@
 // Animation Sequences.
 //
 // Used in three areas of the game:
-// - The sequence at the start with the Ferrari driving in from the side
-// - Flag Waving Man
-// - 5 x End Sequences
+// -	The sequence at the start with the Ferrari driving in from the side
+// -	Flag Waving Man
+// -	5 × End Sequences
 //
 // See "Animation.hpp" for the specific format used by animated sprites.
 // It is essentially a deviation from the normal sprites in the game.
@@ -16,24 +16,22 @@
 #include "Game/Inputs.hpp"
 #include "Game/Animation.hpp"
 
-// ----------------------------------------------------------------------------
 // Animation Data Format.
+// ──────────────────────
 // Animation blocks are stored in groups of 8 bytes, and formatted as follows:
-//
-// +00 [Byte] Sprite Colour Palette
-// +01 [Byte] Bit 7: Make X Position Negative
-//            Bits 4-6: Sprite To Sprite Priority
-//            Bits 0-3: Top Bits Of Sprite Data Address
-// +02 [Word] Sprite Data Address
-// +04 [Byte] Sprite X Position
-// +05 [Byte] Sprite Y Position
-// +06 [Byte] Sprite To Road Priority
-// +07 [Byte] Bit 7: Set To Load Next Block Of Sprite Animation Data To 0x1E
-//            Bit 6: Set For H-Flip
-//            Bit 4:
-//            Bits 0-3: Animation Frame Delay
-//                     (Before Incrementing To Next Block Of 8 Bytes)
-// ----------------------------------------------------------------------------
+//	+00 [Byte]	Sprite Colour Palette
+//	+01 [Byte]	Bit 7: Make X Position Negative
+//			Bits 4-6: Sprite To Sprite Priority
+//			Bits 0-3: Top Bits Of Sprite Data Address
+//	+02 [Word]	Sprite Data Address
+//	+04 [Byte]	Sprite X Position
+//	+05 [Byte]	Sprite Y Position
+//	+06 [Byte]	Sprite To Road Priority
+//	+07 [Byte]	Bit 7: Set To Load Next Block Of Sprite Animation Data To 0x1E
+//			Bit 6: Set For H-Flip
+//			Bit 4:
+//			Bits 0-3: Animation Frame Delay
+//			(Before Incrementing To Next Block Of 8 Bytes)
 
 OAnimSeq oanimseq;
 
@@ -44,9 +42,8 @@ OAnimSeq::~OAnimSeq(void) {
 }
 
 void OAnimSeq::init(oentry *jump_table) {
-// --------------------------------------------------------------------------------------------
 // Flag Animation Setup
-// --------------------------------------------------------------------------------------------
+// ────────────────────
    oentry *sprite_flag = &jump_table[OSprites::SPRITE_FLAG];
    anim_flag.sprite = sprite_flag;
    anim_flag.anim_state = 0;
@@ -56,9 +53,8 @@ void OAnimSeq::init(oentry *jump_table) {
 // Routine initalisations
    sprite_flag->control |= OSprites::ENABLE;
    sprite_flag->z = 400 << 16;
-// --------------------------------------------------------------------------------------------
 // Ferrari & Passenger Animation Setup For Intro
-// --------------------------------------------------------------------------------------------
+// ─────────────────────────────────────────────
    oentry *sprite_ferrari = &jump_table[OSprites::SPRITE_FERRARI];
    anim_ferrari.init(sprite_ferrari);
    anim_ferrari.anim_addr_curr = outrun.adr.anim_ferrari_curr;
@@ -75,9 +71,8 @@ void OAnimSeq::init(oentry *jump_table) {
    anim_pass2.anim_addr_curr = outrun.adr.anim_pass2_curr;
    anim_pass2.anim_addr_next = outrun.adr.anim_pass2_next;
    sprite_pass2->draw_props = oentry::BOTTOM;
-// --------------------------------------------------------------------------------------------
 // End Sequence Animation
-// --------------------------------------------------------------------------------------------
+// ──────────────────────
    end_seq_state = 0; // init
    seq_pos = 0;
    ferrari_stopped = false;
@@ -91,9 +86,8 @@ void OAnimSeq::init(oentry *jump_table) {
    anim_obj8.init(&jump_table[OSprites::SPRITE_FLAG]);
 }
 
-// ------------------------------------------------------------------------------------------------
 // START ANIMATION SEQUENCES (FLAG, FERRARI DRIVING IN)
-// ------------------------------------------------------------------------------------------------
+// ────────────────────────────────────────────────────
 
 void OAnimSeq::flag_seq() {
    if (!(anim_flag.sprite->control&OSprites::ENABLE))
@@ -167,7 +161,7 @@ void OAnimSeq::flag_seq() {
 
 // Setup Ferrari Animation Sequence
 //
-// Source: 0x6036
+// At: 6036
 void OAnimSeq::ferrari_seq() {
    if (!(anim_ferrari.sprite->control&OSprites::ENABLE))
       return;
@@ -188,7 +182,7 @@ void OAnimSeq::ferrari_seq() {
 
 // Process Animations for Ferrari and Passengers on intro
 //
-// Source: 60AE
+// At: 60ae
 void OAnimSeq::anim_seq_intro(oanimsprite *anim) {
    if (outrun.game_state <= GS_LOGO) {
       oferrari.init_ingame();
@@ -248,12 +242,11 @@ void OAnimSeq::anim_seq_intro(oanimsprite *anim) {
    }
 }
 
-// ------------------------------------------------------------------------------------------------
 // END ANIMATION SEQUENCES
-// ------------------------------------------------------------------------------------------------
+// ───────────────────────
 
 // Initialize end sequence animations on game complete
-// Source: 0x9978
+// At: 9978
 void OAnimSeq::init_end_seq() {
 // Process animation sprites instead of normal routine
    oferrari.state = OFerrari::FERRARI_END_SEQ;
@@ -299,7 +292,7 @@ void OAnimSeq::tick_end_seq() {
 }
 
 // Initalize Sprites For End Sequence.
-// Source: 0x588A
+// At: 588a
 void OAnimSeq::init_end_sprites() {
 // Ferrari Object [0x5B12 entry point]
    uint32_t addr = outrun.adr.anim_endseq_obj1 + (end_seq << 3);
@@ -415,7 +408,7 @@ void OAnimSeq::init_end_sprites() {
 }
 
 // Ferrari Outro Animation Sequence
-// Source: 0x5B12
+// At: 5b12
 void OAnimSeq::anim_seq_outro_ferrari() {
    if (!ferrari_stopped) {
    // Car is moving. Turn Brake On.
@@ -431,7 +424,7 @@ void OAnimSeq::anim_seq_outro_ferrari() {
 }
 
 // End Sequence: Setup Animated Sprites
-// Source: 0x5B42
+// At: 5b42
 void OAnimSeq::anim_seq_outro(oanimsprite *anim, int pal_override) {
    oinputs.steering_adjust = 0;
 // Return if no animation data to process
@@ -480,7 +473,7 @@ void OAnimSeq::anim_seq_outro(oanimsprite *anim, int pal_override) {
 
 // Render Sprite Shadow For End Sequence
 // Use parent sprite as basis to set this up
-// Source: 0x5C48
+// At: 5c48
 void OAnimSeq::anim_seq_shadow(oanimsprite *parent, oanimsprite *anim) {
 // Return if no animation data to process
    if (!read_anim_data(anim))
@@ -507,7 +500,7 @@ void OAnimSeq::anim_seq_shadow(oanimsprite *parent, oanimsprite *anim) {
 }
 
 // Read Animation Data for End Sequence
-// Source: 0x5CC4
+// At: 5cc4
 bool OAnimSeq::read_anim_data(oanimsprite *anim) {
    uint32_t addr = outrun.adr.anim_end_table + (end_seq << 2) + (anim->sprite->id << 2) + (anim->sprite->id << 4); // a0 + d1
 // Read start & end position in animation timeline for this object
@@ -530,9 +523,8 @@ bool OAnimSeq::read_anim_data(oanimsprite *anim) {
             outrun.init_best_outrunners();
       }
    }
-// --------------------------------------------------------------------------------------------
 // Process Animation Sequence
-// --------------------------------------------------------------------------------------------
+// ──────────────────────────
    const bool DO_NOTHING = false;
    const bool PROCESS = true;
 // check_seq_pos:

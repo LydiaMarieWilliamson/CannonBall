@@ -1,13 +1,11 @@
-## -----------------------------------------------------------------------------
 ## CannonBall Windows Setup
-##
+## ────────────────────────
 ## Extra libraries are required to use OpenGLES on Windows.
 ## Quite a long install process.
-## Download & Compile Angle: https://opensource.google/projects/angle
-##
+## Download & Compile Angle:
+## ▪	https://opensource.google/projects/angle
 ## Other notes:
-## http://mickcharlesbeaver.blogspot.com/2017/11/using-opengl-es-20-with-sdl2-via-angle.html
-## -----------------------------------------------------------------------------
+## ▪	http://mickcharlesbeaver.blogspot.com/2017/11/using-opengl-es-20-with-sdl2-via-angle.html
 
 ## Library Locations
 set(LibDir c:/coding/lib)
@@ -23,8 +21,8 @@ set(OPENGLES 1)
 set(PlatformLinkLibs
    "${AngleDir}/libEGL.dll.lib"
    "${AngleDir}/libGLESv2.dll.lib"
-   dxguid   ## Direct X Haptic Support
-   dinput8  ## Direct X Haptic Support
+   dxguid	## Direct X Haptic Support
+   dinput8	## Direct X Haptic Support
 )
 
 ## Platform Specific Link Directories

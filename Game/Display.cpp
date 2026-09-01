@@ -1,10 +1,9 @@
 // Heads-Up Display (HUD) Code
-//
-// - Score Rendering
-// - Timer Rendering
-// - Rev Rendering
-// - Minimap Rendering
-// - Text Rendering
+// -	Score Rendering
+// -	Timer Rendering
+// -	Rev Rendering
+// -	Minimap Rendering
+// -	Text Rendering
 //
 // Copyright Chris White.
 // See License.txt for more details.
@@ -26,7 +25,7 @@ OHud::~OHud(void) {
 
 // Draw Text Labels For HUD
 //
-// Source: 0xB462
+// At: b462
 void OHud::draw_main_hud() {
    blit_text1(HUD_LAP1);
    blit_text1(HUD_LAP2);
@@ -68,7 +67,7 @@ void OHud::draw_fps_counter(int16_t fps) {
 
 // Routine to setup and draw mini-map (bottom RHS of HUD)
 //
-// Source: 0x8B52
+// At: 8b52
 void OHud::do_mini_map() {
    if (outrun.game_state == GS_ATTRACT)
       return;
@@ -80,7 +79,7 @@ void OHud::do_mini_map() {
 //
 // Returns start address of block of 4 tiles. Represents square of route on mini-map screen.
 //
-// Source: 0x8B68
+// At: 8b68
 uint32_t OHud::setup_mini_map() {
    if (ostats.route_info > 0x4F)
       ostats.route_info = 0x4F;
@@ -112,7 +111,7 @@ void OHud::draw_mini_map(uint32_t tile_addr) {
 
 // Print Timer To Top Left Hand Corner Of Screen
 //
-// Source: 0x8216
+// At: 8216
 void OHud::draw_timer1(uint16_t time) {
    if (outrun.game_state < GS_START1 || outrun.game_state > GS_INGAME)
       return;
@@ -138,7 +137,7 @@ void OHud::draw_timer1(uint16_t time) {
 
 // Called directly by High Score Table
 //
-// Source: 0x8234
+// At: 8234
 void OHud::draw_timer2(uint16_t time_counter, uint32_t addr, uint16_t base_tile) {
    uint16_t digit1 = time_counter&0xF;
    uint16_t digit2 = (time_counter&0xF0) >> 4;
@@ -176,7 +175,7 @@ void OHud::draw_lap_timer(uint32_t addr, uint8_t *digits, uint8_t ms_value) {
 
 // Draw Score (In-Game HUD)
 //
-// Source: 0x7382
+// At: 7382
 void OHud::draw_score_ingame(uint32_t score) {
    if (outrun.game_state < GS_START1 || outrun.game_state > GS_BONUS)
       return;
@@ -185,10 +184,10 @@ void OHud::draw_score_ingame(uint32_t score) {
 
 // Draw Score
 //
-// + 8530 = Digit 0
-// + 8531 = Digit 1
+//	+ 8530 = Digit 0
+//	+ 8531 = Digit 1
 //
-// Source: 0x7146
+// At: 7146
 void OHud::draw_score(uint32_t addr, const uint32_t score, uint8_t font) {
 // Base address of Digit 0 setup here
    const uint16_t BASE = 0x30 | (font << 9) | 0x8100;
@@ -253,7 +252,7 @@ void OHud::draw_score_tile(uint32_t addr, const uint32_t score, uint8_t font) {
 
 // Modified Version Of Draw Digits
 //
-// Source: C3A0
+// At: c3a0
 void OHud::draw_stage_number(uint32_t addr, uint8_t digit, uint16_t col) {
    if (digit < 10) {
       video.write_text16(addr, digit + (col << 8) + DIGIT_BASE);
@@ -266,7 +265,7 @@ void OHud::draw_stage_number(uint32_t addr, uint8_t digit, uint16_t col) {
 
 // Draw Rev Counter
 //
-// Source: 0x6B08
+// At: 6b08
 void OHud::draw_rev_counter() {
 // Return in attract mode and don't draw rev counter
    if (outrun.game_state <= GS_INIT_GAME) return;
@@ -308,7 +307,7 @@ void OHud::draw_rev_counter() {
 
 // Convert & Blit car speed to screen
 //
-// Source: 0xBB72
+// At: bb72
 void OHud::blit_speed(uint32_t dst_addr, uint16_t speed) {
    const uint16_t TILE_BASE = 0x8C60; // Base tile number
 // Convert to human readable speed
@@ -344,7 +343,7 @@ void OHud::blit_speed(uint32_t dst_addr, uint16_t speed) {
 
 // Blit large digit spanning two rows.
 //
-// Source: 0x9BF2
+// At: 9bf2
 void OHud::blit_large_digit(uint32_t *addr, uint8_t digit) {
    video.write_text16(*addr, (digit + 0x80) | 0x8C00);
    video.write_text16(*addr + 0x80, (digit + 0x81) | 0x8C00);
@@ -353,9 +352,9 @@ void OHud::blit_large_digit(uint32_t *addr, uint8_t digit) {
 
 // Draw Copyright Text to text ram
 //
-// Source Address: 0xB844
-// Input:          None
-// Output:         None
+// At: b844
+// Input:	None
+// Output:	None
 void OHud::draw_copyright_text() {
    blit_text1(TEXT1_1986_SEGA);
    blit_text1(TEXT1_COPYRIGHT);
@@ -363,7 +362,7 @@ void OHud::draw_copyright_text() {
 
 // Draw Insert Coin text
 //
-// Source: 0xB7D0
+// At: b7d0
 void OHud::draw_insert_coin() {
 // Update text
    if ((outrun.tick_counter ^ (outrun.tick_counter - 1))&BIT_4) {
@@ -397,7 +396,7 @@ void OHud::draw_insert_coin() {
    }
 }
 
-// Source: 0x6CDE
+// At: 6cde
 void OHud::draw_credits() {
    if (config.engine.freeplay) {
       blit_text1(TEXT1_FREEPLAY);
@@ -409,31 +408,28 @@ void OHud::draw_credits() {
 
 // Blit Tiles to text ram layer (Single Row)
 //
-// Source Address: 0xB844
-// Input:          Source address in rom of data format
-// Output:         None
+// At: b844
+// Input:	Source address in rom of data format
+// Output:	None
 //
 // Format of the input data is as follows:
+//	Long 1: Destination address to move data to. [e.g. 0x00110D34 which would go to the text ram]
+//	Word 1: Number of tiles to draw / counter
+//	Byte 1: High byte to apply to every copy, containing priority info [86]
+//	Byte 2: Not used
 //
-// Long 1: Destination address to move data to. [e.g. 0x00110D34 which would go to the text ram]
-// Word 1: Number of tiles to draw / counter
-// Byte 1: High byte to apply to every copy, containing priority info [86]
-// Byte 2: Not used
-//
-// Byte 3: Second byte to copy containing tile number (low)
-// Byte 4: Third byte to copy containing tile number (low)
-// Byte 5: etc.
+//	Byte 3: Second byte to copy containing tile number (low)
+//	Byte 4: Third byte to copy containing tile number (low)
+//	Byte 5: etc.
 //
 // Text layer name table format:
-//
-// MSB          LSB
-// p???cccnnnnnnnnn
-//
-// p : Priority. If 0, sprites with priority level 3 are shown over the text.
-//               If 1, the text layer is shown over sprites regardless of priority.
-// c : Color palette
-// n : Tile index to use
-// ? : Unknown
+//	MSB          LSB
+//	p???cccnnnnnnnnn
+//	p : Priority.	If 0, sprites with priority level 3 are shown over the text.
+//			If 1, the text layer is shown over sprites regardless of priority.
+//	c : Color palette
+//	n : Tile index to use
+//	? : Unknown
 void OHud::blit_text1(uint32_t src_addr) {
    uint32_t dst_addr = roms.rom0.read32(&src_addr); // Text RAM destination address
    uint16_t counter = roms.rom0.read16(&src_addr); // Number of tiles to blit
@@ -459,17 +455,16 @@ void OHud::blit_text1(uint8_t x, uint8_t y, uint32_t src_addr) {
 
 // Blit Tiles to text ram layer (Double Row)
 //
-// Source Address: 0xB844
-// Input:          Source address in rom of data format
-// Output:         None
+// At: b844
+// Input:	Source address in rom of data format
+// Output:	None
 //
 // Format of the input data is as follows:
-//
-// Byte 0: Offset into text RAM [First 2 bytes]
-// Byte 1: Offset into text RAM [First 2 bytes]
-// Byte 2: Palette to use
-// Byte 3: Number of characters to display (used as a counter)
-// Byte 4: Start of text to display
+//	Byte 0: Offset into text RAM [First 2 bytes]
+//	Byte 1: Offset into text RAM [First 2 bytes]
+//	Byte 2: Palette to use
+//	Byte 3: Number of characters to display (used as a counter)
+//	Byte 4: Start of text to display
 void OHud::blit_text2(uint32_t src_addr) {
    uint32_t dst_addr = 0x110000 + roms.rom0.read16(&src_addr); // Text RAM destination address
    uint16_t pal = roms.rom0.read8(&src_addr);
@@ -496,9 +491,8 @@ void OHud::blit_text2(uint32_t src_addr) {
    }
 }
 
-// ------------------------------------------------------------------------------------------------
 // Enhanced Cannonball Routines Below
-// ------------------------------------------------------------------------------------------------
+// ──────────────────────────────────
 
 void OHud::draw_debug_info(uint32_t pos, uint16_t height_pat, uint8_t sprite_pat) {
    ohud.blit_text_new(0, 4, "LEVEL POS", OHud::GREEN);
@@ -564,9 +558,8 @@ void OHud::blit_text_big(const uint8_t Y, const char *text, bool do_notes) {
 
 // Custom Routine To Blit Text Easily
 //
-// The name table is 64x28, but only 40x28 is shown. The viewable portion of
-// the name table starts at column 24 and goes to column 63, which maps to
-// screen columns 0 through 39.
+// The name table is 64×28, but only 40×28 is shown.
+// The viewable portion of the name table starts at column 24 and goes to column 63, which maps to screen columns 0 through 39.
 //
 // Normal font: 41 onwards
 void OHud::blit_text_new(uint16_t x, uint16_t y, const char *text, uint16_t pal) {
@@ -577,7 +570,7 @@ void OHud::blit_text_new(uint16_t x, uint16_t y, const char *text, uint16_t pal)
    // Convert lowercase characters to uppercase
       if (c >= 'a' && c <= 'z')
          c -= 0x20;
-      else if (c == '�')
+      else if (c == '\xa9') // '\xa9' = '©'
          c = 0x10;
       else if (c == '-')
          c = 0x2d;

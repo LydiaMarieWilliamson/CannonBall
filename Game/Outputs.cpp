@@ -1,16 +1,13 @@
 // Process Outputs.
-//
-// - Cabinet Vibration & Hydraulic Movement
-// - Brake & Start Lamps
-// - Coin Chute Outputs
+// -	Cabinet Vibration & Hydraulic Movement
+// -	Brake & Start Lamps
+// -	Coin Chute Outputs
 //
 // The Deluxe Motor code is also used by the force-feedback haptic system.
 //
-// One thing to note is that this code was originally intended to drive
-// a moving hydraulic cabinet, not to be mapped to a haptic device.
+// One thing to note is that this code was originally intended to drive a moving hydraulic cabinet, not to be mapped to a haptic device.
 //
-// Therefore, it's not perfect when used in this way, but the results
-// aren't bad :)
+// Therefore, it's not perfect when used in this way, but the results aren't bad :)
 //
 // Copyright Chris White.
 // See License.txt for more details.
@@ -40,7 +37,7 @@ OOutputs::~OOutputs(void) {
 }
 
 // Initalize Moving Cabinet Motor
-// Source: 0xECE8
+// At: ece8
 void OOutputs::init() {
    motor_state = STATE_INIT;
    hw_motor_control = MOTOR_OFF;
@@ -113,9 +110,8 @@ void OOutputs::writeDigitalToConsole() {
    }
 }
 
-// ------------------------------------------------------------------------------------------------
 // Digital Outputs
-// ------------------------------------------------------------------------------------------------
+// ───────────────
 void OOutputs::set_digital(uint8_t output) {
    dig_out |= output;
 }
@@ -128,10 +124,9 @@ int OOutputs::is_set(uint8_t output) {
    return (dig_out&output)? 1: 0;
 }
 
-// ------------------------------------------------------------------------------------------------
 // Motor Diagnostics
-// Source: 0x1885E
-// ------------------------------------------------------------------------------------------------
+// ─────────────────
+// At: 1885e
 bool OOutputs::diag_motor(int16_t input_motor, uint8_t hw_motor_limit) {
    switch (motor_state) {
    // Initalize
@@ -244,9 +239,8 @@ void OOutputs::diag_done() {
       hw_motor_control = MOTOR_CENTRE;
 }
 
-// ------------------------------------------------------------------------------------------------
 // Calibrate Motors
-// ------------------------------------------------------------------------------------------------
+// ────────────────
 bool OOutputs::calibrate_motor(int16_t input_motor, uint8_t hw_motor_limit) {
    switch (motor_state) {
    // Initalize
@@ -398,9 +392,8 @@ void OOutputs::calibrate_done() {
       motor_state = STATE_EXIT;
 }
 
-// ------------------------------------------------------------------------------------------------
 // Moving Cabinet Code
-// ------------------------------------------------------------------------------------------------
+// ───────────────────
 
 const static uint8_t MOTOR_VALUES[] = {
    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3,
@@ -433,7 +426,7 @@ const static uint8_t MOTOR_VALUES_OFFROAD4[] = {
 
 // Process Motor Code.
 // Note, that only the Deluxe Moving Motor Code is ported for now.
-// Source: 0xE644
+// At: e644
 void OOutputs::do_motors(int MODE, int16_t input_motor) {
    motor_x_change = -(input_motor - (MODE == MODE_FFEEDBACK? CENTRE_POS: motor_centre_pos));
    if (!motor_enabled) {
@@ -465,7 +458,7 @@ void OOutputs::do_motors(int MODE, int16_t input_motor) {
    }
 }
 
-// Source: 0xE6DA
+// At: e6da
 void OOutputs::car_moving(const int MODE) {
 // Motor is currently moving
    if (motor_movement) {
@@ -548,7 +541,7 @@ void OOutputs::car_moving(const int MODE) {
    }
 }
 
-// Source: 0xE822
+// At: e822
 void OOutputs::car_stationary() {
    int16_t change = std::abs(motor_x_change);
    if (change <= 8) {
@@ -569,7 +562,7 @@ void OOutputs::car_stationary() {
    }
 }
 
-// Source: 0xE8DA
+// At: e8da
 void OOutputs::adjust_motor() {
    int16_t change = motor_change_latch; // d1
    motor_change_latch = motor_x_change;
@@ -595,7 +588,7 @@ void OOutputs::adjust_motor() {
 }
 
 // Adjust motor during crash/skid state
-// Source: 0xE994
+// At: e994
 void OOutputs::do_motor_crash() {
    if (oferrari.car_x_diff == 0)
       set_value(MOTOR_VALUES_OFFROAD1, 3);
@@ -606,7 +599,7 @@ void OOutputs::do_motor_crash() {
 }
 
 // Adjust motor when wheels are off-road
-// Source: 0xE9BE
+// At: e9be
 void OOutputs::do_motor_offroad() {
    const uint8_t *table = (oferrari.wheel_state != OFerrari::WHEELS_OFF)? MOTOR_VALUES_OFFROAD2: MOTOR_VALUES_OFFROAD1;
    const uint16_t car_inc = oinitengine.car_increment >> 16;
@@ -624,7 +617,7 @@ void OOutputs::set_value(const uint8_t *table, uint8_t index) {
    done();
 }
 
-// Source: 0xE94E
+// At: e94e
 void OOutputs::done() {
    if (std::abs(motor_x_change) <= 8) {
       was_small_change = true;
@@ -647,19 +640,18 @@ void OOutputs::motor_output(uint8_t cmd) {
    forcefeedback::set(cmd, force);
 }
 
-// ------------------------------------------------------------------------------------------------
 // Deluxe Upright: Steering Wheel Movement
-// ------------------------------------------------------------------------------------------------
+// ───────────────────────────────────────
 
 // Deluxe Upright: Vibration Enable Table. 4 Groups of vibration values.
 const static uint8_t VIBRATE_LOOKUP[] = {
-// SLOW SPEED --------   // MEDIUM SPEED ------
+// SLOW SPEED ────────	// MEDIUM SPEED ──────
    1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0,
-// FAST SPEED --------   // VERY FAST SPEED ---
+// FAST SPEED ────────	// VERY FAST SPEED ───
    1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1,
 };
 
-// Source: 0xEAAA
+// At: eaaa
 void OOutputs::do_vibrate_upright() {
    if (outrun.game_state != GS_INGAME) {
       clear_digital(D_MOTOR);
@@ -711,9 +703,8 @@ void OOutputs::do_vibrate_upright() {
    vibrate_counter++;
 }
 
-// ------------------------------------------------------------------------------------------------
 // Mini Upright: Steering Wheel Movement
-// ------------------------------------------------------------------------------------------------
+// ─────────────────────────────────────
 void OOutputs::do_vibrate_mini() {
    if (outrun.game_state != GS_INGAME) {
       clear_digital(D_MOTOR);
@@ -762,10 +753,9 @@ void OOutputs::do_vibrate_mini() {
    }
 }
 
-// ------------------------------------------------------------------------------------------------
 // Coin Chute Output
-// Source: 0x6F8C
-// ------------------------------------------------------------------------------------------------
+// ─────────────────
+// At: 6f8c
 void OOutputs::coin_chute_out(CoinChute *chute, bool insert) {
 // Initalize counter if coin inserted
    chute->counter[2] = insert? 1: 0;

@@ -1,8 +1,7 @@
 // Video Rendering.
-//
-// - Renders the System 16 Video Layers
-// - Handles Reads and Writes to these layers from the main game code
-// - Interfaces with platform specific rendering code
+// -	Renders the System 16 Video Layers
+// -	Handles Reads and Writes to these layers from the main game code
+// -	Interfaces with platform specific rendering code
 //
 // Copyright Chris White.
 // See License.txt for more details.
@@ -73,9 +72,8 @@ void Video::disable() {
    enabled = false;
 }
 
-// ------------------------------------------------------------------------------------------------
 // Configure video settings from config file
-// ------------------------------------------------------------------------------------------------
+// ─────────────────────────────────────────
 int Video::set_video_mode(video_settings_t *settings) {
    if (settings->widescreen) {
       config.s16_width = S16_WIDTH_WIDE;
@@ -99,22 +97,18 @@ int Video::set_video_mode(video_settings_t *settings) {
    return 1;
 }
 
-// --------------------------------------------------------------------------------------------
 // Shadow Colours.
+// ───────────────
 // 63% Intensity is the correct value derived from hardware as follows:
-//
-// 1/ Shadows are just an extra 220 ohm resistor that goes to ground when enabled.
-// 2/ This is in parallel with the resistor-"DAC" (3.9k, 2k, 1k, 0.5k, 0.25k),
-//    and otherwise left floating.
+// 1/	Shadows are just an extra 220 ohm resistor that goes to ground when enabled.
+// 2/	This is in parallel with the resistor-"DAC" (3.9k, 2k, 1k, 0.5k, 0.25k), and otherwise left floating.
 //
 // Static calculation example:
-//
-// const float rDAC   = 1.f/(1.f/3900.f + 1.f/2000.f + 1.f/1000.f + 1.f/500.f + 1.f/250.f);
-// const float rShade = 220.f;
-// const float shadeAttenuation = rShade/(rShade + rDAC); // 0.63f
+//	const float rDAC   = 1.f/(1.f/3900.f + 1.f/2000.f + 1.f/1000.f + 1.f/500.f + 1.f/250.f);
+//	const float rShade = 220.f;
+//	const float shadeAttenuation = rShade/(rShade + rDAC); // 0.63f
 //
 // (MAME uses an incorrect value which is closer to 78% Intensity)
-// --------------------------------------------------------------------------------------------
 void Video::set_shadow_intensity(float f) {
    renderer->set_shadow_intensity(f);
 }
@@ -153,9 +147,8 @@ bool Video::supports_vsync() {
    return renderer->supports_vsync();
 }
 
-// ---------------------------------------------------------------------------
 // Text Handling Code
-// ---------------------------------------------------------------------------
+// ──────────────────
 void Video::clear_text_ram() {
    for (uint32_t i = 0; i <= 0xFFF; i++)
       tile_layer->text_ram[i] = 0;
@@ -195,9 +188,8 @@ uint8_t Video::read_text8(uint32_t addr) {
    return tile_layer->text_ram[addr&0xFFF];
 }
 
-// ---------------------------------------------------------------------------
 // Tile Handling Code
-// ---------------------------------------------------------------------------
+// ──────────────────
 void Video::clear_tile_ram() {
    for (uint32_t i = 0; i <= 0xFFFF; i++)
       tile_layer->tile_ram[i] = 0;
@@ -237,17 +229,15 @@ uint8_t Video::read_tile8(uint32_t addr) {
    return tile_layer->tile_ram[addr&0xFFFF];
 }
 
-// ---------------------------------------------------------------------------
 // Sprite Handling Code
-// ---------------------------------------------------------------------------
+// ────────────────────
 void Video::write_sprite16(uint32_t *addr, const uint16_t data) {
    sprite_layer->write(*addr&0xfff, data);
    *addr += 2;
 }
 
-// ---------------------------------------------------------------------------
 // Palette Handling Code
-// ---------------------------------------------------------------------------
+// ─────────────────────
 void Video::write_pal8(uint32_t *palAddr, const uint8_t data) {
    palette[*palAddr&0x1fff] = data;
    refresh_palette(*palAddr&0x1fff);

@@ -12,63 +12,59 @@
 // All rights reserved.
 
 // System 16B-style tilemaps
-//
+// ━━━━━━━━━━━━━━━━━━━━━━━━━
 // 16 total pages
 // Column/rowscroll enabled via bits in text layer
 // Alternate tilemap support
 //
 // Tile format:
-//     Bits               Usage
-//     p------- --------  Tile priority versus sprites
-//     -??----- --------  Unknown
-//     ---ccccc cc------  Tile color palette
-//     ---nnnnn nnnnnnnn  Tile index
-//
+//	Bits			Usage
+//	p――――――― ――――――――	Tile priority versus sprites
+//	―??――――― ――――――――	Unknown
+//	―――ccccc cc――――――	Tile color palette
+//	―――nnnnn nnnnnnnn	Tile index
 // Text format:
-//     Bits               Usage
-//     p------- --------  Tile priority versus sprites
-//     -???---- --------  Unknown
-//     ----ccc- --------  Tile color palette
-//     -------n nnnnnnnn  Tile index
-//
+//	Bits			Usage
+//	p――――――― ――――――――	Tile priority versus sprites
+//	―???―――― ――――――――	Unknown
+//	――――ccc― ――――――――	Tile color palette
+//	―――――――n nnnnnnnn	Tile index
 // Alternate tile format:
-//     Bits               Usage
-//     p------- --------  Tile priority versus sprites
-//     -??----- --------  Unknown
-//     ----cccc ccc-----  Tile color palette
-//     ---nnnnn nnnnnnnn  Tile index
-//
+//	Bits			Usage
+//	p――――――― ――――――――	Tile priority versus sprites
+//	―??――――― ――――――――	Unknown
+//	――――cccc ccc―――――	Tile color palette
+//	―――nnnnn nnnnnnnn	Tile index
 // Alternate text format:
-//     Bits               Usage
-//     p------- --------  Tile priority versus sprites
-//     -???---- --------  Unknown
-//     -----ccc --------  Tile color palette
-//     -------- nnnnnnnn  Tile index
-//
+//	Bits			Usage
+//	p――――――― ――――――――	Tile priority versus sprites
+//	―???―――― ――――――――	Unknown
+//	―――――ccc ――――――――	Tile color palette
+//	―――――――― nnnnnnnn	Tile index
 // Text RAM:
-//     Offset   Bits               Usage
-//     E80      aaaabbbb ccccdddd  Foreground tilemap page select
-//     E82      aaaabbbb ccccdddd  Background tilemap page select
-//     E84      aaaabbbb ccccdddd  Alternate foreground tilemap page select
-//     E86      aaaabbbb ccccdddd  Alternate background tilemap page select
-//     E90      c------- --------  Foreground tilemap column scroll enable
-//              -------v vvvvvvvv  Foreground tilemap vertical scroll
-//     E92      c------- --------  Background tilemap column scroll enable
-//              -------v vvvvvvvv  Background tilemap vertical scroll
-//     E94      -------v vvvvvvvv  Alternate foreground tilemap vertical scroll
-//     E96      -------v vvvvvvvv  Alternate background tilemap vertical scroll
-//     E98      r------- --------  Foreground tilemap row scroll enable
-//              ------hh hhhhhhhh  Foreground tilemap horizontal scroll
-//     E9A      r------- --------  Background tilemap row scroll enable
-//              ------hh hhhhhhhh  Background tilemap horizontal scroll
-//     E9C      ------hh hhhhhhhh  Alternate foreground tilemap horizontal scroll
-//     E9E      ------hh hhhhhhhh  Alternate background tilemap horizontal scroll
-//     F16-F3F  -------- vvvvvvvv  Foreground tilemap per-16-pixel-column vertical scroll
-//     F56-F7F  -------- vvvvvvvv  Background tilemap per-16-pixel-column vertical scroll
-//     F80-FB7  a------- --------  Foreground tilemap per-8-pixel-row alternate tilemap enable
-//              -------h hhhhhhhh  Foreground tilemap per-8-pixel-row horizontal scroll
-//     FC0-FF7  a------- --------  Background tilemap per-8-pixel-row alternate tilemap enable
-//              -------h hhhhhhhh  Background tilemap per-8-pixel-row horizontal scroll
+//	Offset	Bits			Usage
+//	E80	aaaabbbb ccccdddd	Foreground tilemap page select
+//	E82	aaaabbbb ccccdddd	Background tilemap page select
+//	E84	aaaabbbb ccccdddd	Alternate foreground tilemap page select
+//	E86	aaaabbbb ccccdddd	Alternate background tilemap page select
+//	E90	c――――――― ――――――――	Foreground tilemap column scroll enable
+//		―――――――v vvvvvvvv	Foreground tilemap vertical scroll
+//	E92	c――――――― ――――――――	Background tilemap column scroll enable
+//		―――――――v vvvvvvvv	Background tilemap vertical scroll
+//	E94	―――――――v vvvvvvvv	Alternate foreground tilemap vertical scroll
+//	E96	―――――――v vvvvvvvv	Alternate background tilemap vertical scroll
+//	E98	r――――――― ――――――――	Foreground tilemap row scroll enable
+//		――――――hh hhhhhhhh	Foreground tilemap horizontal scroll
+//	E9A	r――――――― ――――――――	Background tilemap row scroll enable
+//		――――――hh hhhhhhhh	Background tilemap horizontal scroll
+//	E9C	――――――hh hhhhhhhh	Alternate foreground tilemap horizontal scroll
+//	E9E	――――――hh hhhhhhhh	Alternate background tilemap horizontal scroll
+//	F16-F3F	―――――――― vvvvvvvv	Foreground tilemap per-16-pixel-column vertical scroll
+//	F56-F7F	―――――――― vvvvvvvv	Background tilemap per-16-pixel-column vertical scroll
+//	F80-FB7	a――――――― ――――――――	Foreground tilemap per-8-pixel-row alternate tilemap enable
+//		―――――――h hhhhhhhh	Foreground tilemap per-8-pixel-row horizontal scroll
+//	FC0-FF7	a――――――― ――――――――	Background tilemap per-8-pixel-row alternate tilemap enable
+//		―――――――h hhhhhhhh	Background tilemap per-8-pixel-row horizontal scroll
 
 hwtiles::hwtiles(void) {
    for (int i = 0; i < 2; i++)
@@ -129,8 +125,7 @@ void hwtiles::restore_tiles() {
 
 // Set Tilemap X Clamp
 //
-// This is used for the widescreen mode, in order to clamp the tilemap to
-// a location of the screen.
+// This is used for the widescreen mode, in order to clamp the tilemap to a location of the screen.
 //
 // In-Game we must clamp right to avoid page scrolling issues.
 //
@@ -235,8 +230,8 @@ void hwtiles::render_text_layer(uint16_t *buf, uint8_t priority_draw) {
                x = 8*mx;
                y = 8*my;
                x -= 192;
-            // We also adjust the text layer for wide-screen below. But don't allow painting in the
-            // wide-screen areas to avoid graphical glitches.
+            // We also adjust the text layer for wide-screen below.
+            // But don't allow painting in the wide-screen areas to avoid graphical glitches.
                if (x > 7 && x < (s16_width_noscale - 8) && y > 7 && y <= (S16_HEIGHT - 8))
                   (this->*render8x8_tile_mask)(buf, Code, x + config.s16_x_off, y, Colour, 3, 0, TILEMAP_COLOUR_OFFSET);
                else if (x > -8 && x < s16_width_noscale && y >= 0 && y < S16_HEIGHT)
@@ -308,11 +303,9 @@ void hwtiles::render8x8_tile_mask_clip_lores(uint16_t *buf, uint16_t nTileNumber
    }
 }
 
-// ------------------------------------------------------------------------------------------------
 // Additional routines for Hi-Res Mode.
-// Note that the tilemaps are displayed at the same resolution, we just want everything to be
-// proportional.
-// ------------------------------------------------------------------------------------------------
+// ────────────────────────────────────
+// Note that the tilemaps are displayed at the same resolution, we just want everything to be proportional.
 void hwtiles::render8x8_tile_mask_hires(uint16_t *buf, uint16_t nTileNumber, uint16_t StartX, uint16_t StartY, uint16_t nTilePalette, uint16_t nColourDepth, uint16_t nMaskColour, uint16_t nPaletteOffset) {
    uint32_t nPalette = (nTilePalette << nColourDepth) | nMaskColour;
    uint32_t *pTileData = tiles + (nTileNumber << 3);

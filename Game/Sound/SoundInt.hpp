@@ -1,8 +1,7 @@
 // Interface to Ported Z80 Code.
 // Handles the interface between 68000 program code and Z80.
 //
-// Also abstracted here, so the more complex OSound class isn't exposed
-// to the main code directly
+// Also abstracted here, so the more complex OSound class isn't exposed to the main code directly
 //
 // Copyright Chris White.
 // See License.txt for more details.

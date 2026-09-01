@@ -20,7 +20,7 @@ OHiScore::~OHiScore(void) {
 
 // Clear score variables (not scores themselves)
 //
-// Source: 0xCE74
+// At: ce74
 void OHiScore::init() {
 #if 0
    ostats.score = 0x04100000; // hack
@@ -39,7 +39,7 @@ void OHiScore::init() {
 
 // Setup palette for Best Outrunners High Score Entry
 // This is the shaded red background for the hi-score entry
-// Source: 0x360C
+// At: 360c
 void OHiScore::setup_pal_best() {
    uint32_t src = PAL_BESTOR;
    uint32_t dst = 0x120F00;
@@ -49,7 +49,7 @@ void OHiScore::setup_pal_best() {
 
 // Setup road colour for Best Outrunners High Score Entry
 // This is a pure black road for the hi-score entry
-// Source: 0x3624
+// At: 3624
 void OHiScore::setup_road_best() {
    uint32_t dst = 0x120800;
    for (int i = 0; i <= 0x1F; i++)
@@ -57,7 +57,7 @@ void OHiScore::setup_road_best() {
 }
 
 // Initalize Default Score Table
-// Source: 0xD17A
+// At: d17a
 void OHiScore::init_def_scores() {
    uint32_t adr = DEFAULT_SCORES;
    for (int i = 0; i < NO_SCORES; i++) {
@@ -85,7 +85,7 @@ void OHiScore::init_def_scores() {
 
 // Hi Score Processing Logic
 //
-// Source: 0xD1C4
+// At: d1c4
 void OHiScore::tick() {
    switch (state&3) {
    // Detect Score Position, Insert Score, Init Table
@@ -123,7 +123,7 @@ void OHiScore::tick() {
 }
 
 // Calculate high score position.
-// Source: D318
+// At: d318
 void OHiScore::get_score_pos() {
    for (int i = 0; i < NO_SCORES; i++) {
       if (ostats.score > scores[i].score) {
@@ -135,12 +135,12 @@ void OHiScore::get_score_pos() {
    score_pos = -1; // Not a new high-score
 }
 
-// - Insert Score Entry
-// - Move Other Entries Down In Memory
-// - Calculate Completed Time
-// - Setup Appropriate Minimap Tiles
+// -	Insert Score Entry
+// -	Move Other Entries Down In Memory
+// -	Calculate Completed Time
+// -	Setup Appropriate Minimap Tiles
 //
-// Source: 0xD2C0
+// At: d2c0
 void OHiScore::insert_score() {
 // Move entries down in memory
    for (int i = NO_SCORES - 1; i > score_pos; i--) {
@@ -165,7 +165,7 @@ void OHiScore::insert_score() {
 }
 
 // Set Table Position To Display Score From. Store Result in $26
-// Source: 0xD298
+// At: d298
 void OHiScore::set_display_pos() {
 #if 1
    if (score_pos < 0) {
@@ -184,7 +184,7 @@ void OHiScore::set_display_pos() {
 
 // Check whether to perform name entry.
 // Print alphabet and other stuff if necessary.
-// Source: 0xD252
+// At: d252
 void OHiScore::check_name_entry() {
 // No High Score
    if (score_pos == -1) {
@@ -210,7 +210,7 @@ void OHiScore::check_name_entry() {
 }
 
 // Get Address in text ram at which to output score
-// Source: 0xD542
+// At: d542
 uint32_t OHiScore::get_score_adr() {
    if (score_pos < 3)
       return 0x110452 + (score_pos << 8); // top 3 positions
@@ -220,7 +220,7 @@ uint32_t OHiScore::get_score_adr() {
 }
 
 // Blit Alphabet. Highlight selected letter red.
-// Source: 0xD45A
+// At: d45a
 void OHiScore::blit_alphabet() {
 // Print Text: "ABCDEFGHIJK..."
    ohud.blit_text2(TEXT2_ALPHABET);
@@ -243,7 +243,7 @@ void OHiScore::blit_alphabet() {
 //
 // Takes address of score entry as input
 //
-// Source: 0xD42C
+// At: d42c
 void OHiScore::flash_entry(uint32_t adr) {
    uint16_t tile = 0x20; // Default blank tile
    flash++; // Increment flashing counter
@@ -255,7 +255,7 @@ void OHiScore::flash_entry(uint32_t adr) {
 
 // High Score Input
 //
-// Source: 0xD33A
+// At: d33a
 void OHiScore::do_input(uint32_t adr) {
 // Read Steering Left / Right & Denote Letter To Be Highlighted
    const static uint8_t ENTRIES = 28; // 28 Possible entries we can select from
@@ -315,11 +315,11 @@ void OHiScore::do_input(uint32_t adr) {
 // Read controls for high score input screen
 //
 // Output:
-//  0 = No Movement
-// -1 = Left
-//  1 = Right
+//	0 = No Movement
+//	-1 = Left
+//	+1 = Right
 //
-// Source: 0xD4DA
+// At: d4da
 int8_t OHiScore::read_controls() {
 // Determine when accelerator has been pressed then depressed
    if (oinputs.input_acc < 0x30) {
@@ -353,7 +353,7 @@ int8_t OHiScore::read_controls() {
 
 // Display Best Outrunners in attract mode and name entry screen
 //
-// Source: 0xCE84
+// At: ce84
 void OHiScore::display_scores() {
    switch (best_or_state) {
    // Init
@@ -376,12 +376,11 @@ void OHiScore::display_scores() {
    }
 }
 
-// ------------------------------------------------------------------------------------------------
-//                                       Mini car Movement
-// ------------------------------------------------------------------------------------------------
+// Mini car Movement
+// ─────────────────
 
 // Setup minicars before they move across screen
-// Source: 0xCED2
+// At: ced2
 void OHiScore::setup_minicars() {
    for (int i = 0; i < NO_MINICARS; i++) {
       minicars[i].pos = 0x100;
@@ -392,7 +391,7 @@ void OHiScore::setup_minicars() {
 }
 
 // Move minicars across screen on text ram layer
-// Source: 0xCF0E
+// At: cf0e
 void OHiScore::tick_minicars() {
 // Destination in text ram
    uint32_t dst = 0x11047C;
@@ -450,7 +449,7 @@ void OHiScore::tick_minicars() {
 
 // Setup palette and priority data for the copied tiles behind the minicar.
 // The palette & priority used for the text depends on the position.
-// Source: 0xCFCC
+// At: cfcc
 void OHiScore::setup_minicars_pal(minicar_entry *minicar) {
    uint8_t pos = minicar->pos >> 8;
 // Lap Time Tile Properties
@@ -469,11 +468,10 @@ void OHiScore::setup_minicars_pal(minicar_entry *minicar) {
    minicar->tile_props = 0x8600;
 }
 
-// ------------------------------------------------------------------------------------------------
-//                                     Score Table Rendering
-// ------------------------------------------------------------------------------------------------
+// Score Table Rendering
+// ─────────────────────
 
-// Source: 0xD00C
+// At: d00c
 void OHiScore::blit_score_table() {
 // Clear tile table ready for High Score Display
    uint32_t tile_addr = 0x10E000; // Tile Table 15
@@ -490,7 +488,7 @@ void OHiScore::blit_score_table() {
 }
 
 // Blit 7x single digit at start of score table (1. 2. 3. 4. 5. 6. 7.)
-// Source: 0xD03A
+// At: d03a
 void OHiScore::blit_digit() {
 // Destination in tile ram for digit
    uint32_t dst = 0x10E438;
@@ -519,7 +517,7 @@ void OHiScore::blit_digit() {
 
 // Blit High Scores
 //
-// Source: 0xD078
+// At: d078
 void OHiScore::blit_scores() {
 // Destination in tile ram for digit
    uint32_t dst = 0x10E43E;
@@ -534,7 +532,7 @@ void OHiScore::blit_scores() {
 
 // Blit Initials
 //
-// Source: 0xD0A4
+// At: d0a4
 void OHiScore::blit_initials() {
 // Destination in tile ram for digit
    uint32_t dst = 0x10E452;
@@ -552,7 +550,7 @@ void OHiScore::blit_initials() {
 
 // Blit mini route map
 //
-// Source: 0xD0D8
+// At: d0d8
 void OHiScore::blit_route_map() {
 // Destination in tile ram for digit
    uint32_t dst = 0x10E45E;
@@ -572,7 +570,7 @@ void OHiScore::blit_route_map() {
 
 // Blit laptime
 //
-// Source: 0xD112
+// At: d112
 void OHiScore::blit_lap_time() {
 // Destination in tile ram for digit
    uint32_t dst = 0x10E46A;
@@ -602,7 +600,7 @@ void OHiScore::blit_lap_time() {
 // Convert laptime to tile data and store in laptime array.
 // Enhanced routine to handle minutes > 9
 //
-// Source: 0x806C
+// At: 806c
 void OHiScore::convert_lap_time(uint16_t time) {
    const uint16_t MINUTE = 3600;
    int32_t src_time = time; // laptime copy [d0]

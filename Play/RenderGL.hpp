@@ -1,9 +1,9 @@
 // Open GL Video Rendering.
 //
 // Useful References:
-// http://www.sdltutorials.com/sdl-opengl-tutorial-basics
-// http://www.opengl.org/wiki/Common_Mistakes
-// http://open.gl/textures
+//	http://www.sdltutorials.com/sdl-opengl-tutorial-basics
+//	http://www.opengl.org/wiki/Common_Mistakes
+//	http://open.gl/textures
 //
 // Copyright Chris White.
 // See License.txt for more details.

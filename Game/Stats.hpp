@@ -1,8 +1,8 @@
 // In-Game Statistics.
-// - Stage Timers
-// - Route Info
-// - Speed to Score Conversion
-// - Bonus Time Increment
+// -	Stage Timers
+// -	Route Info
+// -	Speed to Score Conversion
+// -	Bonus Time Increment
 //
 // Copyright Chris White.
 // See License.txt for more details.
@@ -13,29 +13,26 @@
 class OStats {
 public:
 // Current stage
-// 0    = Stage 1
-// 1    = Stage 2
-// 2    = Stage 3
-// 3    = Stage 4
-// 4    = Stage 5
-// -1   = Bonus Points Section
+//	+0 = Stage 1
+//	+1 = Stage 2
+//	+2 = Stage 3
+//	+3 = Stage 4
+//	+4 = Stage 5
+//	-1 = Bonus Points Section
 //
-// A good way to quickly see the end sequence is to set this to '4' and play
-// through the first level.
+// A good way to quickly see the end sequence is to set this to '4' and play through the first level.
    int8_t cur_stage;
 // Score (Outputs Hex values directly)
    uint32_t score;
 // Store info on the route taken by the player
-//
-// +10 For each stage.
+//	+10 For each stage.
 //
 // Then increment by the following when Left Hand route selected at each stage.
-//
-// Stage 1 = +8 (1 << 3 - 0)
-// Stage 2 = +4 (1 << 3 - 1)
-// Stage 3 = +2 (1 << 3 - 2)
-// Stage 4 = +1 (1 << 3 - 3)
-// Stage 5 = Road doesn't split on this stage
+//	Stage 1 = +8 (1 << 3 - 0)
+//	Stage 2 = +4 (1 << 3 - 1)
+//	Stage 3 = +2 (1 << 3 - 2)
+//	Stage 4 = +1 (1 << 3 - 3)
+//	Stage 5 = Road doesn't split on this stage
 //
 // So if we reach Stage 2 (left route) we do 10 + 8 = 18
    uint16_t route_info;

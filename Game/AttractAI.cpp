@@ -4,32 +4,25 @@
 // This code contains a port of the original AI and a new enhanced AI.
 //
 // Enhanced AI Bug-Fixes:
-// ----------------------
-// - AI is much better at driving tracks without crashing into scenery.
-// - No weird juddering when turning corners.
-// - No brake light flickering.
-// - Can drive any stage in the game competently.
-// - Selects a true random route, rather than a pre-defined route.
-// - Can handle split tracks correctly.
+// ──────────────────────
+// -	AI is much better at driving tracks without crashing into scenery.
+// -	No weird juddering when turning corners.
+// -	No brake light flickering.
+// -	Can drive any stage in the game competently.
+// -	Selects a true random route, rather than a pre-defined route.
+// -	Can handle split tracks correctly.
 //
-// It still occasionally collides with scenery on the later stages, but
-// I think this is ok - as we want to demo a few collisions!
+// It still occasionally collides with scenery on the later stages, but I think this is ok - as we want to demo a few collisions!
 //
 // Notes on the original AI:
-// -------------------------
-// The final behaviour of the AI differs from the original game.
-//
-// This is because the core Ferrari logic the AI relies on is in turn
-// dependent on timing behaviour between the two 68k CPUs.
-//
-// Differences in timing lead to subtle differences in the road x position
-// at that particular point of time. Over time, these differences are
-// magnified.
-//
-// MAME does not accurately reproduce the arcade machine with regard to
-// this. And the Saturn conversion also exhibits different behaviour.
-//
-// The differences are relatively minor but noticeable.
+// ─────────────────────────
+// ▪	The final behaviour of the AI differs from the original game.
+// ▪	This is because the core Ferrari logic the AI relies on is in turn dependent on timing behaviour between the two 68k CPUs.
+// ▪	Differences in timing lead to subtle differences in the road x position at that particular point of time.
+//	Over time, these differences are magnified.
+// ▪	MAME does not accurately reproduce the arcade machine with regard to this.
+//	And the Saturn conversion also exhibits different behaviour.
+// ▪	The differences are relatively minor but noticeable.
 //
 // Copyright Chris White.
 // See License.txt for more details.
@@ -54,21 +47,18 @@ void OAttractAI::init() {
    last_stage = -1;
 }
 
-// ------------------------------------------------------------------------------------------------
-//                                           ENHANCED AI CODE
-// ------------------------------------------------------------------------------------------------
+// ENHANCED AI CODE
+// ────────────────
 
 void OAttractAI::tick_ai_enhanced() {
-// --------------------------------------------------------------------------------------------
 // Choose Route At Random
-// --------------------------------------------------------------------------------------------
+// ──────────────────────
    if (last_stage != ostats.cur_stage) {
       last_stage = ostats.cur_stage;
       oferrari.sprite_ai_x = std::rand()&1;
    }
-// --------------------------------------------------------------------------------------------
 // Steering
-// --------------------------------------------------------------------------------------------
+// ────────
    int16_t future_x;
 // Select road at road split
    if (oinitengine.rd_split_state > 0 && oinitengine.rd_split_state < 8)
@@ -85,9 +75,8 @@ void OAttractAI::tick_ai_enhanced() {
    else if (oferrari.sprite_ai_steer < -0x7F)
       oferrari.sprite_ai_steer = -0x7F;
    oinputs.steering_adjust = oferrari.sprite_ai_steer;
-// --------------------------------------------------------------------------------------------
 // Braking: Brake when we get too close to the edge of the track
-// --------------------------------------------------------------------------------------------
+// ─────────────────────────────────────────────────────────────
    oinputs.brake_adjust = 0;
    if (oinitengine.car_increment >> 16 >= 0x80) {
       int16_t x = oinitengine.car_x_pos;
@@ -126,22 +115,20 @@ void OAttractAI::tick_ai_enhanced() {
          oinputs.brake_adjust = OInputs::BRAKE_THRESHOLD4;
       otraffic.ai_traffic = 0;
    }
-// --------------------------------------------------------------------------------------------
 // Acceleration: Always accelerate unless we're breaking
-// --------------------------------------------------------------------------------------------
+// ─────────────────────────────────────────────────────
    if (!oinputs.brake_adjust)
       oinputs.acc_adjust = 0xFF;
    else
       oinputs.acc_adjust = 0;
 }
 
-// ------------------------------------------------------------------------------------------------
-//                                           ORIGINAL AI CODE
-// ------------------------------------------------------------------------------------------------
+// ORIGINAL AI CODE
+// ────────────────
 
 // Attract Mode AI Code
 //
-// Source: 0xA084
+// At: a084
 void OAttractAI::tick_ai() {
 // Check upcoming road segment for straight/curve.
 // Choose route from pre defined table at road split.
@@ -191,11 +178,10 @@ void OAttractAI::tick_ai() {
 // Check upcoming road segment for straight/curve
 // Check upcoming road segment for road split
 //
-// Source: 0xA318
+// At: a318
 void OAttractAI::check_road() {
-// --------------------------------------------------------------------------------------------
 // Process Upcoming Curve
-// --------------------------------------------------------------------------------------------
+// ──────────────────────
    const int16_t STEER = 0xb4;
 // Upcoming Road: Straight or No Change
    if (oinitengine.road_type_next <= OInitEngine::ROAD_STRAIGHT) {
@@ -215,9 +201,8 @@ void OAttractAI::check_road() {
    else {
       oferrari.sprite_ai_x = oinitengine.road_type_next == OInitEngine::ROAD_LEFT? STEER: -STEER;
    }
-// --------------------------------------------------------------------------------------------
 // Process Road Split
-// --------------------------------------------------------------------------------------------
+// ──────────────────
    if (oinitengine.rd_split_state > 0 && oinitengine.rd_split_state < 4) {
    // Route information for stages
    // 0 = Turn Left, 1 = Turn Right
@@ -229,7 +214,7 @@ void OAttractAI::check_road() {
 
 // Set steering value based on road split, previously set curve info
 //
-// Source: 0xA3C2
+// At: a3c2
 void OAttractAI::set_steering() {
    int16_t steering = 0; // d0
    int16_t car_x_diff = 0; // d1
@@ -308,14 +293,13 @@ void OAttractAI::set_steering() {
    oferrari.sprite_car_x_bak = car_x;
 }
 
-// ------------------------------------------------------------------------------------------------
-//                                        END OF GAME AI CODE
-// ------------------------------------------------------------------------------------------------
+// END OF GAME AI CODE
+// ───────────────────
 
 // Bonus Mode: Set x steering adjustment
 // Check upcoming road segment for straight/curve
 //
-// Source: 0xA498
+// At: a498
 void OAttractAI::check_road_bonus() {
 // Upcoming Road: Straight or No Change
    if (oinitengine.road_type_next <= OInitEngine::ROAD_STRAIGHT) {
@@ -338,7 +322,7 @@ void OAttractAI::check_road_bonus() {
 
 // Bonus Mode: Set steering value configured in check_road_bonus()
 //
-// Source: 0xA510
+// At: a510
 void OAttractAI::set_steering_bonus() {
    int16_t steering = oinitengine.car_x_pos; // d4
 // Road Split During Bonus Mode

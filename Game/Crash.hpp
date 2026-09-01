@@ -2,19 +2,18 @@
 //
 // There are two types of collision: Scenery & Traffic.
 //
-// 1/ Traffic: The Ferrari will spin after a collision.
-// 2/ Scenery: There are three types of scenery collision:
-//    - Low speed bump. Car rises slightly in the air and stalls.
-//    - Mid speed spin. Car spins and slides after collision.
-//    - High speed flip. If slightly slower, car rolls into screen.
-//      Otherwise, grows towards screen and vanishes
+// 1/	Traffic: The Ferrari will spin after a collision.
+// 2/	Scenery: There are three types of scenery collision:
+//	-	Low speed bump. Car rises slightly in the air and stalls.
+//	-	Mid speed spin. Car spins and slides after collision.
+//	-	High speed flip. If slightly slower, car rolls into screen.
+//		Otherwise, grows towards screen and vanishes
 //
 // Known Issues With Original Code:
-// - Passenger sprites flicker if they land moving in the water on Stage 1
+// -	Passenger sprites flicker if they land moving in the water on Stage 1
 //
 // The Ferrari sprite is used differently by the crash code.
-// As there's only one of them, I've rolled the additional variables into
-// this class.
+// As there's only one of them, I've rolled the additional variables into this class.
 //
 // Copyright Chris White.
 // See License.txt for more details.
@@ -38,49 +37,43 @@ public:
 // Amount to adjust car x position by when skidding
    const static uint8_t SKID_X_ADJ = 24;
 // Crash State [Investigate Further]
-//
-// 0 = No crash
-// 1 = Collision with object. Init Spin if medium speed collision.
-// 2 = Flip Car.
-// 3 = Slide Car. Trigger Smoke Cloud.
-// 4 = Horizontally Flip Car. Trigger Smoke Cloud.
-// 5 = SPIN: Remove Smoke From Spin. Girl Points Finger.
-//     FLIP: Flip Animation Done.
-// 6 = Pan Camera To Track Centre
-// 7 = Camera Repositioned. Ready For Restart
-//
+//	0 =	No crash
+//	1 =	Collision with object. Init Spin if medium speed collision.
+//	2 =	Flip Car.
+//	3 =	Slide Car. Trigger Smoke Cloud.
+//	4 =	Horizontally Flip Car. Trigger Smoke Cloud.
+//	5 =	SPIN: Remove Smoke From Spin. Girl Points Finger.
+//		FLIP: Flip Animation Done.
+//	6 =	Pan Camera To Track Centre
+//	7 =	Camera Repositioned. Ready For Restart
 // (Note that hitting another vehicle and skidding does not affect the crash state)
    int8_t crash_state;
 // Skid Counter. Set On Collision With Another Vehicle Only.
-//
-// If positive, skid to the left.
-// If negative, skid to the right.
+// ▪	If positive, skid to the left.
+// ▪	If negative, skid to the right.
    int16_t skid_counter;
    int16_t skid_counter_bak;
 // Spin Control 1 - SPIN only
-//
-// 0 = No Spin
-// 1 = Init Spin Car
-// 2 = Spin In Progress
+//	0 = No Spin
+//	1 = Init Spin Car
+//	2 = Spin In Progress
    uint8_t spin_control1;
    uint8_t spin_control2;
 // Increments on a per collision basis (Follows on from collision_sprite being set)
 //
 // Used to cycle passenger animations after a crash
-//
-// coll_count1 != coll_count2 = Crash Subroutines Not Enabled
-// coll_count1 == coll_count2 = Crash Subroutines Enabled
+// ▪	coll_count1 != coll_count2 = Crash Subroutines Not Enabled
+// ▪	coll_count1 == coll_count2 = Crash Subroutines Enabled
    int16_t coll_count1;
    int16_t coll_count2;
 // Counter that increments per-frame during a crash scenario
    int16_t crash_counter;
 // Denotes the spin/flip number following the crash.
-//
-// 0 = No crash has taken place yet
-// 1 = Crash has taken place this level
-// 2 = Crash. First Spin/Flip.
-// 3 = Crash. Second Spin/Flip.
-// 4 = Crash. Third Spin/Flip.
+//	0 = No crash has taken place yet
+//	1 = Crash has taken place this level
+//	2 = Crash. First Spin/Flip.
+//	3 = Crash. Second Spin/Flip.
+//	4 = Crash. Third Spin/Flip.
    int16_t crash_spin_count;
 // Crash Sprite Z Position
    int16_t crash_z;
@@ -92,34 +85,33 @@ public:
    void clear_crash_state();
    void tick();
 private:
-// This is the rolled Ferrari sprite, which is configured differently for
-// the crash code.
+// This is the rolled Ferrari sprite, which is configured differently for the crash code.
 // The offsets indicate the original offsets in memory.
-// +1E [Word] Spins/Flips Remaining
+// +1E [Word]	Spins/Flips Remaining
    int16_t spinflipcount1;
-// +22 [Word] Crash Spin/Flip Count Copy
+// +22 [Word]	Crash Spin/Flip Count Copy
    int16_t spinflipcount2;
-// +24 [Word] Crash Slide Value (After Spin/Flip etc.)
+// +24 [Word]	Crash Slide Value (After Spin/Flip etc.)
    int16_t slide;
-// +26 [Word] Frame (actually an index into the Sprite format below)
+// +26 [Word]	Frame (actually an index into the Sprite format below)
    int16_t frame;
-// +28 [Long] Address of animation sequence (frame address, palette info etc.)
+// +28 [Long]	Address of animation sequence (frame address, palette info etc.)
    uint32_t addr;
-// +2C [Word] Camera Pan X Target (for repositioning after crash)
+// +2C [Word]	Camera Pan X Target (for repositioning after crash)
    int16_t camera_x_target;
-// +2E [Word] Camera Pan Increment
+// +2E [Word]	Camera Pan Increment
    int16_t camera_xinc;
-// +30 [Word] Index into movement lookup table (to set y position of car during low speed bump)
+// +30 [Word]	Index into movement lookup table (to set y position of car during low speed bump)
    int16_t lookup_index;
-// +32 [Word] Frame to restore car to after bump routine
+// +32 [Word]	Frame to restore car to after bump routine
    int16_t frame_restore;
-// +34 [Word] Used as a shift value to change y position during shunt
+// +34 [Word]	Used as a shift value to change y position during shunt
    int16_t shift;
-// +36 [Word] Flip Only: 0 = Fast Crash. 1 = Slow Crash.
+// +36 [Word]	Flip Only: 0 = Fast Crash. 1 = Slow Crash.
    int16_t crash_speed;
-// +38 [Word] Crash Z Increment (How much to change Crash Z Per Tick)
+// +38 [Word]	Crash Z Increment (How much to change Crash Z Per Tick)
    int16_t crash_zinc;
-// +3A [Word] 0 = RHS, 1 = LHS?
+// +3A [Word]	0 = RHS, 1 = LHS?
    int16_t crash_side;
 // Passenger Frame to use during spin
    int16_t spin_pass_frame;

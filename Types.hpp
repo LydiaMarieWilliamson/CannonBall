@@ -1,7 +1,6 @@
 // Data Types.
 //
-// The Boost library is only used to enforce data type size at compile
-// time.
+// The Boost library is only used to enforce data type size at compile time.
 //
 // If you're sure the sizes are correct, it can be removed for your port.
 //

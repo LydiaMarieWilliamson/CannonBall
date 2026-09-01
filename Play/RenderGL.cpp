@@ -1,9 +1,9 @@
 // Open GL Video Rendering.
 //
 // Useful References:
-// http://www.sdltutorials.com/sdl-opengl-tutorial-basics
-// http://www.opengl.org/wiki/Common_Mistakes
-// http://open.gl/textures
+//	http://www.sdltutorials.com/sdl-opengl-tutorial-basics
+//	http://www.opengl.org/wiki/Common_Mistakes
+//	http://open.gl/textures
 //
 // Copyright Chris White.
 // See License.txt for more details.
@@ -117,9 +117,8 @@ bool Render::init(int src_width, int src_height, int scale, int video_mode, int 
    Gmask = surface->format->Gmask;
    Bmask = surface->format->Bmask;
 #endif
-// --------------------------------------------------------------------------------------------
 // Initalize Open GL
-// --------------------------------------------------------------------------------------------
+// ─────────────────
 // Disable dithering
    glDisable(GL_DITHER);
 // Disable anti-aliasing

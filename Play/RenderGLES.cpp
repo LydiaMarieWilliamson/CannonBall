@@ -198,16 +198,15 @@ bool Render::init(int src_width, int src_height, int scale, int video_mode, int 
    Rshift = surface->format->Rshift;
    Gshift = surface->format->Gshift;
    Bshift = surface->format->Bshift;
-// --------------------------------------------------------------------------------------------
 // Initalize Open GL
-// --------------------------------------------------------------------------------------------
+// ─────────────────
    glDisable(GL_DITHER); // Disable Dithering
    glDisable(GL_DEPTH_TEST); // Disable Depth Buffer
    glClearColor(0, 0, 0, 0); // Black background
    glViewport(screen_xoff, screen_yoff, dst_width, dst_height);
 // Initalize Texture ID
    glGenTextures(1, &texture);
-// ---------- Screen texture setup  ------------------
+// ────────── Screen texture setup  ──────────────────
    const GLint param = config.video.filtering? GL_LINEAR: GL_NEAREST;
    glBindTexture(GL_TEXTURE_2D, texture);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -222,7 +221,7 @@ bool Render::init(int src_width, int src_height, int scale, int video_mode, int 
 // Leave screen texture binded so it's like that when we arrive to draw_frame so we save this call.
    glBindTexture(GL_TEXTURE_2D, texture);
    SHOW_ERROR
-// ---------- GL geometry setup  ------------------
+// ────────── GL geometry setup  ──────────────────
    GLfloat uvs[8];
    GLfloat proj[4][4];
 // Setup texture coordinates

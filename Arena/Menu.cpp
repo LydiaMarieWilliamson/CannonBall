@@ -62,7 +62,7 @@ void Menu::populate() {
    menu_musictest.push_back(ENTRY_MUSIC1);
    menu_musictest.push_back(ENTRY_MUSIC2);
    menu_musictest.push_back(ENTRY_BACK);
-   menu_about.push_back("CANNONBALL 0.35 � CHRIS WHITE 2022");
+   menu_about.push_back("CANNONBALL 0.35 \xa9 CHRIS WHITE 2022"); // '\xa9' = '©'
    menu_about.push_back("REASSEMBLER.BLOGSPOT.COM");
    menu_about.push_back(" ");
    menu_about.push_back("CANNONBALL IS FREE AND MAY NOT BE SOLD.");
@@ -81,9 +81,8 @@ void Menu::populate() {
    text_redefine.push_back("PRESS VIEW CHANGE");
 }
 
-// ------------------------------------------------------------------------------------------------
 // Populate Menus for PC Setup
-// ------------------------------------------------------------------------------------------------
+// ───────────────────────────
 void Menu::populate_for_pc() {
    menu_main.push_back(ENTRY_PLAYGAME);
    menu_main.push_back(ENTRY_GAMEMODES);
@@ -148,9 +147,8 @@ void Menu::populate_controls() {
    menu_controls_gp.push_back(ENTRY_BACK);
 }
 
-// ------------------------------------------------------------------------------------------------
 // Populate Menus for Genuine Cabinet Setup (via SmartyPi interface)
-// ------------------------------------------------------------------------------------------------
+// ─────────────────────────────────────────────────────────────────
 void Menu::populate_for_cabinet() {
    menu_main.push_back(ENTRY_PLAYGAME);
    menu_main.push_back(ENTRY_GAMEMODES);
@@ -661,9 +659,8 @@ void Menu::menu_back() {
    is_text_menu = (menu_selected == &menu_about);
 }
 
-// ------------------------------------------------------------------------------------------------
 // Refresh menu options with latest config data
-// ------------------------------------------------------------------------------------------------
+// ────────────────────────────────────────────
 void Menu::refresh_menu() {
    int16_t cursor_backup = cursor;
    for (cursor = 0; cursor < (int)menu_selected->size(); cursor++) {

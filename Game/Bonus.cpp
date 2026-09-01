@@ -24,7 +24,7 @@ void OBonus::init() {
 }
 
 // Display Text and countdown time for bonus mode
-// Source: 0x99E0
+// At: 99e0
 void OBonus::do_bonus_text() {
    switch (bonus_state) {
       case BONUS_TEXT_INIT:
@@ -49,7 +49,7 @@ void OBonus::do_bonus_text() {
 // Calculate Bonus Seconds. This uses the seconds remaining for every lap raced.
 // Print stuff to text layer for bonus mode.
 //
-// Source: 0x9A9C
+// At: 9a9c
 void OBonus::init_bonus_text() {
    bonus_state = BONUS_TEXT_SECONDS;
    int16_t time_counter_bak = ostats.time_counter << 8;
@@ -89,7 +89,7 @@ void OBonus::init_bonus_text() {
 }
 
 // Decrement bonus seconds. Blit seconds remaining.
-// Source: 9A08
+// At: 9a08
 void OBonus::decrement_bonus_secs() {
    if (bonus_counter < 60) {
       bonus_counter++;
@@ -110,7 +110,7 @@ void OBonus::decrement_bonus_secs() {
 }
 
 // Blit large yellow second remaining value e.g.: 23.3
-// Source: 0x9B7C
+// At: 9b7c
 void OBonus::blit_bonus_secs() {
    const uint8_t COL2 = 0x80;
    const uint16_t TILE_DOT = 0x8C2E;

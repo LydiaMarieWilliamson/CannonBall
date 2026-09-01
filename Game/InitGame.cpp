@@ -1,10 +1,9 @@
 // Core Game Engine Routines.
-//
-// - The main loop which advances the level onto the next segment.
-// - Code to directly control the road hardware. For example, the road
-//   split and bonus points routines.
-// - Code to determine whether to initialize certain game modes
-//   (Crash state, Bonus points, road split state)
+// -	The main loop which advances the level onto the next segment.
+// -	Code to directly control the road hardware.
+//	For example, the road split and bonus points routines.
+// -	Code to determine whether to initialize certain game modes
+//	(Crash state, Bonus points, road split state)
 //
 // Copyright Chris White.
 // See License.txt for more details.
@@ -40,7 +39,7 @@ OInitEngine::OInitEngine() {
 OInitEngine::~OInitEngine() {
 }
 
-// Source: 0x8360
+// At: 8360
 void OInitEngine::init(int8_t level) {
    ostats.game_completed = 0;
    ingame_engine = false;
@@ -92,7 +91,7 @@ void OInitEngine::init(int8_t level) {
    osoundint.reset();
 }
 
-// Source: 0x8402
+// At: 8402
 void OInitEngine::setup_stage1() {
    oroad.road_width = 0x1C2 << 16; // Force display of two roads at start
    ostats.score = 0;
@@ -110,25 +109,24 @@ void OInitEngine::setup_stage1() {
 
 // Initialise Master Segment Address For Stage
 //
-// 1. Read Internal Stage Number from Stage Data Table (Using the lookup offset)
-// 2. Load the master address, using the stage number as an index.
+// 1.	Read Internal Stage Number from Stage Data Table (Using the lookup offset)
+// 2.	Load the master address, using the stage number as an index.
 //
-// Source: 0x8C80
+// At: 8c80
 void OInitEngine::init_road_seg_master() {
    trackloader.init_track(oroad.stage_lookup_off);
 }
 
 // Check Road Width
-// Source: B85A
+// At: b85a
 //
 // Potentially Update Width Of Road
 //
 // ADDRESS 2 - Road Segment Data [8 byte boundaries]:
-//
-// Word 1 [+0]: Segment Position
-// Word 2 [+2]: Set = Denotes Road Height Info. Unset = Denotes Road Width
-// Word 3 [+4]: Segment Road Width / Segment Road Height Index
-// Word 4 [+6]: Segment Width Adjustment SIGNED (Speed at which width is adjusted)
+//	Word 1 [+0]:	Segment Position
+//	Word 2 [+2]:	Set = Denotes Road Height Info. Unset = Denotes Road Width
+//	Word 3 [+4]:	Segment Road Width / Segment Road Height Index
+//	Word 4 [+6]:	Segment Width Adjustment SIGNED (Speed at which width is adjusted)
 void OInitEngine::update_road() {
    check_road_split(); // Check/Process road split if necessary
    uint32_t addr = 0;
@@ -137,11 +135,11 @@ void OInitEngine::update_road() {
    if (d0 <= oroad.road_pos >> 16) {
    // Skip road width adjustment if set and adjust height
       if (trackloader.read_width_height(&addr) == 0) {
-      // ROM:0000B8A6 skip_next_width
+      // At: b8a6 skip_next_width
          if (oroad.height_lookup == 0)
             oroad.height_lookup = trackloader.read_width_height(&addr); // Set new height lookup section
       } else {
-      // ROM:0000B87A
+      // At: b87a
          int16_t width = trackloader.read_width_height(&addr); // Segment road width
          int16_t change = trackloader.read_width_height(&addr); // Segment adjustment speed
          if (width != (int16_t)(oroad.road_width >> 16)) {
@@ -154,7 +152,7 @@ void OInitEngine::update_road() {
       }
       trackloader.wh_offset += 8;
    }
-// ROM:0000B8BC set_road_width
+// At: b8bc set_road_width
 // Width of road is changing & car is moving
    if (change_width != 0 && car_increment >> 16 != 0) {
       int32_t d0 = ((car_increment >> 16)*road_width_adj) << 4;
@@ -171,21 +169,17 @@ void OInitEngine::update_road() {
          }
       }
    }
-// ------------------------------------------------------------------------------------------------
 // ROAD SEGMENT FORMAT
-//
-// Each segment of road is 6 bytes in memory, consisting of 3 words
-// Each road segment is a significant length of road btw :)
+// ───────────────────
+// ▪	Each segment of road is 6 bytes in memory, consisting of 3 words
+// ▪	Each road segment is a significant length of road btw :)
 //
 // ADDRESS 3 - Road Segment Data [6 byte boundaries]
-//
-// Word 1 [+0]: Segment Position (used with 0x260006 car position)
-// Word 2 [+2]: Segment Road Curve
-// Word 3 [+4]: Segment Road type (1 = Straight, 2 = Right Bend, 3 = Left Bend)
-//
+//	Word 1 [+0]: Segment Position (used with 0x260006 car position)
+//	Word 2 [+2]: Segment Road Curve
+//	Word 3 [+4]: Segment Road type (1 = Straight, 2 = Right Bend, 3 = Left Bend)
 // 60a08 = address of next road segment? (e.g. A0 = 0x0001DD86)
-// ------------------------------------------------------------------------------------------------
-// ROM:0000B91C set_road_type:
+// At: b91c set_road_type:
    int16_t segment_pos = trackloader.read_curve(0);
    if (segment_pos != -1) {
       int16_t d1 = segment_pos - 0x3C;
@@ -205,15 +199,13 @@ void OInitEngine::update_road() {
 
 // Carries on from the above in the original code
 void OInitEngine::update_engine() {
-// ------------------------------------------------------------------------
 // TILE MAP OFFSETS
-// ROM:0000B986 setup_shadow_offset:
+// ────────────────
+// At: b986 setup_shadow_offset:
 // Setup the shadow offset based on how much we've scrolled left/right. Lovely and subtle!
-// ------------------------------------------------------------------------
    update_shadow_offset();
-// ------------------------------------------------------------------------
 // Main Car Logic Block
-// ------------------------------------------------------------------------
+// ────────────────────
    oferrari.move();
    if (oferrari.car_ctrl_active) {
       oferrari.set_curve_adjust();
@@ -223,9 +215,8 @@ void OInitEngine::update_engine() {
       oferrari.set_ferrari_bounds();
    }
    oferrari.do_sound_score_slip();
-// ------------------------------------------------------------------------
 // Setup New Sprite Scroll Speed. Based On Granular Difference.
-// ------------------------------------------------------------------------
+// ────────────────────────────────────────────────────────────
    set_granular_position();
    set_fine_position();
 // Draw Speed & Hud Stuff
@@ -262,11 +253,10 @@ void OInitEngine::update_shadow_offset() {
 }
 
 // Check for Road Split
+// -	Checks position in level and determine whether to init road split
+// -	Processes road split if initialized
 //
-// - Checks position in level and determine whether to init road split
-// - Processes road split if initialized
-//
-// Source: 868E
+// At: 868e
 void OInitEngine::check_road_split() {
 // Check whether to initialize the next level
    ostats.init_next_level();
@@ -357,13 +347,11 @@ void OInitEngine::check_road_split() {
    }
 }
 
-// ------------------------------------------------------------------------------------------------
 // Check Stage Info To Determine What To Do With Road
-//
-// Stage 1-4: Init Road Split
-// Stage 5: Init Bonus
-// Stage 5 ATTRACT: Loop to Stage 1
-// ------------------------------------------------------------------------------------------------
+// ──────────────────────────────────────────────────
+//	Stage 1-4:		Init Road Split
+//	Stage 5:		Init Bonus
+//	Stage 5 ATTRACT:	Loop to Stage 1
 void OInitEngine::check_stage() {
 // Time Trial Mode
    if (outrun.cannonball_mode == Outrun::MODE_TTRIAL) {
@@ -459,11 +447,10 @@ void OInitEngine::reload_stage1() {
    init_split_next_level();
 }
 
-// ------------------------------------------------------------------------------------------------
 // Road Split 1
+// ────────────
 // Init Road Split & Begin Road Split
 // Called When We're Not On The Final Stage
-// ------------------------------------------------------------------------------------------------
 void OInitEngine::init_split1() {
    rd_split_state = SPLIT_CHOICE1;
    oroad.road_load_split = -1;
@@ -474,9 +461,8 @@ void OInitEngine::init_split1() {
    trackloader.init_track_split();
 }
 
-// ------------------------------------------------------------------------------------------------
 // Road Split 2: Beginning of split. User must choose.
-// ------------------------------------------------------------------------------------------------
+// ───────────────────────────────────────────────────
 void OInitEngine::init_split2() {
    rd_split_state = SPLIT_CHOICE2;
 // Manual adjustments to the road width, based on the current position
@@ -488,9 +474,8 @@ void OInitEngine::init_split2() {
    }
 }
 
-// ------------------------------------------------------------------------------------------------
 // Road Split 3: Road physically splits into two individual roads
-// ------------------------------------------------------------------------------------------------
+// ──────────────────────────────────────────────────────────────
 void OInitEngine::init_split3() {
    rd_split_state = 4;
    int16_t pos = (((oroad.road_pos >> 16) - 0x3F) << 3) + road_width_orig;
@@ -507,11 +492,11 @@ void OInitEngine::init_split3() {
       route_selected = -1;
       uint8_t inc = 1 << (3 - ostats.cur_stage);
    // One of the following increment values
-   // Stage 1 = +8 (1 << 3 - 0)
-   // Stage 2 = +4 (1 << 3 - 1)
-   // Stage 3 = +2 (1 << 3 - 2)
-   // Stage 4 = +1 (1 << 3 - 3)
-   // Stage 5 = Road doesn't split on this stage
+   //	Stage 1 = +8 (1 << 3 - 0)
+   //	Stage 2 = +4 (1 << 3 - 1)
+   //	Stage 3 = +2 (1 << 3 - 2)
+   //	Stage 4 = +1 (1 << 3 - 3)
+   //	Stage 5 = Road doesn't split on this stage
       ostats.route_info += inc;
       oroad.stage_lookup_off++;
    }
@@ -524,9 +509,8 @@ void OInitEngine::init_split3() {
       init_split4();
 }
 
-// ------------------------------------------------------------------------------------------------
 // Road Split 4: Road Fully Split, Remove Other Road
-// ------------------------------------------------------------------------------------------------
+// ─────────────────────────────────────────────────
 void OInitEngine::init_split4() {
    rd_split_state = 5; // init_split4
 // Set Appropriate Road Control Value, Dependent On Route Chosen
@@ -540,27 +524,24 @@ void OInitEngine::init_split4() {
       init_split5();
 }
 
-// ------------------------------------------------------------------------------------------------
 // Road Split 5: Only Draw One Section Of Road - Wait For Final Curve
-// ------------------------------------------------------------------------------------------------
+// ──────────────────────────────────────────────────────────────────
 void OInitEngine::init_split5() {
    rd_split_state = 6;
    if (road_curve)
       init_split6();
 }
 
-// ------------------------------------------------------------------------------------------------
 // Road Split 6 - Car On Final Curve Of Split
-// ------------------------------------------------------------------------------------------------
+// ──────────────────────────────────────────
 void OInitEngine::init_split6() {
    rd_split_state = 7;
    if (!road_curve)
       init_split7();
 }
 
-// ------------------------------------------------------------------------------------------------
 // Road Split 7: Init Road Merge Before Checkpoint (From Normal Section Of Road)
-// ------------------------------------------------------------------------------------------------
+// ─────────────────────────────────────────────────────────────────────────────
 void OInitEngine::init_split7() {
    rd_split_state = 8;
    oroad.road_ctrl = ORoad::ROAD_BOTH_P0;
@@ -575,9 +556,8 @@ void OInitEngine::init_split7() {
    road_remove_split &= ~BIT_0; // Denote we're back to normal road handling for enemy traffic logic
 }
 
-// ------------------------------------------------------------------------------------------------
 // Road Split 9 - Do Road Merger. Road Gets Narrower Again.
-// ------------------------------------------------------------------------------------------------
+// ────────────────────────────────────────────────────────
 void OInitEngine::init_split9() {
    rd_split_state = 10;
 // Calculate narrower road width to merge roads
@@ -589,9 +569,8 @@ void OInitEngine::init_split9() {
       oroad.road_width = (d0 << 16) | (oroad.road_width&0xFFFF);
 }
 
-// ------------------------------------------------------------------------------------------------
 // Road Split A: Checkpoint Sign
-// ------------------------------------------------------------------------------------------------
+// ─────────────────────────────
 void OInitEngine::init_split10() {
    rd_split_state = 11;
    if (oroad.road_pos >> 16 > 0x180) {
@@ -600,9 +579,8 @@ void OInitEngine::init_split10() {
    }
 }
 
-// ------------------------------------------------------------------------------------------------
 // Road Split B: Init Next Level
-// ------------------------------------------------------------------------------------------------
+// ─────────────────────────────
 void OInitEngine::init_split_next_level() {
    oroad.road_pos = 0;
    oroad.tilemap_h_target = 0;
@@ -616,12 +594,11 @@ void OInitEngine::init_split_next_level() {
       osprites.clear_palette_data();
 }
 
-// ------------------------------------------------------------------------------------------------
 // Bonus Road Mode Control
-// ------------------------------------------------------------------------------------------------
+// ───────────────────────
 
 // Initialize new segment of road data for bonus sequence
-// Source: 0x8A04
+// At: 8a04
 void OInitEngine::init_bonus(int16_t seq) {
    oroad.road_ctrl = ORoad::ROAD_BOTH_P0_INV;
    oroad.road_pos = 0;
@@ -697,15 +674,15 @@ void OInitEngine::bonus6() {
 
 // SetGranularPosition
 //
-// Source: BD3E
+// At: bd3e
 //
 // Uses the car increment value to set the granular position.
 // The granular position is used to finely scroll the road by CPU 1 and smooth zooming of scenery.
 //
-// pos_fine is the (road_pos >> 16)*10
+//	pos_fine is the (road_pos >> 16)*10
 //
 // Notes:
-// Disable with - bpset bd3e, 1, {pc = bd76; g}
+// ▪	Disable with - bpset bd3e, 1, {pc = bd76; g}
 void OInitEngine::set_granular_position() {
    uint16_t car_inc16 = car_increment >> 16;
    uint16_t result = car_inc16/0x40;
@@ -730,7 +707,7 @@ void OInitEngine::set_fine_position() {
 
 // Check whether to initalize crash or bonus sequence code
 //
-// Source: 0x984E
+// At: 984e
 void OInitEngine::init_crash_bonus() {
    if (outrun.game_state == GS_MUSIC) return;
    if (ocrash.skid_counter > 6 || ocrash.skid_counter < -6) {
@@ -779,7 +756,7 @@ void OInitEngine::init_crash_bonus() {
    }
 }
 
-// Source: 0x993C
+// At: 993c
 void OInitEngine::test_bonus_mode(bool do_bonus_check) {
 // Bonus checking code
    if (do_bonus_check && obonus.bonus_control) {

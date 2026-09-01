@@ -1,11 +1,10 @@
 // Sprite Handling Routines.
-//
-// - Initializing Sprites from level data.
-// - Mapping palettes to sprites.
-// - Ordering sprites by priority.
-// - Adding shadows to sprites where appropriate.
-// - Clipping sprites based on priority in relation to road hardware.
-// - Conversion from internal format to output format required by hardware.
+// -	Initializing Sprites from level data.
+// -	Mapping palettes to sprites.
+// -	Ordering sprites by priority.
+// -	Adding shadows to sprites where appropriate.
+// -	Clipping sprites based on priority in relation to road hardware.
+// -	Conversion from internal format to output format required by hardware.
 //
 // Copyright Chris White.
 // See License.txt for more details.
@@ -29,7 +28,7 @@ public:
    };
 // Note, the original game has 0x4F entries.
 // But we can set it to a higher value, to fix the broken arches on Gateway.
-// this is a limitation in the original game.
+// This is a limitation in the original game.
 // We just leave the larger array in place when changing the settings.
 // Total sprite entries in Jump Table (start at offset #3)
    const static uint8_t SPRITE_ENTRIES = 0x62;
@@ -62,22 +61,20 @@ public:
    oentry jump_table[JUMP_ENTRIES_TOTAL];
 // Converted sprite entries in RAM for hardware.
    osprite sprite_entries[JUMP_ENTRIES_TOTAL];
-// -------------------------------------------------------------------------
 // Jump Table 2 Entries For Sprite Control
-// -------------------------------------------------------------------------
-// +22 [Word] Road Position For Next Segment Of Sprites
+// ───────────────────────────────────────
+// +22 [Word]	Road Position For Next Segment Of Sprites
    uint16_t seg_pos;
-// +24 [Byte] Number Of Sprites In Segment
+// +24 [Byte]	Number Of Sprites In Segment
    uint8_t seg_total_sprites;
-// +26 [Word] Sprite Frequency Bitmask
+// +26 [Word]	Sprite Frequency Bitmask
    uint16_t seg_sprite_freq;
-// +28 [Word] Sprite Info Offset - Start Value. Loaded Into 2A.
+// +28 [Word]	Sprite Info Offset - Start Value. Loaded Into 2A.
    int16_t seg_spr_offset2;
-// +2A [Word] Sprite Info Offset
+// +2A [Word]	Sprite Info Offset
    int16_t seg_spr_offset1;
-// +2C [Long] Sprite Info Base - Lookup for Sprite X World, Sprite Y World, Sprite Type Table Info [8 byte boundary blocks in ROM]
+// +2C [Long]	Sprite Info Base - Lookup for Sprite X World, Sprite Y World, Sprite Type Table Info [8 byte boundary blocks in ROM]
    uint32_t seg_spr_addr;
-// -------------------------------------------------------------------------
 // Speed at which sprites should scroll. Depends on granular position difference.
    uint16_t sprite_scroll_speed;
 // Shadow multiplication value (signed). Offsets the shadow from the sprite.
@@ -118,15 +115,14 @@ private:
    int16_t pal_copy_count;
 // Palette Addresses. Used in conjunction with palette lookup table.
 // Originally stored between 0x61602 - 0x617FF in RAM
-//
 // Format:
-// Word 1: ROM Source Offset
-// Word 2: Palette RAM Destination Offset
+//	Word 1: ROM Source Offset
+//	Word 2: Palette RAM Destination Offset
 //
-// Word 3: ROM Source Offset
-// Word 4: Palette RAM Destination Offset
+//	Word 3: ROM Source Offset
+//	Word 4: Palette RAM Destination Offset
 //
-// etc.
+//	etc.
    const static int PAL_ENTRIES = 0x100; // hardware palette entries (before extra CannonBall palettes)
    uint16_t pal_addresses[PAL_ENTRIES]; // todo: rename to pal_mapping
 // Palette Lookup Table (was 0x100, but extended to account for extra palettes in CannonBall)

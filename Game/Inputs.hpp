@@ -1,7 +1,6 @@
 // Process Inputs.
-//
-// - Read & Process inputs and controls.
-// - Note, this class does not contain platform specific code.
+// -	Read & Process inputs and controls.
+// -	Note, this class does not contain platform specific code.
 //
 // Copyright Chris White.
 // See License.txt for more details.
@@ -38,9 +37,8 @@ public:
    bool is_analog_r();
    bool is_analog_select();
 private:
-// ------------------------------------------------------------------------
 // Variables for port
-// ------------------------------------------------------------------------
+// ──────────────────
 // Amount to adjust steering per tick. (0x3 is a good test value)
    uint8_t steering_inc;
 // Amount to adjust acceleration per tick. (0x10 is a good test value)
@@ -51,9 +49,8 @@ private:
    int delay1, delay2, delay3;
 // Coin Inputs (Only used by CannonBoard)
    bool coin1, coin2;
-// ------------------------------------------------------------------------
 // Variables from original code
-// ------------------------------------------------------------------------
+// ────────────────────────────
    const static uint8_t STEERING_MIN = 0x48;
    const static uint8_t STEERING_MAX = 0xB8;
    const static uint8_t STEERING_CENTRE = 0x80;

@@ -1,8 +1,7 @@
 // Z80 Program Code Addresses.
 // Addresses to data within the Z80 Program ROM.
 //
-// These are typically large blocks of data that we don't want to include
-// in the codebase.
+// These are typically large blocks of data that we don't want to include in the codebase.
 //
 // For example the music tracks are stored and referenced here.
 //
@@ -17,7 +16,8 @@ const static uint16_t YM_NOTE_OCTAVE = 0xAC9;
 // Command Lists to send to FM Chip. Format is register, value pairs
 const static uint16_t YM_INIT_CMDS = 0xB29;
 
-// Address is ($60 + (8*Operator) + Channel). Total Level affects the total output volume of the sound.
+// Address is ($60 + (8*Operator) + Channel).
+// Total Level affects the total output volume of the sound.
 const static uint16_t YM_LEVEL_CMDS1 = 0xB49;
 const static uint16_t YM_LEVEL_CMDS2 = 0xB81;
 const static uint16_t YM_RELEASE_RATE = 0xB8A;

@@ -1,9 +1,8 @@
 // Traffic Routines.
-//
-// - Traffic spawning.
-// - Traffic logic, lane changing & movement.
-// - Collisions.
-// - Traffic panning and volume control to pass to sound program.
+// -	Traffic spawning.
+// -	Traffic logic, lane changing & movement.
+// -	Collisions.
+// -	Traffic panning and volume control to pass to sound program.
 //
 // Copyright Chris White.
 // See License.txt for more details.
@@ -20,10 +19,9 @@ public:
 // Logic for traffic based on road split
    int8_t traffic_split;
 // Denotes Collision With Other Traffic
-//
-// 0 = No Collision
-// 1 = Init Collision Sequence
-// 2 = Collision Sequence In Progress
+//	0 = No Collision
+//	1 = Init Collision Sequence
+//	2 = Collision Sequence In Progress
    uint16_t collision_traffic;
    uint16_t collision_mask;
    OTraffic(void);
@@ -36,9 +34,8 @@ public:
    void traffic_logic();
    void traffic_sound();
 private:
-// -------------------------------------------------------------------------
 // Function Holders
-// -------------------------------------------------------------------------
+// ────────────────
    enum {
       TRAFFIC_INIT = 0x10, // Initalize Traffic Object
       TRAFFIC_ENTRY = 0x11, // First 0x80 Positions Of Road
@@ -57,13 +54,13 @@ private:
    uint8_t traffic_pal_cycle;
 // Number of traffic spawned
    int16_t traffic_count;
-// +1E [Word] Spawn Tick Counter. Used as a somewhat unrandom way of spawning cars.
+// +1E [Word]	Spawn Tick Counter. Used as a somewhat unrandom way of spawning cars.
    int16_t spawn_counter;
-// +20 [Word] Left Hand / Right Hand Spawn Control. Controls where next car should spawn.
+// +20 [Word]	Left Hand / Right Hand Spawn Control. Controls where next car should spawn.
    int16_t spawn_location;
-// +22 [Word] Wheel Animation Reset Value
+// +22 [Word]	Wheel Animation Reset Value
    int16_t wheel_reset;
-// +24 [Word] Wheel Animation Counter
+// +24 [Word]	Wheel Animation Counter
    int16_t wheel_counter;
    void spawn_car(oentry *sprite);
    void spawn_traffic();

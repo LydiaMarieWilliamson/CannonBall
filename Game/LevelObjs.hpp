@@ -1,13 +1,10 @@
 // Level Object Logic
 //
-// This class handles rendering most of the objects that comprise a typical
-// level.
+// This class handles rendering most of the objects that comprise a typical level.
+// -	Configures rendering properties (co-ordinates, zoom etc.)
+// -	Object specific logic, including collision checks & start lights etc.
 //
-// - Configures rendering properties (co-ordinates, zoom etc.)
-// - Object specific logic, including collision checks & start lights etc.
-//
-// The original codebase contains a large amount of code duplication,
-// much of which is duplicated here.
+// The original codebase contains a large amount of code duplication, much of which is duplicated here.
 //
 // Copyright Chris White.
 // See License.txt for more details.
@@ -20,16 +17,15 @@ public:
 // Spray Counter (Going Through Water).
    uint16_t spray_counter;
 // Wheel Spray Type
-// 00 = Water
-// 04 = Yellow Stuff
-// 08 = Green Stuff
-// 0c = Pink stuff
-// 10 = Smoke
+//	00 = Water
+//	04 = Yellow Stuff
+//	08 = Green Stuff
+//	0c = Pink stuff
+//	10 = Smoke
    uint16_t spray_type;
 // Collision With Sprite Has Ocurred
-//
-// 0 = No Collision
-// 1 = Collision (and increments for every additional collision in this crash cycle)
+//	0 = No Collision
+//	1 = Collision (and increments for every additional collision in this crash cycle)
    uint8_t collision_sprite;
 // Sprite Collision Counter (Hitting Scenery)
    int16_t sprite_collision_counter;

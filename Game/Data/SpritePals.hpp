@@ -1,30 +1,28 @@
 #pragma once
 #include "Types.hpp"
 
-//	Sprite Palettes.
+// Sprite Palettes.
+// -	Additional CannonBall Sprite Palettes Start At Entry 256.
+// -	32 Bytes Per Entry
+// -	Originally stored at 0x14ed8
 //
-//	- Additional CannonBall Sprite Palettes Start At Entry 256.
-//	- 32 Bytes Per Entry
-//	- Originally stored at 0x14ed8
-//
-//	Each 16-bit entry in color RAM has the following layout:
-//
-//	D15 : Shade hi/lo
-//	D14 : Blue bit 0
-//	D13 : Green bit 0
-//	D12 : Red bit 0
-//	D11 : Blue bit 4
-//	D10 : Blue bit 3
-//	D9 : Blue bit 2
-//	D8 : Blue bit 1
-//	D7 : Green bit 4
-//	D6 : Green bit 3
-//	D5 : Green bit 2
-//	D4 : Green bit 1
-//	D3 : Red bit 4
-//	D2 : Red bit 3
-//	D1 : Red bit 2
-//	D0 : Red bit 1
+// Each 16-bit entry in color RAM has the following layout:
+//	D15:	Shade hi/lo
+//	D14:	Blue bit 0
+//	D13:	Green bit 0
+//	D12:	Red bit 0
+//	D11:	Blue bit 4
+//	D10:	Blue bit 3
+//	D9:	Blue bit 2
+//	D8:	Blue bit 1
+//	D7:	Green bit 4
+//	D6:	Green bit 3
+//	D5:	Green bit 2
+//	D4:	Green bit 1
+//	D3:	Red bit 4
+//	D2:	Red bit 3
+//	D1:	Red bit 2
+//	D0:	Red bit 1
 
 // Exported as Big Endian, Double Words, 8 Columns
 const static uint32_t PALETTE_EXPANSION[] = {

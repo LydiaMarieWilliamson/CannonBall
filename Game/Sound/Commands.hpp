@@ -6,9 +6,8 @@
 #pragma once
 
 namespace sound {
-// ----------------------------------------------------------------------------
 // Commands to send from main program code
-// ----------------------------------------------------------------------------
+// ───────────────────────────────────────
 enum {
    FM_RESET = 0, // Reset FM Chip (Stop Music etc.)
    RESET = 0x80, // Reset sound code
@@ -46,9 +45,8 @@ enum {
    MUSIC_LASTWAVE = 0xA5, // Music: Last Wave
 };
 
-// ----------------------------------------------------------------------------
 // Engine Commands to send from main program code
-// ----------------------------------------------------------------------------
+// ──────────────────────────────────────────────
 enum {
    UNUSED,
    ENGINE_PITCH_H,

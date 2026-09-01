@@ -45,8 +45,8 @@ private:
       MAP_CLEAR = 0x18,
    };
 // Direction to move on mini-map
-// Bit 0: 0 = Up   (Left Route)
-//        1 = Down (Right Route)
+//	Bit 0:	0 = Up   (Left Route)
+//		1 = Down (Right Route)
    uint8_t map_route;
 // Minimap Position (Per Segment Basis)
    int16_t map_pos;

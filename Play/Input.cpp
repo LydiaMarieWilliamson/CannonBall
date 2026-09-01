@@ -217,13 +217,11 @@ void Input::handle_axis(const uint8_t ax, const int16_t value) {
    }
 }
 
-// ------------------------------------------------------------------------------------------------
 // Scale the trigger value to be between 0 and 0xFF
-//
+// ────────────────────────────────────────────────
 // This is based on whether this is an SDL Controller or Joystick.
-// Controllers: Trigger axis values range from 0 to SDL_JOYSTICK_AXIS_MAX (32767)
-// Joysticks:   Undefined, but usually between -32768 to 32767
-// ------------------------------------------------------------------------------------------------
+// Controllers:	Trigger axis values range from 0 to SDL_JOYSTICK_AXIS_MAX (32767)
+// Joysticks:	Undefined, but usually between -32768 to 32767
 int Input::scale_trigger(const int value) {
    if (controller != NULL)
       return value/0x80;
@@ -231,9 +229,8 @@ int Input::scale_trigger(const int value) {
       return (value + 0x8000)/0x100;
 }
 
-// ------------------------------------------------------------------------------------------------
 // Store the last analog axis to be pressed and depressed beyond the cap value for config purposes
-// ------------------------------------------------------------------------------------------------
+// ───────────────────────────────────────────────────────────────────────────────────────────────
 void Input::store_last_axis(const uint8_t ax, const int16_t value) {
    const static int CAP = SDL_JOYSTICK_AXIS_MAX/4;
    if (std::abs(value) > CAP)

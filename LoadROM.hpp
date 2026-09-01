@@ -23,9 +23,8 @@ public:
    int load_crc32(const char *debug, const int offset, const int length, const int expected_crc, const uint8_t mode = NORMAL, const bool verbose = true);
    int load_binary(const char *filename);
    void unload(void);
-// ----------------------------------------------------------------------------
 // Used by translated 68000 Code
-// ----------------------------------------------------------------------------
+// ─────────────────────────────
    inline uint32_t read32(uint32_t *addr) {
       uint32_t data = (rom[*addr] << 24) | (rom[*addr + 1] << 16) | (rom[*addr + 2] << 8) | (rom[*addr + 3]);
       *addr += 4;
@@ -48,10 +47,9 @@ public:
    inline uint8_t read8(uint32_t addr) {
       return rom[addr];
    }
-// ----------------------------------------------------------------------------
 // Used by translated Z80 Code
+// ───────────────────────────
 // Note that the endian is reversed compared with the 68000 code.
-// ----------------------------------------------------------------------------
    inline uint16_t read16(uint16_t *addr) {
       uint16_t data = (rom[*addr + 1] << 8) | (rom[*addr]);
       *addr += 2;

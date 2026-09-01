@@ -31,22 +31,24 @@
 Outrun outrun;
 
 // Known Core Engine Issues:
-//
-// - Road split. Minor bug on positioning traffic on correct side of screen for one frame or so at the point of split.
-//   Most noticeable in 60fps mode.
-//   The Dreamcast version exhibits a bug where the road renders on the wrong side of the screen for one frame at this point.
-//   The original version (and Cannonball) has a problem where the cars face the wrong direction for one frame.
-//
+// -	Road split.
+//	Minor bug on positioning traffic on correct side of screen for one frame or so at the point of split.
+//	Most noticeable in 60fps mode.
+//	The Dreamcast version exhibits a bug where the road renders on the wrong side of the screen for one frame at this point.
+//	The original version (and Cannonball) has a problem where the cars face the wrong direction for one frame.
 // Bugs Present In Original 1986 Release:
-//
-// - Millisecond displays incorrectly on Extend Time screen [fixed]
-// - Erroneous values in sprite zooming table [fixed]
-// - Shadow popping into position randomly. Try setting car x position to 0x1E2. (0x260050) [fixed]
-// - Stage 2a: Incomplete arches due to lack of sprite slots [fixed]
-// - Best OutRunners screen looks odd after Stage 2 Gateway
-// - Stage 3c: Clouds overlapping trees [unable to fix easily]
-// - Sometimes the Ferrari stalls on the start-line on game restart. Happens in Attract Mode too.
-// - On completion screen, some of the side crowd graphics are misplaced. Japanese version only [fixed]
+// -	Millisecond displays incorrectly on Extend Time screen [fixed]
+// -	Erroneous values in sprite zooming table [fixed]
+// -	Shadow popping into position randomly.
+//	Try setting car x position to 0x1E2.
+//	(0x260050) [fixed]
+// -	Stage 2a: Incomplete arches due to lack of sprite slots [fixed]
+// -	Best OutRunners screen looks odd after Stage 2 Gateway
+// -	Stage 3c: Clouds overlapping trees [unable to fix easily]
+// -	Sometimes the Ferrari stalls on the start-line on game restart.
+//	Happens in Attract Mode too.
+// -	On completion screen, some of the side crowd graphics are misplaced.
+//	Japanese version only [fixed]
 
 Outrun::Outrun() {
    outputs = new OOutputs();
@@ -164,9 +166,8 @@ void Outrun::jump_table() {
       case GS_REINIT:
       case GS_CALIBRATE_MOTOR:
       break;
-   // ----------------------------------------------------------------------------------------
-   // Couse Map Specific Code
-   // ----------------------------------------------------------------------------------------
+   // Course Map Specific Code
+   // ────────────────────────
       case GS_MAP:
          omap.tick();
       break;
@@ -178,9 +179,8 @@ void Outrun::jump_table() {
             omusic.blit();
          }
       break;
-   // ----------------------------------------------------------------------------------------
    // Best OutRunners Entry (EditJumpTable3 Entries)
-   // ----------------------------------------------------------------------------------------
+   // ──────────────────────────────────────────────
       case GS_INIT_BEST2:
       case GS_BEST2:
          osprites.tick();
@@ -191,9 +191,8 @@ void Outrun::jump_table() {
                game_state = GS_INIT_MUSIC;
          }
       break;
-   // ----------------------------------------------------------------------------------------
    // Core Game Engine Routines
-   // ----------------------------------------------------------------------------------------
+   // ─────────────────────────
       case GS_LOGO:
          if (!tick_frame)
             ologo.blit();
@@ -238,14 +237,13 @@ void Outrun::jump_table() {
    }
 }
 
-// Source: 0xB15E
+// At: b15e
 void Outrun::main_switch() {
    switch (game_state) {
       case GS_INIT:
          init_attract();
-   // ----------------------------------------------------------------------------------------
    // Attract Mode
-   // ----------------------------------------------------------------------------------------
+   // ────────────
       case GS_ATTRACT:
          tick_attract();
       break;
@@ -291,9 +289,8 @@ void Outrun::main_switch() {
             game_state = GS_INIT; // Resume attract mode
          }
       break;
-   // ----------------------------------------------------------------------------------------
    // Music Select Screen
-   // ----------------------------------------------------------------------------------------
+   // ───────────────────
       case GS_INIT_MUSIC:
          omusic.enable();
          game_state = GS_MUSIC;
@@ -306,9 +303,8 @@ void Outrun::main_switch() {
             game_state = GS_INIT_GAME;
          }
       break;
-   // ----------------------------------------------------------------------------------------
    // In-Game
-   // ----------------------------------------------------------------------------------------
+   // ───────
       case GS_INIT_GAME:
       // ROM:0000B3E8                 move.w  #-1, (ingame_active1).l             ; Denote in-game engine is active
       // ROM:0000B3F0                 clr.l   (prev_game_time).l                  ; Reset overall game time
@@ -362,9 +358,8 @@ void Outrun::main_switch() {
          if (decrement_timers())
             game_state = GS_INIT_GAMEOVER;
       break;
-   // ----------------------------------------------------------------------------------------
    // Bonus Mode
-   // ----------------------------------------------------------------------------------------
+   // ──────────
       case GS_INIT_BONUS:
          ostats.frame_counter = ostats.frame_reset;
          obonus.bonus_control = OBonus::BONUS_INIT; // Initialize Bonus Mode Logic
@@ -378,9 +373,8 @@ void Outrun::main_switch() {
             game_state = GS_INIT_GAMEOVER;
          }
       break;
-   // ----------------------------------------------------------------------------------------
    // Display Game Over Text
-   // ----------------------------------------------------------------------------------------
+   // ──────────────────────
       case GS_INIT_GAMEOVER:
          if (cannonball_mode != MODE_TTRIAL) {
             oferrari.car_ctrl_active = false; // -1
@@ -419,18 +413,16 @@ void Outrun::main_switch() {
                cannonball::state = cannonball::STATE_INIT_MENU;
          }
       break;
-   // ----------------------------------------------------------------------------------------
    // Display Course Map
-   // ----------------------------------------------------------------------------------------
+   // ──────────────────
       case GS_INIT_MAP:
          omap.init();
          ohud.blit_text2(TEXT2_COURSEMAP);
          game_state = GS_MAP;
       case GS_MAP:
       break;
-   // ----------------------------------------------------------------------------------------
    // Best OutRunners / Score Entry
-   // ----------------------------------------------------------------------------------------
+   // ─────────────────────────────
       case GS_INIT_BEST2:
          oroad.set_view_mode(ORoad::VIEW_ORIGINAL, true);
       // bsr.w   EndGame
@@ -467,9 +459,8 @@ void Outrun::main_switch() {
             game_state = GS_REINIT; // Reinit game to attract mode
          }
       break;
-   // ----------------------------------------------------------------------------------------
    // Reinitialize Game After High Score Entry
-   // ----------------------------------------------------------------------------------------
+   // ────────────────────────────────────────
       case GS_REINIT:
          video.clear_text_ram();
          game_state = GS_INIT;
@@ -477,9 +468,8 @@ void Outrun::main_switch() {
    }
    oinitengine.update_road();
    oinitengine.update_engine();
-// --------------------------------------------------------------------------------------------
 // Debugging Only
-// --------------------------------------------------------------------------------------------
+// ──────────────
    if (DEBUG_LEVEL) {
       if (oinitengine.rd_split_state != 0) {
          if (!fork_chosen) {
@@ -505,25 +495,22 @@ void Outrun::main_switch() {
 
 // Setup Jump Table. Move from ROM to RAM.
 //
-// Source Address: 0x7E1C
-// Input:          Sprite To Copy
-// Output:         None
+// At: 7e1c
+// Input:	Sprite To Copy
+// Output:	None
 //
 // ROM Format [0xF000 - 0xF1F5]
+//	Word 1: Number of entries [7D]
+//	Long 1: Address 1 (address of jump information)
+//	...
+//	Long x: Address x
 //
-// Word 1: Number of entries [7D]
-// Long 1: Address 1 (address of jump information)
-// ...
-// Long x: Address x
-//
-// Each address in the jump table is a pointer into ROM containing 0x1F words
-// of info (so info is at 0x40 boundary in bytes)
+// Each address in the jump table is a pointer into ROM containing 0x1F words of info (so info is at 0x40 boundary in bytes)
 //
 // RAM Format[0x61800]
-//
-// 0x00 byte: If high byte set, take jump
-// 0x01 byte: Index number
-// 0x02 long: Address to jump to
+//	0x00 byte: If high byte set, take jump
+//	0x01 byte: Index number
+//	0x02 long: Address to jump to
 void Outrun::init_jump_table() {
 // Reset value to restore car increment to during attract mode
    car_inc_bak = 0;
@@ -546,14 +533,13 @@ void Outrun::init_jump_table() {
    video.sprite_layer->set_x_clip(false);
 }
 
-// -------------------------------------------------------------------------------
 // Decrement Game Time
+// ───────────────────
 //
 // Decrements Frame Count, and Overall Time Counter
 //
 // Returns true if timer expired.
-// Source: 0xB736
-// -------------------------------------------------------------------------------
+// At: b736
 bool Outrun::decrement_timers() {
 // Cheat
    if (freeze_timer && game_state == GS_INGAME)
@@ -578,9 +564,8 @@ bool Outrun::decrement_timers() {
    }
 }
 
-// -------------------------------------------------------------------------------
 // SMARTYPI: Motor Calibration
-// -------------------------------------------------------------------------------
+// ───────────────────────────
 void Outrun::init_motor_calibration() {
    otiles.init();
    opalette.init();
@@ -604,9 +589,8 @@ void Outrun::init_motor_calibration() {
    video.write_pal32(&dst, PAL_SERVICE[3]);
 }
 
-// -------------------------------------------------------------------------------
 // Attract Mode Control
-// -------------------------------------------------------------------------------
+// ────────────────────
 void Outrun::init_attract() {
    video.enabled = true;
    osoundint.has_booted = true;
@@ -652,9 +636,8 @@ void Outrun::check_freeplay_start() {
    }
 }
 
-// -------------------------------------------------------------------------------
 // Best OutRunners Initialization
-// -------------------------------------------------------------------------------
+// ──────────────────────────────
 void Outrun::init_best_outrunners() {
    video.enabled = false;
    video.sprite_layer->set_x_clip(false); // Stop clipping in wide-screen mode.
@@ -666,9 +649,8 @@ void Outrun::init_best_outrunners() {
    game_state = GS_INIT_BEST2;
 }
 
-// -------------------------------------------------------------------------------
 // Remap ROM addresses and select course.
-// -------------------------------------------------------------------------------
+// ──────────────────────────────────────
 void Outrun::select_course(bool jap, bool prototype) {
    if (jap) {
       roms.rom0p = &roms.j_rom0;

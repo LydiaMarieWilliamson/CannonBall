@@ -23,11 +23,10 @@ public:
       BONUS_END = 0x1C, // 1C = End Bonus Sequence
    };
 // Bonus State
-//
-// 0 = Init Bonus Points Text & Calculate Bonus Score
-// 1 = Decrement Bonus Seconds
-// 2 = Clear Bonus Text
-// 3 = Do Not Execute Bonus Text Block
+//	0 = Init Bonus Points Text & Calculate Bonus Score
+//	1 = Decrement Bonus Seconds
+//	2 = Clear Bonus Text
+//	3 = Do Not Execute Bonus Text Block
    int8_t bonus_state;
    enum {
       BONUS_TEXT_INIT = 0,

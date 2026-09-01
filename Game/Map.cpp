@@ -44,7 +44,7 @@ void OMap::init() {
 
 // Process route through levels
 // Process end position on final level
-// Source: 0x345E
+// At: 345e
 void OMap::tick() {
 // 60 FPS Code to simply render sprites
    if (!outrun.tick_frame) {
@@ -173,7 +173,7 @@ void OMap::position_ferrari(uint8_t index) {
 //
 // Notes: Index 26 is start of water that needs to be changed for widescreen
 //
-// Source: 0x33F4
+// At: 33f4
 void OMap::load_sprites() {
 #if 0
 // hacks
@@ -220,7 +220,7 @@ void OMap::load_sprites() {
    map_state = MAP_INIT;
 }
 
-// Source: 0x355A
+// At: 355a
 void OMap::do_route_final() {
    int16_t pos = oroad.road_pos >> 16;
    if (oinitengine.rd_split_state)
@@ -231,7 +231,7 @@ void OMap::do_route_final() {
    end_route();
 }
 
-// Source: 0x3584
+// At: 3584
 void OMap::end_route() {
    map_pos++;
    if (map_pos_final < map_pos) {
@@ -243,7 +243,7 @@ void OMap::end_route() {
    }
 }
 
-// Source: 0x35B6
+// At: 35b6
 void OMap::init_map_delay() {
    map_route = 0;
    map_delay = 0x80;
@@ -251,7 +251,7 @@ void OMap::init_map_delay() {
    map_display();
 }
 
-// Source: 0x35CC
+// At: 35cc
 void OMap::map_display() {
 // Init Best OutRunners
    if (--map_delay <= 0) {
@@ -260,29 +260,28 @@ void OMap::map_display() {
    }
 }
 
-// ------------------------------------------------------------------------------------------------
 // Colour sprite based road as car moves over it on mini-map
-// ------------------------------------------------------------------------------------------------
+// ─────────────────────────────────────────────────────────
 
-// Source: 0x3740
+// At: 3740
 void OMap::draw_vert_top(oentry *sprite) {
    if (sprite->control&OSprites::ENABLE)
       draw_piece(sprite, outrun.adr.sprite_coursemap_top);
 }
 
-// Source: 0x3736
+// At: 3736
 void OMap::draw_vert_bottom(oentry *sprite) {
    if (sprite->control&OSprites::ENABLE)
       draw_piece(sprite, outrun.adr.sprite_coursemap_bot);
 }
 
-// Source: 0x372C
+// At: 372c
 void OMap::draw_horiz_end(oentry *sprite) {
    if (sprite->control&OSprites::ENABLE)
       draw_piece(sprite, outrun.adr.sprite_coursemap_end);
 }
 
-// Source: 0x3746
+// At: 3746
 void OMap::draw_piece(oentry *sprite, uint32_t adr) {
 // Update palette of background piece, to highlight route as minicar passes over it
    if (map_route == sprite->id) {
@@ -297,7 +296,7 @@ void OMap::draw_piece(oentry *sprite, uint32_t adr) {
 }
 
 // Move mini car sprite on Course Map Screen
-// Source: 0x3696
+// At: 3696
 void OMap::move_mini_car(oentry *sprite) {
 // Move Mini Car
    if (!minicar_enable) {

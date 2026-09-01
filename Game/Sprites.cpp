@@ -1,11 +1,10 @@
 // Sprite Handling Routines.
-//
-// - Initializing Sprites from level data.
-// - Mapping palettes to sprites.
-// - Ordering sprites by priority.
-// - Adding shadows to sprites where appropriate.
-// - Clipping sprites based on priority in relation to road hardware.
-// - Conversion from internal format to output format required by hardware.
+// -	Initializing Sprites from level data.
+// -	Mapping palettes to sprites.
+// -	Ordering sprites by priority.
+// -	Adding shadows to sprites where appropriate.
+// -	Clipping sprites based on priority in relation to road hardware.
+// -	Conversion from internal format to output format required by hardware.
 //
 // Copyright Chris White.
 // See License.txt for more details.
@@ -50,17 +49,15 @@ void OSprites::init() {
    jump_table[SPRITE_SMOKE1].init(SPRITE_SMOKE1);
    jump_table[SPRITE_SMOKE2].init(SPRITE_SMOKE2);
    oferrari.init(&jump_table[SPRITE_FERRARI], &jump_table[SPRITE_PASS1], &jump_table[SPRITE_PASS2], &jump_table[SPRITE_SHADOW]);
-// ------------------------------------------------------------------------
 // Traffic in Right Hand Lane At Start of Stage 1
-// ------------------------------------------------------------------------
+// ──────────────────────────────────────────────
    for (uint8_t i = SPRITE_TRAFF1; i <= SPRITE_TRAFF8; i++) {
       jump_table[i].init(i);
       jump_table[i].control |= SHADOW;
       jump_table[i].addr = outrun.adr.sprite_porsche; // Initial offset of traffic sprites. Will be changed.
    }
-// ------------------------------------------------------------------------
 // Crash Sprites
-// ------------------------------------------------------------------------
+// ─────────────
    for (uint8_t i = SPRITE_CRASH; i <= SPRITE_CRASH_PASS2_S; i++) {
       jump_table[i].init(i);
    }
@@ -76,9 +73,8 @@ void OSprites::init() {
    jump_table[SPRITE_CRASH_SHADOW].draw_props = oentry::BOTTOM;
    jump_table[SPRITE_CRASH_SHADOW].addr = outrun.adr.shadow_data;
    ocrash.init(&jump_table[SPRITE_CRASH], &jump_table[SPRITE_CRASH_SHADOW], &jump_table[SPRITE_CRASH_PASS1], &jump_table[SPRITE_CRASH_PASS1_S], &jump_table[SPRITE_CRASH_PASS2], &jump_table[SPRITE_CRASH_PASS2_S]);
-// ------------------------------------------------------------------------
 // Animation Sequence Sprites
-// ------------------------------------------------------------------------
+// ──────────────────────────
    jump_table[SPRITE_FLAG].init(SPRITE_FLAG);
    oanimseq.init(jump_table);
    seg_pos = 0;
@@ -107,7 +103,7 @@ void OSprites::update_sprites() {
 }
 
 // Disable All Sprite Entries
-// Source: 0x4A50
+// At: 4a50
 void OSprites::disable_sprites() {
    for (uint8_t i = 0; i < SPRITE_ENTRIES; i++)
       jump_table[i].control &= ~OSprites::ENABLE;
@@ -119,48 +115,42 @@ void OSprites::tick() {
 
 // Sprite Control
 //
-// Source: 3BEE
+// At: 3bee
 //
 // Notes:
-// - Setup Jump Table Entry #2, the sprite control. This in turn is used to control and setup all the sprites.
-// - Read 4 Byte Entry From Road_Seg_Adr1 which indicates the upcoming block of sprite data for the level
-// - This first block of data specifies the position, total number of sprites in the block we want to try rendering
-//   and appropriate lookup for the sprite number/frequency info.
+// -	Setup Jump Table Entry #2, the sprite control.
+//	This in turn is used to control and setup all the sprites.
+// -	Read 4 Byte Entry From Road_Seg_Adr1 which indicates the upcoming block of sprite data for the level
+// -	This first block of data specifies the position, total number of sprites in the block we want to try rendering and appropriate lookup for the sprite number/frequency info.
+// -	This second table in memory specifies the frequency and number of sprites in the sequence.
+// -	The second table also contains the actual sprite info (x, y, palette, type). This can be multipled sprites.
 //
-// - This second table in memory specifies the frequency and number of sprites in the sequence.
-//
-// - The second table also contains the actual sprite info (x, y, palette, type). This can be multipled sprites.
-//
-// ----------------------------------
+// ──────────────────────────────────
 //
 // road_seg_addr1 Format: [4 byte boundaries]
+//	[+0]	Road Position [Word]
+//	[+2]	Number Of Sprites In Segment [Byte]
+//	[+3]	Sprite Data Entry Number From Lookup Table × 4 [Byte]
 //
-// [+0] Road Position [Word]
-// [+2] Number Of Sprites In Segment [Byte]
-// [+3] Sprite Data Entry Number From Lookup Table*4 [Byte]
+// At 1a43c: Sprite Master Table Format
+//	A Table Containing a series of longs.
+//	Each address in this table represents:
+//	[+0]	Sprite Frequency Value Bitmask [Word]
+//	[+2]	Reload Value For Sprite Info Offset [Word]
+//	[+4]	Start of table with x, y, type, palette etc.
+//		This table can appear as many times as desired in each block and follows the format below, starting +4:
 //
-// Sprite Master Table Format @ 0x1A43C:
+// ─────────────────────────────────────────────────
+//	[+0] [Byte]	Bit 0 = H-Flip Sprite
+//			Bit 1 = Enable Shadows
+//			Bits 4-7 = Routine Draw Number
+//	[+1] [Byte]	Sprite X World Position
+//	[+2] [Word]	Sprite Y World Position
+//	[+5] [Byte]	Sprite Type
+//	[+7] [Byte]	Sprite Palette
+// ─────────────────────────────────────────────────
 //
-// A Table Containing a series of longs. Each address in this table represents:
-//
-// [+0] Sprite Frequency Value Bitmask [Word]
-// [+2] Reload Value For Sprite Info Offset [Word]
-// [+4] Start of table with x, y, type, palette etc.
-//      This table can appear as many times as desired in each block and follows the format below, starting +4:
-//
-// -------------------------------------------------
-// [+0] [Byte] Bit 0 = H-Flip Sprite
-//             Bit 1 = Enable Shadows
-//
-//             Bits 4-7 = Routine Draw Number
-// [+1] [Byte] Sprite X World Position
-// [+2] [Word] Sprite Y World Position
-// [+5] [Byte] Sprite Type
-// [+7] [Byte] Sprite Palette
-// -------------------------------------------------
-//
-// The Frequency bitmask, for example 111000111 00111000
-// rotates left, and whenever a bit is set, a sprite from the sequence is rendered.
+// The Frequency bitmask, for example 111000111 00111000 rotates left, and whenever a bit is set, a sprite from the sequence is rendered.
 //
 // When a bit is unset no draw occurs on that call.
 //
@@ -185,15 +175,14 @@ void OSprites::sprite_control() {
 // Process segment
    if (seg_total_sprites == 0) return;
    if (seg_pos > oroad.road_pos >> 16) return;
-// ------------------------------------------------------------------------
 // Sprite 1
-// ------------------------------------------------------------------------
+// ────────
 // Rotate 16 bit value left. Stick top bit in low bit.
    uint16_t carry = seg_sprite_freq&0x8000;
    seg_sprite_freq = ((seg_sprite_freq << 1) | ((seg_sprite_freq&0x8000) >> 15))&0xFFFF;
    if (carry) {
       seg_total_sprites--;
-      seg_spr_offset1 -= 8; //  Decrement rom address offset to point at next sprite [8 byte boundary]
+      seg_spr_offset1 -= 8; // Decrement rom address offset to point at next sprite [8 byte boundary]
       if (seg_spr_offset1 < 0)
          seg_spr_offset1 = seg_spr_offset2; // Reload sprite info offset value
       olevelobjs.setup_sprites(0x10400);
@@ -202,14 +191,13 @@ void OSprites::sprite_control() {
       seg_pos++;
       return;
    }
-// ------------------------------------------------------------------------
 // Sprite 2 - Second Sprite is slightly set back from the first.
-// ------------------------------------------------------------------------
+// ─────────────────────────────────────────────────────────────
    carry = seg_sprite_freq&0x8000;
    seg_sprite_freq = ((seg_sprite_freq << 1) | ((seg_sprite_freq&0x8000) >> 15))&0xFFFF;
    if (carry) {
       seg_total_sprites--;
-      seg_spr_offset1 -= 8; //  Decrement rom address offset to point at next sprite [8 byte boundary]
+      seg_spr_offset1 -= 8; // Decrement rom address offset to point at next sprite [8 byte boundary]
       if (seg_spr_offset1 < 0)
          seg_spr_offset1 = seg_spr_offset2; // Reload sprite info offset value
       olevelobjs.setup_sprites(0x10000);
@@ -217,7 +205,7 @@ void OSprites::sprite_control() {
    seg_pos++;
 }
 
-// Source: 0x76F4
+// At: 76f4
 void OSprites::clear_palette_data() {
    spr_col_pal = 0;
    for (int16_t i = 0; i < PAL_LOOKUP_LENGTH; i++)
@@ -226,15 +214,14 @@ void OSprites::clear_palette_data() {
 
 // Copy Sprite Palette Data To Palette RAM On Vertical Interrupt
 //
-// Source Address: 0x858E
-// Input:          Source address in rom of data format
-// Output:         None
-//
+// At: 858e
+// Input:	Source address in rom of data format
+// Output:	None
 void OSprites::copy_palette_data() {
 // Return if no palette entries to copy
    if (pal_copy_count <= 0) return;
    for (int16_t i = 0; i < pal_copy_count*2; ) {
-   // Palette Data Source Offset (aligned to start of 32 byte boundry, *32)
+   // Palette Data Source Offset (aligned to start of 32 byte boundary, ×32)
       uint32_t src_addr = pal_addresses[i++] << 3;
       uint32_t dst_addr = PAL_SPRITES + (pal_addresses[i++] << 5);
       for (uint16_t j = 0; j < 8; j++)
@@ -245,30 +232,28 @@ void OSprites::copy_palette_data() {
 
 // Map Palettes from ROM to Palette RAM for a particular sprite.
 //
-// Source Address: 0x75EA
-// Input:          Sprite
-// Output:         None
+// At: 75ea
+// Input:	Sprite
+// Output:	None
 //
 // Prepares RAM for copy_palette_data routine on vint
 
 // Notes:
-// 1. Checks lookup table to determine whether relevant palette info is copied to ram.
-//    Return if already cached
-// 2. Otherwise set the mapping between ROM and the HW Palette to be used
-// 3. pal_copy_count contains the number of entries we need to copy
-// 4. pal_addresses contains the address mapping
+// 1.	Checks lookup table to determine whether relevant palette info is copied to ram.
+//	Return if already cached
+// 2.	Otherwise set the mapping between ROM and the HW Palette to be used
+// 3.	pal_copy_count contains the number of entries we need to copy
+// 4.	pal_addresses contains the address mapping
 void OSprites::map_palette(oentry *spr) {
    uint8_t pal = pal_lookup[spr->pal_src];
-// -----------------------------------
 // Entry is cached. Use entry.
-// -----------------------------------
+// ───────────────────────────
    if (pal != 0) {
       spr->pal_dst = pal;
       return;
    }
-// -----------------------------------
 // Entry is not cached. Need to cache.
-// -----------------------------------
+// ───────────────────────────────────
 // Increment hw colour palette entry to use
    if (++spr_col_pal > 0x7F) return;
    spr->pal_dst = spr_col_pal; // Set next available hw sprite colour palette
@@ -280,15 +265,15 @@ void OSprites::map_palette(oentry *spr) {
 
 // Setup Sprite Ordering Table & Shadows
 //
-// Source Address: 0x77A8
-// Input:          Sprite To Copy
-// Output:         None
+// At: 77a8
+// Input:	Sprite To Copy
+// Output:	None
 //
 // Notes:
-// 1/ Reads Sprite-to-Sprite priority of individual sprite
-// 2/ Creates ordered sprite table starting at 0x64000
-// 3/ The format of this table is detailed in the comments at 0x78B0
-// 4/ Optionally adds shadow to sprite if requires
+// 1/	Reads Sprite-to-Sprite priority of individual sprite
+// 2/	Creates ordered sprite table starting at 0x64000
+// 3/	The format of this table is detailed in the comments at 0x78B0
+// 4/	Optionally adds shadow to sprite if requires
 //
 // The end result is a table of sprite entries at 0x64000
 void OSprites::do_spr_order_shadows(oentry *input) {
@@ -335,10 +320,9 @@ void OSprites::do_spr_order_shadows(oentry *input) {
 
 // Sprite Copying Routine
 //
-// Source Address: 0x78B0
-// Input:          None
-// Output:         None
-//
+// At: 78b0
+// Input:	None
+// Output:	None
 void OSprites::sprite_copy() {
    if (spr_cnt_main == 0) {
       finalise_sprites();
@@ -385,10 +369,9 @@ void OSprites::sprite_copy() {
 
 // Was originally labelled set_end_marker
 //
-// Source Address: 0x7942
-// Input:          None
-// Output:         None
-//
+// At: 7942
+// Input:	None
+// Output:	None
 void OSprites::finalise_sprites() {
    sprite_count = spr_cnt_main + spr_cnt_shadow;
 // Set end sprite marker
@@ -405,10 +388,9 @@ void OSprites::finalise_sprites() {
 
 // Copy Sprite Data to Sprite RAM
 //
-// Source Address: 0x97E4
-// Input:          None
-// Output:         None
-//
+// At: 97e4
+// Input:	None
+// Output:	None
 void OSprites::blit_sprites() {
    uint32_t dst_addr = SPRITE_RAM;
    for (uint16_t i = 0; i <= sprite_count; i++) {
@@ -428,27 +410,26 @@ void OSprites::blit_sprites() {
 
 // Convert Sprite From Internal Software Format To Hardware Format
 //
-// Source Address: 0x94EC
-// Input:          Sprite To Copy
-// Output:         None
+// At: 94ec
+// Input:	Sprite To Copy
+// Output:	None
 //
-// 1. Copies Sprite Information From Jump Table Area To RAM
-// 2. Stores In Similar Format To Sprite Hardware, but with 4 extra bytes of scratch data on end
-// 3. Note: Mostly responsible for setting x, y, width, height, zoom, pitch, priorities etc.
+// 1.	Copies Sprite Information From Jump Table Area To RAM
+// 2.	Stores In Similar Format To Sprite Hardware, but with 4 extra bytes of scratch data on end
+// 3.	Note: Mostly responsible for setting x, y, width, height, zoom, pitch, priorities etc.
 //
-// 0x11ED2: Table of Sprite Addresses for Hardware. Contains:
-//
-// 5 x 10 bytes. One block for each sprite size lookup.
+// At 11ed2: Table of Sprite Addresses for Hardware.
+// Contains:
+//	5 × 10 bytes. One block for each sprite size lookup.
 // The exact sprite is selected using the ZoomTable.hpp table.
-//
-// + 0 : [Byte] Unused
-// + 1 : [Byte] Width Helper Lookup  [Offsets into 0x20000 (the width and height table)]
-// + 2 : [Byte] Line Data Width
-// + 3 : [Byte] Height Helper Lookup [Offsets into 0x20000 (the width and height table)]
-// + 4 : [Byte] Line Data Height
-// + 5 : [Byte] Sprite Pitch
-// + 7 : [Byte] Sprite Bank
-// + 8 : [Word] Offset Within Sprite Bank
+//	+ 0 : [Byte]	Unused
+//	+ 1 : [Byte]	Width Helper Lookup  [Offsets into 0x20000 (the width and height table)]
+//	+ 2 : [Byte]	Line Data Width
+//	+ 3 : [Byte]	Height Helper Lookup [Offsets into 0x20000 (the width and height table)]
+//	+ 4 : [Byte]	Line Data Height
+//	+ 5 : [Byte]	Sprite Pitch
+//	+ 7 : [Byte]	Sprite Bank
+//	+ 8 : [Word]	Offset Within Sprite Bank
 void OSprites::do_sprite(oentry *input) {
    input->control |= DRAW_SPRITE; // Display input sprite
 // Get Correct Output Entry
@@ -468,9 +449,8 @@ void OSprites::do_sprite(oentry *input) {
    uint32_t index = (input->zoom*4);
    output->set_vzoom(ZOOM_LOOKUP[index]); // note we don't increment src_rom here
    output->set_hzoom(ZOOM_LOOKUP[index++]);
-// -------------------------------------------------------------------------
 // Set width & height values using lookup
-// -------------------------------------------------------------------------
+// ──────────────────────────────────────
    uint16_t lookup_mask = ZOOM_LOOKUP[index++]; // Width/Height lookup helper
 // This is the address of the frame required for the level of zoom we're using
 // There are 5 unique frames that are typically used for zoomed sprites.
@@ -504,9 +484,8 @@ void OSprites::do_sprite(oentry *input) {
    }
 // loc 9582:
    input->width = width;
-// -------------------------------------------------------------------------
 // Set Sprite X & Y Values
-// -------------------------------------------------------------------------
+// ───────────────────────
    set_sprite_xy(input, output, width, height);
 // Here we need the entire value set by above routine, not just top 0x1FF mask!
    int16_t sprite_x1 = output->get_x();
@@ -523,15 +502,13 @@ void OSprites::do_sprite(oentry *input) {
       hide_hwsprite(input, output);
       return;
    }
-// -------------------------------------------------------------------------
 // Set Palette & Sprite Bank Information
-// -------------------------------------------------------------------------
+// ─────────────────────────────────────
    output->set_pal(input->pal_dst); // Set Sprite Colour Palette
    output->set_offset(roms.rom0p->read16(src_offsets + 8)); // Set Offset within selected sprite bank
    output->set_bank(roms.rom0p->read8(src_offsets + 7) << 1); // Set Sprite Bank Value
-// -------------------------------------------------------------------------
 // Set Sprite Height
-// -------------------------------------------------------------------------
+// ─────────────────
    if (sprite_y1 < 256) {
       int16_t y_adj = -(sprite_y1 - 256);
       y_adj *= roms.rom0p->read16(src_offsets + 2); // Width of line data (Unsigned multiply)
@@ -543,14 +520,11 @@ void OSprites::do_sprite(oentry *input) {
    } else {
       output->set_height((uint8_t)height);
    }
-// -------------------------------------------------------------------------
 // Set Sprite Height Taking Elevation Of Road Into Account For Clipping Purposes
-//
-// Word 0: Priority of section
-// Word 1: Height of section
-//
-// Source: 0x9602
-// -------------------------------------------------------------------------
+// ─────────────────────────────────────────────────────────────────────────────
+//	Word 0: Priority of section
+//	Word 1: Height of section
+// At: 9602
 // Start of priority elevation data in road ram
    uint16_t road_y_index = oroad.road_p0 + 0x280;
 // Priority List Not Populated (Flat Elevation)
@@ -594,9 +568,8 @@ void OSprites::do_sprite(oentry *input) {
    }
 // cont2:
    set_hrender(input, output, roms.rom0p->read16(src_offsets + 4), width);
-// -------------------------------------------------------------------------
 // Set Sprite Pitch & Priority
-// -------------------------------------------------------------------------
+// ───────────────────────────
    output->set_pitch(roms.rom0p->read8(src_offsets + 5) << 1);
    output->set_priority(input->shadow << 4); // todo: where does this get set?
 }
@@ -609,15 +582,13 @@ void OSprites::hide_hwsprite(oentry *input, osprite *output) {
 
 // Sets Sprite Render Point
 //
-// Source Address: 0x967C
-// Input:          Jump Table Entry, Output Sprite Entry, Width & Height
-// Output:         Updated Sprite Output Entry
-//
+// At: 967c
+// Input:	Jump Table Entry, Output Sprite Entry, Width & Height
+// Output:	Updated Sprite Output Entry
 void OSprites::set_sprite_xy(oentry *input, osprite *output, uint16_t width, uint16_t height) {
    uint8_t anchor = input->draw_props;
-// -------------------------------------------------------------------------
 // Set Y Render Point
-// -------------------------------------------------------------------------
+// ──────────────────
    int16_t y = input->y;
    switch ((anchor&0xC) >> 2) {
    // Anchor Center
@@ -637,9 +608,8 @@ void OSprites::set_sprite_xy(oentry *input, osprite *output, uint16_t width, uin
          output->set_y(y + 256);
       break;
    }
-// -------------------------------------------------------------------------
 // Set X Render Point
-// -------------------------------------------------------------------------
+// ──────────────────
    int16_t x = input->x;
    switch (anchor&0x3) {
    // Anchor Center
@@ -663,10 +633,9 @@ void OSprites::set_sprite_xy(oentry *input, osprite *output, uint16_t width, uin
 
 // Determines whether to render sprite left-to-right or right-to-left
 //
-// Source Address: 0x96E4
-// Input:          Jump Table Entry, Output Sprite Entry, Offset
-// Output:         Updated Sprite Output Entry
-//
+// At: 96e4
+// Input:	Jump Table Entry, Output Sprite Entry, Offset
+// Output:	Updated Sprite Output Entry
 void OSprites::set_hrender(oentry *input, osprite *output, uint16_t offset, uint16_t width) {
    uint8_t props = 0x60;
    uint8_t anchor = input->draw_props;

@@ -2,8 +2,7 @@
 //
 // This is used to scale all sprites in the game.
 //
-// The original game features a bug, which causes sprites at certain z
-// positions to be scaled incorrectly.
+// The original game features a bug, which causes sprites at certain z positions to be scaled incorrectly.
 #include "Types.hpp"
 
 // Format is: vzoom & hzoom, width/height lookup, sprite size to use, unused

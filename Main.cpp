@@ -27,9 +27,8 @@
 // Fine to include on non-windows builds as dummy functions used.
 #include "Jolt/Jolt.hpp"
 
-// ------------------------------------------------------------------------------------------------
 // Initialize Shared Variables
-// ------------------------------------------------------------------------------------------------
+// ───────────────────────────
 using namespace cannonball;
 
 int cannonball::state = STATE_BOOT;
@@ -38,14 +37,13 @@ int cannonball::frame = 0;
 bool cannonball::tick_frame = true;
 int cannonball::fps_counter = 0;
 
-// ------------------------------------------------------------------------------------------------
 // Main Variables and Pointers
-// ------------------------------------------------------------------------------------------------
+// ───────────────────────────
 Audio cannonball::audio;
 Menu *menu;
 bool pause_engine;
 
-// ------------------------------------------------------------------------------------------------
+// ───────────────────────────
 
 static void quit_func(int code) {
    audio.stop_audio();
@@ -206,7 +204,7 @@ static void main_loop() {
 }
 
 // Very (very) simple command line parser.
-// Returns true if everything is ok to proceed with launching th engine.
+// Returns true if everything is ok to proceed with launching the engine.
 static bool parse_command_line(int argc, char *argv[]) {
    for (int i = 0; i < argc; i++) {
       if (strcmp(argv[i], "-cfgfile") == 0 && i + 1 < argc) {

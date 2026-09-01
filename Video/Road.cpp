@@ -10,95 +10,82 @@
 // All rights reserved.
 
 // Out Run/X-Board-style road chip
-//
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Road control register:
-//     Bits               Usage
-//     -------- -----d--  (X-board only) Direct scanline mode (1) or indirect mode (0)
-//     -------- ------pp  Road enable/priorities:
-//                           0 = road 0 only visible
-//                           1 = both roads visible, road 0 has priority
-//                           2 = both roads visible, road 1 has priority
-//                           3 = road 1 only visible
-//
+//	Bits			Usage
+//	―――――――― ―――――d――	(X-board only) Direct scanline mode (1) or indirect mode (0)
+//	―――――――― ――――――pp	Road enable/priorities:
+//				0 = road 0 only visible
+//				1 = both roads visible, road 0 has priority
+//				2 = both roads visible, road 1 has priority
+//				3 = road 1 only visible
 // Road RAM:
-//     Offset   Bits               Usage
-//     000-1FF  ----s--- --------  Road 0: Solid fill (1) or ROM fill
-//              -------- -ccccccc  Road 0: Solid color (if solid fill)
-//              -------i iiiiiiii  Road 0: Index for other tables (if in indirect mode)
-//              -------r rrrrrrr-  Road 0: Road ROM line select
-//     200-3FF  ----s--- --------  Road 1: Solid fill (1) or ROM fill
-//              -------- -ccccccc  Road 1: Solid color (if solid fill)
-//              -------i iiiiiiii  Road 1: Index for other tables (if in indirect mode)
-//              -------r rrrrrrr-  Road 1: Road ROM line select
-//     400-7FF  ----hhhh hhhhhhhh  Road 0: horizontal scroll
-//     800-BFF  ----hhhh hhhhhhhh  Road 1: horizontal scroll
-//     C00-FFF  ----bbbb --------  Background color index
-//              -------- s-------  Road 1: stripe color index
-//              -------- -a------  Road 1: pixel value 2 color index
-//              -------- --b-----  Road 1: pixel value 1 color index
-//              -------- ---c----  Road 1: pixel value 0 color index
-//              -------- ----s---  Road 0: stripe color index
-//              -------- -----a--  Road 0: pixel value 2 color index
-//              -------- ------b-  Road 0: pixel value 1 color index
-//              -------- -------c  Road 0: pixel value 0 color index
-//
+//	Offset	Bits			Usage
+//	000-1FF	――――s――― ――――――――	Road 0: Solid fill (1) or ROM fill
+//		―――――――― ―ccccccc	Road 0: Solid color (if solid fill)
+//		―――――――i iiiiiiii	Road 0: Index for other tables (if in indirect mode)
+//		―――――――r rrrrrrr―	Road 0: Road ROM line select
+//	200-3FF	――――s――― ――――――――	Road 1: Solid fill (1) or ROM fill
+//		―――――――― ―ccccccc	Road 1: Solid color (if solid fill)
+//		―――――――i iiiiiiii	Road 1: Index for other tables (if in indirect mode)
+//		―――――――r rrrrrrr―	Road 1: Road ROM line select
+//	400-7FF	――――hhhh hhhhhhhh	Road 0: horizontal scroll
+//	800-BFF	――――hhhh hhhhhhhh	Road 1: horizontal scroll
+//	C00-FFF	――――bbbb ――――――――	Background color index
+//		―――――――― s―――――――	Road 1: stripe color index
+//		―――――――― ―a――――――	Road 1: pixel value 2 color index
+//		―――――――― ――b―――――	Road 1: pixel value 1 color index
+//		―――――――― ―――c――――	Road 1: pixel value 0 color index
+//		―――――――― ――――s―――	Road 0: stripe color index
+//		―――――――― ―――――a――	Road 0: pixel value 2 color index
+//		―――――――― ――――――b―	Road 0: pixel value 1 color index
+//		―――――――― ―――――――c	Road 0: pixel value 0 color index
 // Logic:
-//     First, the scanline is used to index into the tables at 000-1FF/200-3FF
-//         - if solid fill, the background is filled with the specified color index
-//         - otherwise, the remaining tables are used
-//
-//     If indirect mode is selected, the index is taken from the low 9 bits of the
-//         table value from 000-1FF/200-3FF
-//     If direct scanline mode is selected, the index is set equal to the scanline
-//         for road 0, or the scanline + 256 for road 1
-//
-//     The horizontal scroll value is looked up using the index in the tables at
-//         400-7FF/800-BFF
-//
-//     The color information is looked up using the index in the table at C00-FFF. Note
-//         that the same table is used for both roads.
-//
+// ▪	First, the scanline is used to index into the tables at 000-1FF/200-3FF
+//	―	if solid fill, the background is filled with the specified color index
+//	―	otherwise, the remaining tables are used
+// ▪	If indirect mode is selected, the index is taken from the low 9 bits of the table value from 000-1FF/200-3FF
+// ▪	If direct scanline mode is selected, the index is set equal to the scanline for road 0, or the scanline + 256 for road 1
+// ▪	The horizontal scroll value is looked up using the index in the tables at 400-7FF/800-BFF
+// ▪	The color information is looked up using the index in the table at C00-FFF.
+//	Note that the same table is used for both roads.
 //
 // Out Run road priorities are controlled by a PAL that maps as indicated below.
-// This was used to generate the priority_map. It is assumed that X-board is the
-// same, though this logic is locked inside a Sega custom.
+// This was used to generate the priority_map.
+// It is assumed that X-board is the same, though this logic is locked inside a Sega custom.
 //
-// RRC0 =  CENTA&(RDA == 3)&!RRC2
-//     | CENTB&(RDB == 3)&RRC2
-//     | (RDA == 1)&!RRC2
-//     | (RDB == 1)&RRC2
-//
-// RRC1 =  CENTA&(RDA == 3)&!RRC2
-//     | CENTB&(RDB == 3)&RRC2
-//     | (RDA == 2)&!RRC2
-//     | (RDB == 2)&RRC2
-//
-// RRC2 = !/HSYNC&IIQ
-//     | (CTRL == 3)
-//     | !CENTA&(RDA == 3)&!CENTB&(RDB == 3)&(CTRL == 2)
-//     | CENTB&(RDB == 3)&(CTRL == 2)
-//     | !CENTA&(RDA == 3)&!M2&(CTRL == 2)
-//     | !CENTA&(RDA == 3)&!M3&(CTRL == 2)
-//     | !M0&(RDB == 0)&(CTRL == 2)
-//     | !M1&(RDB == 0)&(CTRL == 2)
-//     | !CENTA&(RDA == 3)&CENTB&(RDB == 3)&(CTRL == 1)
-//     | !M0&CENTB&(RDB == 3)&(CTRL == 1)
-//     | !M1&CENTB&(RDB == 3)&(CTRL == 1)
-//     | !CENTA&M0&(RDB == 0)&(CTRL == 1)
-//     | !CENTA&M1&(RDB == 0)&(CTRL == 1)
-//     | !CENTA&(RDA == 3)&(RDB == 1)&(CTRL == 1)
-//     | !CENTA&(RDA == 3)&(RDB == 2)&(CTRL == 1)
-//
-// RRC3 =  VA11&VB11
-//     | VA11&(CTRL == 0)
-//     | (CTRL == 3)&VB11
-//
-// RRC4 =  !CENTA&(RDA == 3)&!CENTB&(RDB == 3)
-//     | VA11&VB11
-//     | VA11&(CTRL == 0)
-//     | (CTRL == 3)&VB11
-//     | !CENTB&(RDB == 3)&(CTRL == 3)
-//     | !CENTA&(RDA == 3)&(CTRL == 0)
+//	RRC0	= CENTA ∧ (RDA == 3) ∧ ¬RRC2
+//		∨ CENTB ∧ (RDB == 3) ∧ RRC2
+//		∨ (RDA == 1) ∧ ¬RRC2
+//		∨ (RDB == 1) ∧ RRC2
+//	RRC1	= CENTA ∧ (RDA == 3) ∧ ¬RRC2
+//		∨ CENTB ∧ (RDB == 3) ∧ RRC2
+//		∨ (RDA == 2) ∧ ¬RRC2
+//		∨ (RDB == 2) ∧ RRC2
+//	RRC2	= ¬/HSYNC ∧ IIQ
+//		∨ (CTRL == 3)
+//		∨ ¬M0 ∧ (RDB == 0) ∧ (CTRL == 2)
+//		∨ ¬M1 ∧ (RDB == 0) ∧ (CTRL == 2)
+//		∨ CENTB ∧ (RDB == 3) ∧ (CTRL == 2)
+//		∨ ¬M0 ∧ CENTB ∧ (RDB == 3) ∧ (CTRL == 1)
+//		∨ ¬M1 ∧ CENTB ∧ (RDB == 3) ∧ (CTRL == 1)
+//		∨ ¬CENTA ∧ M0 ∧ (RDB == 0) ∧ (CTRL == 1)
+//		∨ ¬CENTA ∧ M1 ∧ (RDB == 0) ∧ (CTRL == 1)
+//		∨ ¬CENTA ∧ (RDA == 3) ∧ (RDB == 1) ∧ (CTRL == 1)
+//		∨ ¬CENTA ∧ (RDA == 3) ∧ (RDB == 2) ∧ (CTRL == 1)
+//		∨ ¬CENTA ∧ (RDA == 3) ∧ CENTB ∧ (RDB == 3) ∧ (CTRL == 1)
+//		∨ ¬CENTA ∧ (RDA == 3) ∧ ¬CENTB ∧ (RDB == 3) ∧ (CTRL == 2)
+//		∨ ¬CENTA ∧ (RDA == 3) ∧ ¬M2 ∧ (CTRL == 2)
+//		∨ ¬CENTA ∧ (RDA == 3) ∧ ¬M3 ∧ (CTRL == 2)
+//	RRC3	= VA11 ∧ (CTRL == 0)
+//		∨ VA11 ∧ VB11
+//		∨ (CTRL == 3) ∧ VB11
+//	RRC4	= VA11 ∧ (CTRL == 0)
+//		∨ VA11 ∧ VB11
+//		∨ (CTRL == 3) ∧ VB11
+//		∨ (CTRL == 3) ∧ ¬CENTB ∧ (RDB == 3)
+//		∨ ¬CENTA ∧ (RDA == 3) ∧ ¬CENTB ∧ (RDB == 3)
+//		∨ ¬CENTA ∧ (RDA == 3) ∧ (CTRL == 0)
 
 HWRoad hwroad;
 
@@ -127,25 +114,23 @@ void HWRoad::init(const uint8_t *src_road, const bool hires) {
 }
 
 // There are TWO (identical) roads we need to decode.
-// Each of these roads is represented using a 512x256 map.
+// Each of these roads is represented using a 512 × 256 map.
 // See: http://www.extentofthejam.com/pseudo/
 //
-// 512 x 256 x 2bpp map
-// 0x8000 bytes of data.
-// 2 Bits Per Pixel.
+//	512 × 256 × 2bpp map
+//	0x8000 bytes of data.
+//	2 Bits Per Pixel.
 //
 // Per Road:
-// Bit 0 of each pixel is stored at offset 0x0000 - 0x3FFF
-// Bit 1 of each pixel is stored at offset 0x4000 - 0x7FFF
-//
-// This means: 80 bytes per X Row [2 x 0x40 Bytes from the two separate locations]
-//
+//	Bit 0 of each pixel is stored at offset 0x0000 - 0x3FFF
+//	Bit 1 of each pixel is stored at offset 0x4000 - 0x7FFF
+//	This means: 80 bytes per X Row [2 × 0x40 Bytes from the two separate locations]
 // Decoded Format:
-// 0 = Road Colour
-// 1 = Road Inner Stripe
-// 2 = Road Outer Stripe
-// 3 = Road Exterior
-// 7 = Central Stripe
+//	0 = Road Colour
+//	1 = Road Inner Stripe
+//	2 = Road Outer Stripe
+//	3 = Road Exterior
+//	7 = Central Stripe
 void HWRoad::decode_road(const uint8_t *src_road) {
    for (int y = 0; y < 256*2; y++) {
       const int src = ((y&0xff)*0x40 + (y >> 8)*0x8000)%rom_size; // tempGfx
@@ -198,9 +183,8 @@ void HWRoad::write_road_control(const uint8_t road_control) {
    this->road_control = road_control;
 }
 
-// ------------------------------------------------------------------------------------------------
 // Road Rendering: Lores Version
-// ------------------------------------------------------------------------------------------------
+// ─────────────────────────────
 
 // Background: Look for solid fill scanlines
 void HWRoad::render_background_lores(uint16_t *pixels) {
@@ -341,9 +325,8 @@ void HWRoad::render_foreground_lores(uint16_t *pixels) {
    }
 }
 
-// ------------------------------------------------------------------------------------------------
 // High Resolution (Double Resolution) Road Rendering
-// ------------------------------------------------------------------------------------------------
+// ──────────────────────────────────────────────────
 void HWRoad::render_background_hires(uint16_t *pixels) {
    int x, y;
    uint16_t *roadram = ramBuff;
@@ -386,10 +369,9 @@ void HWRoad::render_background_hires(uint16_t *pixels) {
    }
 }
 
-// ------------------------------------------------------------------------------------------------
 // Render Road Foreground - High Resolution Version
+// ────────────────────────────────────────────────
 // Interpolates previous scanline with next.
-// ------------------------------------------------------------------------------------------------
 void HWRoad::render_foreground_hires(uint16_t *pixels) {
    int x, y, yy;
    uint16_t *roadram = ramBuff;
@@ -414,9 +396,8 @@ void HWRoad::render_foreground_hires(uint16_t *pixels) {
       int32_t hpos0 = roadram[0x200 + (((road_control&4) != 0)? yy: (data0&0x1ff))]&0xfff;
    // get road 1 data
       int32_t hpos1 = roadram[0x400 + (((road_control&4) != 0)? (0x100 + yy): (data1&0x1ff))]&0xfff;
-   // ----------------------------------------------------------------------------------------
    // Interpolate Scanlines when in hi-resolution mode.
-   // ----------------------------------------------------------------------------------------
+   // ─────────────────────────────────────────────────
       if (y&1 && yy < S16_HEIGHT - 1) {
          uint32_t data0_next = roadram[0x000 + yy + 1];
          uint32_t data1_next = roadram[0x100 + yy + 1];
@@ -439,9 +420,8 @@ void HWRoad::render_foreground_hires(uint16_t *pixels) {
             hpos1 = (hpos1 + ((hpos1_next - hpos1) >> 1))&0xFFF;
          }
       }
-   // ----------------------------------------------------------------------------------------
    // Recalculate for non-interpolated scanlines
-   // ----------------------------------------------------------------------------------------
+   // ──────────────────────────────────────────
       else {
          color0 = roadram[0x600 + (((road_control&4) != 0)? yy: (data0&0x1ff))];
          color1 = roadram[0x600 + (((road_control&4) != 0)? (0x100 + yy): (data1&0x1ff))];

@@ -28,17 +28,16 @@ protected:
    uint32_t *screen_pixels;
 // Original Screen Width & Height
    uint16_t orig_width, orig_height;
-// --------------------------------------------------------------------------------------------
-// Screen setup properties. Example below:
-// ________________________
-// |  |                |  | <- screen size      (e.g. 1280 x 720)
-// |  |                |  |
-// |  |                |<-|--- destination size (e.g. 1027 x 720) to maintain aspect ratio
-// |  |                |  |
-// |  |                |  |    source size      (e.g. 320  x 224) System 16 proportions
-// |__|________________|__|
-//
-// --------------------------------------------------------------------------------------------
+// Screen setup properties.
+// ────────────────────────
+// Example below:
+//	┌──┬────────────────┬──┐
+//	│  │                │  │ <─────	screen size		(e.g. 1280 × 720)
+//	│  │                │  │
+//	│  │                │<─┼───────	destination size	(e.g. 1027 × 720) to maintain aspect ratio
+//	│  │                │  │
+//	│  │                │  │	source size		(e.g. 320  × 224) System 16 proportions
+//	└──┴────────────────┴──┘
 // Source texture / pixel array that we are going to manipulate
    int src_width, src_height;
 // Destination window width and height

@@ -1,8 +1,8 @@
 // In-Game Statistics.
-// - Stage Timers
-// - Route Info
-// - Speed to Score Conversion
-// - Bonus Time Increment
+// -	Stage Timers
+// -	Route Info
+// -	Speed to Score Conversion
+// -	Bonus Time Increment
 //
 // Copyright Chris White.
 // See License.txt for more details.
@@ -15,7 +15,7 @@
 OStats ostats;
 
 // Original buggy millisecond lookup table (Used when 64 frames = 1 second)
-// Conversion table from 0 to 64 -> Millisecond value
+// Conversion table from 0 to 64 → Millisecond value
 const static uint8_t LAP_MS_64[] = {
    0x00, 0x01, 0x03, 0x04, 0x06, 0x07, 0x09, 0x10, 0x12, 0x14, 0x15, 0x17, 0x18, 0x20, 0x21, 0x23,
    0x25, 0x26, 0x28, 0x29, 0x31, 0x32, 0x34, 0x35, 0x37, 0x39, 0x40, 0x42, 0x43, 0x45, 0x46, 0x48,
@@ -24,7 +24,7 @@ const static uint8_t LAP_MS_64[] = {
 };
 
 // Bug fixed millisecond lookup table  (Used when 60 frames = 1 second)
-// Conversion table from 0 to 60 -> Millisecond value
+// Conversion table from 0 to 60 → Millisecond value
 const static uint8_t LAP_MS_60[] = {
    0x00, 0x01, 0x03, 0x05, 0x06, 0x08, 0x10, 0x11, 0x13, 0x15, 0x16, 0x18, 0x20, 0x21, 0x23, 0x25,
    0x26, 0x28, 0x30, 0x31, 0x33, 0x35, 0x36, 0x38, 0x40, 0x41, 0x43, 0x45, 0x46, 0x48,
@@ -59,7 +59,7 @@ void OStats::clear_route_info() {
 
 // Increment Counters, Stage Timers & Print Stage Timers
 //
-// Source: 0x7F12
+// At: 7f12
 void OStats::do_timers() {
    if (outrun.game_state != GS_INGAME) return;
    inc_lap_timer();
@@ -77,7 +77,7 @@ void OStats::do_timers() {
 
 // Increment and store lap timer for each stage.
 //
-// Source: 0x7F4C
+// At: 7f4c
 void OStats::inc_lap_timer() {
 // Add MS (Not actual milliseconds, as these are looked up from the table below)
    if (++stage_times[cur_stage][2] >= (config.engine.fix_timer? 0x3C: 0x40)) {
@@ -94,7 +94,7 @@ void OStats::inc_lap_timer() {
    ms_value = lap_ms[stage_times[cur_stage][2]];
 }
 
-// Source: 0xBE4E
+// At: be4e
 void OStats::convert_speed_score(uint16_t speed) {
 // 0x960 is the last value in this table to be actively used
    static const uint16_t CONVERT[] = {
@@ -108,7 +108,7 @@ void OStats::convert_speed_score(uint16_t speed) {
 
 // Update In-Game Score. Adds Value To Overall Score.
 //
-// Source: 0x7340
+// At: 7340
 void OStats::update_score(uint32_t value) {
    if (outrun.cannonball_mode == Outrun::MODE_TTRIAL)
       return;
@@ -121,13 +121,12 @@ void OStats::update_score(uint32_t value) {
 // Initialize Next Level
 //
 // In-Game Only:
+// 1/	Show Extend Play Timer
+// 2/	Add correct time extend for time adjustment setting from dips
+// 3/	Setup next level with relevant number of enemies
+// 4/	Blit some info to the screen
 //
-// 1/ Show Extend Play Timer
-// 2/ Add correct time extend for time adjustment setting from dips
-// 3/ Setup next level with relevant number of enemies
-// 4/ Blit some info to the screen
-//
-// Source: 0x8FAC
+// At: 8fac
 void OStats::init_next_level() {
    if (extend_play_timer) {
    // End Extend Play: Clear Text From Screen
@@ -181,33 +180,33 @@ void OStats::init_next_level() {
 }
 
 // Time Tables
+// -	Show how much time will be incremented to the counter at each stage
+// -	Rightmost routes first
+// -	Note there appears to be an error with the Stage 3a Normal entry
 //
-// - Show how much time will be incremented to the counter at each stage
-// - Rightmost routes first
-// - Note there appears to be an error with the Stage 3a Normal entry
-//
-//          | Easy | Norm | Hard | VHar |
-//          '------'------'------'------'
-// Stage 1  |  80     75     72     70  |
-//          '---------------------------'
-// Stage 2a |  65     65     65     65  |
-// Stage 2b |  62     62     62     62  |
-//          '---------------------------'
-// Stage 3a |  57     55     57     57  |
-// Stage 3b |  62     60     60     60  |
-// Stage 3c |  60     60     59     58  |
-//          '---------------------------'
-// Stage 4a |  66     65     64     62  |
-// Stage 4b |  63     62     60     60  |
-// Stage 4c |  61     60     58     58  |
-// Stage 4d |  65     65     63     63  |
-//          '---------------------------'
-// Stage 5a |  58     56     54     54  |
-// Stage 5b |  55     56     54     54  |
-// Stage 5c |  56     56     54     54  |
-// Stage 5d |  58     56     54     54  |
-// Stage 5e |  56     56     56     56  |
-//          '---------------------------'
+//			┌──────┬──────┬──────┬──────┐
+//			│ Easy │ Norm │ Hard │ VHar │
+//			├──────┴──────┴──────┴──────┤
+//	Stage 1		│  80     75     72     70  │
+//			├───────────────────────────┤
+//	Stage 2a	│  65     65     65     65  │
+//	Stage 2b	│  62     62     62     62  │
+//			├───────────────────────────┤
+//	Stage 3a	│  57     55     57     57  │
+//	Stage 3b	│  62     60     60     60  │
+//	Stage 3c	│  60     60     59     58  │
+//			├───────────────────────────┤
+//	Stage 4a	│  66     65     64     62  │
+//	Stage 4b	│  63     62     60     60  │
+//	Stage 4c	│  61     60     58     58  │
+//	Stage 4d	│  65     65     63     63  │
+//			├───────────────────────────┤
+//	Stage 5a	│  58     56     54     54  │
+//	Stage 5b	│  55     56     54     54  │
+//	Stage 5c	│  56     56     54     54  │
+//	Stage 5d	│  58     56     54     54  │
+//	Stage 5e	│  56     56     56     56  │
+//			└───────────────────────────┘
 const uint8_t OStats::TIME[] = {
 // Easy
    0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,

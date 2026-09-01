@@ -1,9 +1,10 @@
 // Dirent interface for Microsoft Visual Studio
 //
 // Copyright (C) 1998-2019 Toni Ronkko
-// This file is part of dirent.  Dirent may be freely distributed
-// under the MIT license.  For all details and documentation, see
-// https://github.com/tronkko/dirent
+// This file is part of dirent.
+// Dirent may be freely distributed under the MIT license.
+// For all details and documentation, see
+//	https://github.com/tronkko/dirent
 #ifndef DIRENT_H
 #define DIRENT_H
 
@@ -16,8 +17,7 @@
 #   pragma GCC diagnostic ignored "-Wunused-function"
 #endif
 
-// Include windows.h without Windows Sockets 1.1 to prevent conflicts with
-// Windows Sockets 2.0.
+// Include windows.h without Windows Sockets 1.1 to prevent conflicts with Windows Sockets 2.0.
 #ifndef WIN32_LEAN_AND_MEAN
 #   define WIN32_LEAN_AND_MEAN
 #endif
@@ -71,13 +71,13 @@
 #   define S_IFIFO _S_IFIFO	// Pipe
 #endif
 #if !defined S_IFBLK
-#   define S_IFBLK 0	// Block device
+#   define S_IFBLK 0		// Block device
 #endif
 #if !defined S_IFLNK
-#   define S_IFLNK 0	// Link
+#   define S_IFLNK 0		// Link
 #endif
 #if !defined S_IFSOCK
-#   define S_IFSOCK 0	// Socket
+#   define S_IFSOCK 0		// Socket
 #endif
 #if !defined S_IRUSR
 #   define S_IRUSR S_IREAD	// Read user permission
@@ -86,25 +86,25 @@
 #   define S_IWUSR S_IWRITE	// Write user permission
 #endif
 #if !defined S_IXUSR
-#   define S_IXUSR 0	// Execute user permission
+#   define S_IXUSR 0		// Execute user permission
 #endif
 #if !defined S_IRGRP
-#   define S_IRGRP 0	// Read group permission
+#   define S_IRGRP 0		// Read group permission
 #endif
 #if !defined S_IWGRP
-#   define S_IWGRP 0	// Write group permission
+#   define S_IWGRP 0		// Write group permission
 #endif
 #if !defined S_IXGRP
-#   define S_IXGRP 0	// Execute group permission
+#   define S_IXGRP 0		// Execute group permission
 #endif
 #if !defined S_IROTH
-#   define S_IROTH 0	// Read others permission
+#   define S_IROTH 0		// Read others permission
 #endif
 #if !defined S_IWOTH
-#   define S_IWOTH 0	// Write others permission
+#   define S_IWOTH 0		// Write others permission
 #endif
 #if !defined S_IXOTH
-#   define S_IXOTH 0	// Execute others permission
+#   define S_IXOTH 0		// Execute others permission
 #endif
 
 // Maximum length of file name
@@ -132,10 +132,9 @@
 #define IFTODT(mode) ((mode)&S_IFMT)
 #define DTTOIF(type) (type)
 
-// File type macros.  Note that block devices, sockets and links cannot be
-// distinguished on Windows and the macros S_ISBLK, S_ISSOCK and S_ISLNK are
-// only defined for compatibility.  These macros should always return false
-// on Windows.
+// File type macros.
+// Note that block devices, sockets and links cannot be distinguished on Windows and the macros S_ISBLK, S_ISSOCK and S_ISLNK are only defined for compatibility.
+// These macros should always return false on Windows.
 #if !defined S_ISFIFO
 #   define S_ISFIFO(mode) (((mode)&S_IFMT) == S_IFIFO)
 #endif
@@ -271,9 +270,7 @@ static int dirent_wcstombs_s(size_t *pReturnValue, char *mbstr, size_t sizeInByt
 static void dirent_set_errno(int error);
 #endif
 
-// Open directory stream DIRNAME for read and return a pointer to the
-// internal working area that is used to retrieve individual directory
-// entries.
+// Open directory stream DIRNAME for read and return a pointer to the internal working area that is used to retrieve individual directory entries.
 static _WDIR *_wopendir(const wchar_t *dirname) {
    wchar_t *p;
 // Must have directory name
@@ -291,8 +288,7 @@ static _WDIR *_wopendir(const wchar_t *dirname) {
    dirp->cached = 0;
 // Compute the length of full path plus zero terminator
 //
-// Note that on WinRT there's no way to convert relative paths
-// into absolute paths, so just assume it is an absolute path.
+// Note that on WinRT there's no way to convert relative paths into absolute paths, so just assume it is an absolute path.
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 // Desktop
    DWORD n = GetFullPathNameW(dirname, 0, NULL, NULL);
@@ -304,12 +300,10 @@ static _WDIR *_wopendir(const wchar_t *dirname) {
    dirp->patt = (wchar_t *)malloc(sizeof(wchar_t)*n + 16);
    if (dirp->patt == NULL)
       goto exit_closedir;
-// Convert relative directory name to an absolute one.  This
-// allows rewinddir() to function correctly even when current
-// working directory is changed between opendir() and rewinddir().
+// Convert relative directory name to an absolute one.
+// This allows rewinddir() to function correctly even when current working directory is changed between opendir() and rewinddir().
 //
-// Note that on WinRT there's no way to convert relative paths
-// into absolute paths, so just assume it is an absolute path.
+// Note that on WinRT there's no way to convert relative paths into absolute paths, so just assume it is an absolute path.
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 // Desktop
    n = GetFullPathNameW(dirname, n, dirp->patt, NULL);
@@ -347,11 +341,10 @@ exit_closedir:
 
 // Read next directory entry.
 //
-// Returns pointer to static directory entry which may be overwritten by
-// subsequent calls to _wreaddir().
+// Returns pointer to static directory entry which may be overwritten by subsequent calls to _wreaddir().
 static struct _wdirent *_wreaddir(_WDIR *dirp) {
-// Read directory entry to buffer.  We can safely ignore the return
-// value as entry will be set to NULL in case of error.
+// Read directory entry to buffer.
+// We can safely ignore the return value as entry will be set to NULL in case of error.
    struct _wdirent *entry;
    (void)_wreaddir_r(dirp, &dirp->ent, &entry);
 // Return pointer to statically allocated directory entry
@@ -360,8 +353,8 @@ static struct _wdirent *_wreaddir(_WDIR *dirp) {
 
 // Read next directory entry.
 //
-// Returns zero on success.  If end of directory stream is reached, then sets
-// result to NULL and returns zero.
+// Returns zero on success.
+// If end of directory stream is reached, then sets result to NULL and returns zero.
 static int _wreaddir_r(_WDIR *dirp, struct _wdirent *entry, struct _wdirent **result) {
 // Read next directory entry
    WIN32_FIND_DATAW *datap = dirent_next(dirp);
@@ -370,9 +363,8 @@ static int _wreaddir_r(_WDIR *dirp, struct _wdirent *entry, struct _wdirent **re
       *result = NULL;
       return /* OK */0;
    }
-// Copy file name as wide-character string.  If the file name is too
-// long to fit in to the destination buffer, then truncate file name
-// to PATH_MAX characters and zero-terminate the buffer.
+// Copy file name as wide-character string.
+// If the file name is too long to fit in to the destination buffer, then truncate file name to PATH_MAX characters and zero-terminate the buffer.
    size_t n = 0;
    while (n < PATH_MAX && datap->cFileName[n] != 0) {
       entry->d_name[n] = datap->cFileName[n];
@@ -398,9 +390,8 @@ static int _wreaddir_r(_WDIR *dirp, struct _wdirent *entry, struct _wdirent **re
    return /* OK */0;
 }
 
-// Close directory stream opened by opendir() function.  This invalidates the
-// DIR structure as well as any directory entry read previously by
-// _wreaddir().
+// Close directory stream opened by opendir() function.
+// This invalidates the DIR structure as well as any directory entry read previously by _wreaddir().
 static int _wclosedir(_WDIR *dirp) {
    if (!dirp) {
       dirent_set_errno(EBADF);
@@ -416,8 +407,7 @@ static int _wclosedir(_WDIR *dirp) {
    return /* success */0;
 }
 
-// Rewind directory stream such that _wreaddir() returns the very first
-// file name again.
+// Rewind directory stream such that _wreaddir() returns the very first file name again.
 static void _wrewinddir(_WDIR *dirp) {
    if (!dirp)
       return;
@@ -515,8 +505,8 @@ exit_failure:
 
 // Read next directory entry
 static struct dirent *readdir(DIR *dirp) {
-// Read directory entry to buffer.  We can safely ignore the return
-// value as entry will be set to NULL in case of error.
+// Read directory entry to buffer.
+// We can safely ignore the return value as entry will be set to NULL in case of error.
    struct dirent *entry;
    (void)readdir_r(dirp, &dirp->ent, &entry);
 // Return pointer to statically allocated directory entry
@@ -525,8 +515,8 @@ static struct dirent *readdir(DIR *dirp) {
 
 // Read next directory entry into called-allocated buffer.
 //
-// Returns zero on success.  If the end of directory stream is reached, then
-// sets result to NULL and returns zero.
+// Returns zero on success.
+// If the end of directory stream is reached, then sets result to NULL and returns zero.
 static int readdir_r(DIR *dirp, struct dirent *entry, struct dirent **result) {
 // Read next directory entry
    WIN32_FIND_DATAW *datap = dirent_next(dirp->wdirp);
@@ -538,13 +528,11 @@ static int readdir_r(DIR *dirp, struct dirent *entry, struct dirent **result) {
 // Attempt to convert file name to multi-byte string
    size_t n;
    int error = wcstombs_s(&n, entry->d_name, PATH_MAX + 1, datap->cFileName, PATH_MAX + 1);
-// If the file name cannot be represented by a multi-byte string, then
-// attempt to use old 8+3 file name.  This allows the program to
-// access files although file names may seem unfamiliar to the user.
+// If the file name cannot be represented by a multi-byte string, then attempt to use old 8+3 file name.
+// This allows the program to access files although file names may seem unfamiliar to the user.
 //
-// Be ware that the code below cannot come up with a short file name
-// unless the file system provides one.  At least VirtualBox shared
-// folders fail to do this.
+// Be ware that the code below cannot come up with a short file name unless the file system provides one.
+// At least VirtualBox shared folders fail to do this.
    if (error && datap->cAlternateFileName[0] != '\0') {
       error = wcstombs_s(&n, entry->d_name, PATH_MAX + 1, datap->cAlternateFileName, PATH_MAX + 1);
    }
@@ -564,10 +552,8 @@ static int readdir_r(DIR *dirp, struct dirent *entry, struct dirent **result) {
       entry->d_off = 0;
       entry->d_reclen = sizeof(struct dirent);
    } else {
-   // Cannot convert file name to multi-byte string so construct
-   // an erroneous directory entry and return that.  Note that
-   // we cannot return NULL as that would stop the processing
-   // of directory entries completely.
+   // Cannot convert file name to multi-byte string so construct an erroneous directory entry and return that.
+   // Note that we cannot return NULL as that would stop the processing of directory entries completely.
       entry->d_name[0] = '?';
       entry->d_name[1] = '\0';
       entry->d_namlen = 1;

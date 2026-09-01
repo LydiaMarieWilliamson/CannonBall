@@ -10,38 +10,34 @@
 // All rights reserved.
 
 // Out Run/X-Board-style sprites
-//
-//     Offs  Bits               Usage
-//      +0   e------- --------  Signify end of sprite list
-//      +0   -h-h---- --------  Hide this sprite if either bit is set
-//      +0   ----bbb- --------  Sprite bank
-//      +0   -------t tttttttt  Top scanline of sprite + 256
-//      +2   oooooooo oooooooo  Offset within selected sprite bank
-//      +4   ppppppp- --------  Signed 7-bit pitch value between scanlines
-//      +4   -------x xxxxxxxx  X position of sprite (position $BE is screen position 0)
-//      +6   -s------ --------  Enable shadows
-//      +6   --pp---- --------  Sprite priority, relative to tilemaps
-//      +6   ------vv vvvvvvvv  Vertical zoom factor (0x200 = full size, 0x100 = half size, 0x300 = 2x size)
-//      +8   y------- --------  Render from top-to-bottom (1) or bottom-to-top (0) on screen
-//      +8   -f------ --------  Horizontal flip: read the data backwards if set
-//      +8   --x----- --------  Render from left-to-right (1) or right-to-left (0) on screen
-//      +8   ------hh hhhhhhhh  Horizontal zoom factor (0x200 = full size, 0x100 = half size, 0x300 = 2x size)
-//      +E   dddddddd dddddddd  Scratch space for current address
-//
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//	Offs	Bits			Usage
+//	+0	e――――――― ――――――――	Signify end of sprite list
+//	+0	―h―h―――― ――――――――	Hide this sprite if either bit is set
+//	+0	――――bbb― ――――――――	Sprite bank
+//	+0	―――――――t tttttttt	Top scanline of sprite + 256
+//	+2	oooooooo oooooooo	Offset within selected sprite bank
+//	+4	ppppppp― ――――――――	Signed 7-bit pitch value between scanlines
+//	+4	―――――――x xxxxxxxx	X position of sprite (position $BE is screen position 0)
+//	+6	―s―――――― ――――――――	Enable shadows
+//	+6	――pp―――― ――――――――	Sprite priority, relative to tilemaps
+//	+6	――――――vv vvvvvvvv	Vertical zoom factor (0x200 = full size, 0x100 = half size, 0x300 = 2x size)
+//	+8	y――――――― ――――――――	Render from top-to-bottom (1) or bottom-to-top (0) on screen
+//	+8	―f―――――― ――――――――	Horizontal flip: read the data backwards if set
+//	+8	――x――――― ――――――――	Render from left-to-right (1) or right-to-left (0) on screen
+//	+8	――――――hh hhhhhhhh	Horizontal zoom factor (0x200 = full size, 0x100 = half size, 0x300 = 2x size)
+//	+E	dddddddd dddddddd	Scratch space for current address
 // Out Run only:
-//      +A   hhhhhhhh --------  Height in scanlines - 1
-//      +A   -------- -ccccccc  Sprite color palette
-//
+//	+A	hhhhhhhh ――――――――	Height in scanlines - 1
+//	+A	―――――――― ―ccccccc	Sprite color palette
 // X-Board only:
-//      +A   ----hhhh hhhhhhhh  Height in scanlines - 1
-//      +C   -------- cccccccc  Sprite color palette
-//
+//	+A	――――hhhh hhhhhhhh	Height in scanlines - 1
+//	+C	―――――――― cccccccc	Sprite color palette
 // Final bitmap format:
-//
-//           -s------ --------  Shadow control
-//           --pp---- --------  Sprite priority
-//           ----cccc cccc----  Sprite color palette
-//           -------- ----llll  4-bit pixel data
+//		―s―――――― ――――――――	Shadow control
+//		――pp―――― ――――――――	Sprite priority
+//		――――cccc cccc――――	Sprite color palette
+//		―――――――― ――――llll	4-bit pixel data
 
 // Enable for hardware pixel accuracy, where sprite shadowing delayed by 1 clock cycle (slower)
 #define PIXEL_ACCURACY 0
@@ -121,8 +117,8 @@ void hwsprites::swap() {
 // Reproduces glowy edge around sprites on top of shadows as seen on Hardware.
 // Believed to be caused by shadowing being out by one clock cycle / pixel.
 //
-// 1/ Sprites Drawn on top of Shadow clears the shadow flags for its opaque pixels.
-// 2/ Either the flag clear or the sprite itself is offset by one pixel horizontally.
+// 1/	Sprites Drawn on top of Shadow clears the shadow flags for its opaque pixels.
+// 2/	Either the flag clear or the sprite itself is offset by one pixel horizontally.
 //
 // Thanks to Alex B. for this implementation.
 #   define draw_pixel() { \

@@ -1,7 +1,7 @@
 // SDL2 Hardware Surface Video Rendering.
 //
 // Known Bugs:
-// - Missing Scanlines
+// -	Missing Scanlines
 //
 // Copyright Manuel Alfayate, Chris White.
 // See License.txt for more details.
@@ -25,21 +25,23 @@ bool Render::init(int src_width, int src_height, int scale, int video_mode, int 
    if (!RenderBase::sdl_screen_size())
       return false;
    int flags = SDL_WINDOW_SHOWN;
-// In SDL2, we calculate the output dimensions, but then in draw_frame() we won't do any scaling: SDL2
-// will do that for us, using the rects passed to SDL_RenderCopy().
-// scn_* -> physical screen dimensions OR window dimensions. On FULLSCREEN MODE it has the physical screen
-//          dimensions and in windowed mode it has the window dimensions.
-// src_* -> real, internal, frame dimensions. Will ALWAYS be 320 or 398 x 224. NEVER CHANGES.
-// corrected_scn_width_* -> output screen size for scaling.
-// In windowed mode it's the size of the window.
-// --------------------------------------------------------------------------------------------
+// In SDL2, we calculate the output dimensions, but then in draw_frame() we won't do any scaling:
+// SDL2 will do that for us, using the rects passed to SDL_RenderCopy().
+// scn_* →	physical screen dimensions OR window dimensions.
+//		On FULLSCREEN MODE it has the physical screen dimensions and in windowed mode it has the window dimensions.
+// src_* →	real, internal, frame dimensions.
+//		Will ALWAYS be 320 or 398 × 224.
+//		NEVER CHANGES.
+// corrected_scn_width_* →	output screen size for scaling.
+//				In windowed mode it's the size of the window.
 // Full Screen Mode
-// --------------------------------------------------------------------------------------------
+// ────────────────
    if (video_mode == video_settings_t::MODE_FULL || video_mode == video_settings_t::MODE_STRETCH) {
       flags |= (SDL_WINDOW_FULLSCREEN); // Set SDL flag
-   // Fullscreen window size: SDL2 ignores w and h in SDL_CreateWindow() if FULLSCREEN flag
-   // is enable, which is fine, so the window will be fullscreen of the physical videomode
-   // size, but then, if we want to preserve ratio, we need dst_width bigger than src_width.
+   // Fullscreen window size:
+   // SDL2 ignores w and h in SDL_CreateWindow() if FULLSCREEN flag is enabled,
+   // which is fine, so the window will be fullscreen of the physical videomode size,
+   // but then, if we want to preserve ratio, we need dst_width bigger than src_width.
       scn_width = orig_width;
       scn_height = orig_height;
       src_rect.w = src_width;
@@ -67,9 +69,8 @@ bool Render::init(int src_width, int src_height, int scale, int video_mode, int 
       }
       SDL_ShowCursor(false);
    }
-// --------------------------------------------------------------------------------------------
 // Windowed Mode
-// --------------------------------------------------------------------------------------------
+// ─────────────
    else {
       this->video_mode = video_settings_t::MODE_WINDOW;
       scn_width = src_width*scale;

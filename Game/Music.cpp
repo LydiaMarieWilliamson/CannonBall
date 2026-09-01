@@ -42,7 +42,7 @@ bool OMusic::load_widescreen_map(std::string path) {
 
 // Initialize Music Selection Screen
 //
-// Source: 0xB342
+// At: b342
 void OMusic::enable() {
    oferrari.car_ctrl_active = false;
    video.clear_text_ram();
@@ -99,7 +99,7 @@ void OMusic::disable() {
 }
 
 // Music Selection Screen: Setup Radio Sprite
-// Source: 0xCAF0
+// At: caf0
 void OMusic::setup_sprite1() {
    oentry *e = &osprites.jump_table[entry_start + 0];
    e->x = 28;
@@ -113,7 +113,7 @@ void OMusic::setup_sprite1() {
 }
 
 // Music Selection Screen: Setup Equalizer Sprite
-// Source: 0xCB2A
+// At: cb2a
 void OMusic::setup_sprite2() {
    oentry *e = &osprites.jump_table[entry_start + 1];
    e->x = 4;
@@ -127,7 +127,7 @@ void OMusic::setup_sprite2() {
 }
 
 // Music Selection Screen: Setup FM Radio Readout
-// Source: 0xCB64
+// At: cb64
 void OMusic::setup_sprite3() {
    oentry *e = &osprites.jump_table[entry_start + 2];
    e->x = -8;
@@ -141,7 +141,7 @@ void OMusic::setup_sprite3() {
 }
 
 // Music Selection Screen: Setup FM Radio Dial
-// Source: 0xCB9E
+// At: cb9e
 void OMusic::setup_sprite4() {
    oentry *e = &osprites.jump_table[entry_start + 3];
    e->x = 68;
@@ -155,7 +155,7 @@ void OMusic::setup_sprite4() {
 }
 
 // Music Selection Screen: Setup Hand Sprite
-// Source: 0xCBD8
+// At: cbd8
 void OMusic::setup_sprite5() {
    oentry *e = &osprites.jump_table[entry_start + 4];
    e->x = 21;
@@ -170,7 +170,7 @@ void OMusic::setup_sprite5() {
 
 // Check for start button during music selection screen
 //
-// Source: 0xB768
+// At: b768
 void OMusic::check_start() {
    if (ostats.credits && input.has_pressed(Input::START)) {
       outrun.game_state = GS_INIT_GAME;
@@ -318,26 +318,24 @@ void OMusic::blit() {
 
 // Blit Music Selection Tiles to text ram layer (Double Row)
 //
-// Source Address: 0xE0DC
-// Input:          Destination address into tile ram
-// Output:         None
+// At: e0dc
+// Input:	Destination address into tile ram
+// Output:	None
 //
 // Tilemap data is stored in the ROM as a series of words.
 //
 // A basic compression format is used:
-//
-// 1/ If a word is not '0000', copy it directly to tileram
-// 2/ If a word is '0000' a long follows which details the compression.
-//    The upper word of the long is the value to copy.
-//    The lower word of the long is the number of times to copy that value.
+// 1/	If a word is not '0000', copy it directly to tileram
+// 2/	If a word is '0000' a long follows which details the compression.
+//	The upper word of the long is the value to copy.
+//	The lower word of the long is the number of times to copy that value.
 //
 // Tile structure:
-//
-// MSB          LSB
-// ---nnnnnnnnnnnnn Tile index (0-8191)
-// ---ccccccc------ Palette (0-127)
-// p--------------- Priority flag
-// -??------------- Unknown
+//	MSB          LSB
+//	―――nnnnnnnnnnnnn	Tile index (0-8191)
+//	―――ccccccc――――――	Palette (0-127)
+//	p―――――――――――――――	Priority flag
+//	―??―――――――――――――	Unknown
 void OMusic::blit_music_select() {
    const uint32_t TILEMAP_RAM_16 = 0x10F030;
 // Palette Ram: 1F Long Entries For Sky Shade On Horizon, For Colour Change Effect
@@ -349,9 +347,8 @@ void OMusic::blit_music_select() {
       video.write_pal32(&dst_addr, roms.rom0.read32(&src_addr));
 // Set Tilemap Scroll
    otiles.set_scroll(config.s16_x_off);
-// --------------------------------------------------------------------------------------------
 // Blit to Tilemap 16: Widescreen Version. Uses Custom Tilemap.
-// --------------------------------------------------------------------------------------------
+// ────────────────────────────────────────────────────────────
    if (tilemap->loaded && config.s16_x_off > 0) {
       uint32_t tilemap16 = TILEMAP_RAM_16 - 20;
       src_addr = 0;
@@ -364,9 +361,8 @@ void OMusic::blit_music_select() {
          tilemap16 += 0x80; // next line of tiles
       }
    }
-// --------------------------------------------------------------------------------------------
 // Blit to Tilemap 16: Original 4:3 Version.
-// --------------------------------------------------------------------------------------------
+// ─────────────────────────────────────────
    else {
       uint32_t tilemap16 = TILEMAP_RAM_16;
       src_addr = TILEMAP_MUSIC_SELECT;

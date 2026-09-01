@@ -74,12 +74,12 @@ private:
 // 20 Score Entries
    minicar_entry minicars[NO_MINICARS];
 // Stores Laptime conversion
-// +0: Minutes Digit 1
-// +1: Minutes Digit 2
-// +2: Seconds Digit 1
-// +3: Seconds Digit 2
-// +4: Milliseconds Digit 1
-// +5: Milliseconds Digit 2
+//	+0: Minutes Digit 1
+//	+1: Minutes Digit 2
+//	+2: Seconds Digit 1
+//	+3: Seconds Digit 2
+//	+4: Milliseconds Digit 1
+//	+5: Milliseconds Digit 2
    uint16_t laptime[6];
    void get_score_pos();
    void insert_score();

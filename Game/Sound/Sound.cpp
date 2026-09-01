@@ -5,9 +5,8 @@
 // See License.txt for more details.
 
 // TODO:
-//
-// - Double check passing car tones, especially when going through checkpoint areas
-// - Engine tones seem to jump channels. How do we stop this? Is it a bug in the original?
+// -	Double check passing car tones, especially when going through checkpoint areas
+// -	Engine tones seem to jump channels. How do we stop this? Is it a bug in the original?
 
 #include <cstring> // For memset on GCC
 #include "Game/Sound/Sound.hpp"
@@ -52,8 +51,9 @@ void OSound::init(YM2151 *ym, uint8_t *pcm_ram) {
    init_fm_chip();
 }
 
-// Initialize FM Chip. Initalize and start Timer A.
-// Source: 0x79
+// Initialize FM Chip.
+// Initalize and start Timer A.
+// At: 0079
 void OSound::init_fm_chip() {
    command_input = sound::RESET;
 // Initialize the FM Chip with the set of default commands
@@ -90,7 +90,7 @@ void OSound::w16(uint8_t *adr, uint16_t v) {
 }
 
 // Process Command Sent By 68K CPU
-// Source: 0x74F
+// At: 074f
 void OSound::process_command() {
    if (command_input == sound::RESET)
       return;
@@ -245,11 +245,10 @@ void OSound::process_command() {
 }
 
 // Called before initalizing a new command (PCM standalone sample, FM sample, New Music)
-// Source: 0x833
+// At: 0833
 void OSound::new_command() {
-// ------------------------------------------------------------------------
 // FM Sound Effects Only (Increase Volume)
-// ------------------------------------------------------------------------
+// ───────────────────────────────────────
    if (chan_ram[channel::YM_FX1]&BIT_7) {
       chan_ram[channel::YM_FX1] = 0;
       uint16_t adr = YM_LEVEL_CMDS2;
@@ -273,7 +272,7 @@ void OSound::new_command() {
 }
 
 // Copy PCM Channel RAM contents to Channel RAM
-// Source: 0x961
+// At: 0961
 void OSound::pcm_backup() {
 // Return if PCM Channel contents already backed up
    if (sound_props&BIT_1)
@@ -288,7 +287,7 @@ void OSound::pcm_backup() {
 // Check whether FM Channel is in use
 // Map back to corresponding music channel
 //
-// Source: 0x95
+// At: 0095
 void OSound::check_fm_mapping() {
    uint16_t chan_id = channel::MAP1;
 // 8 Channels
@@ -302,7 +301,7 @@ void OSound::check_fm_mapping() {
 
 // Process and update all sound channels
 //
-// Source: 0xB3
+// At: 00b3
 void OSound::process_channels() {
 // Allows FM Music & FM Effect to be played simultaneously
    check_fm_mapping();
@@ -319,9 +318,9 @@ void OSound::process_channels() {
 // Update Individual Channel.
 //
 // Inputs:
-// chan_id = Channel ID to process
+//	chan_id = Channel ID to process
 //
-// Source: 0xCD
+// At: 00cd
 void OSound::process_channel(uint16_t chan_id) {
    chanid_prev = chan_id;
 // Get correct offset in RAM
@@ -342,9 +341,8 @@ void OSound::process_channel(uint16_t chan_id) {
    }
 // Return if not FM channel
    if (chan[ch::FM_FLAGS]&BIT_6) return;
-// ------------------------------------------------------------------------
 // FM CHANNELS
-// ------------------------------------------------------------------------
+// ───────────
 #ifdef UNUSED_WARNINGS
    if (chan[ch::CTRL])
       std::cout << "process_channel - unimplemented code 0x167" << std::endl;
@@ -387,7 +385,7 @@ void OSound::process_channel(uint16_t chan_id) {
 
 // Process Channel Section
 //
-// Source: 0x2E1
+// At: 02e1
 void OSound::process_section(uint8_t *chan) {
    uint8_t cmd = roms.z80.read8(&pos);
    cmd_prev = cmd;
@@ -395,9 +393,8 @@ void OSound::process_section(uint8_t *chan) {
       next_mml_cmd(chan, cmd);
       return;
    }
-// ------------------------------------------------------------------------
 // FM Only Code From Here Onwards
-// ------------------------------------------------------------------------
+// ──────────────────────────────
 #ifdef UNUSED_WARNINGS
 // Not sure, unused?
    if (chan[ch::FLAGS]&BIT_5) {
@@ -423,10 +420,10 @@ void OSound::process_section(uint8_t *chan) {
    calc_end_marker(chan);
 }
 
-// Source: 0x31C
+// At: 031c
 void OSound::calc_end_marker(uint8_t *chan) {
    uint16_t end_marker = roms.z80.read8(pos);
-// 32d
+// At: 032d
    if (chan[ch::FM_MARKER]&BIT_1) {
    // Mask on high bit
       if (chan[ch::FM_MARKER]&BIT_0) {
@@ -434,7 +431,7 @@ void OSound::calc_end_marker(uint8_t *chan) {
          end_marker += (roms.z80.read8(++pos) << 8);
       }
    }
-// 325
+// At: 0325
    else {
       end_marker = chan[ch::END_MARKER]*end_marker;
    }
@@ -446,7 +443,7 @@ void OSound::calc_end_marker(uint8_t *chan) {
 
 // Trigger New MML Command From Sound Data.
 //
-// Source: 0x3A8
+// At: 03a8
 void OSound::next_mml_cmd(uint8_t *chan, uint8_t cmd) {
 // Play New PCM Sample
    if (cmd >= 0xBF) {
@@ -533,7 +530,7 @@ void OSound::next_mml_cmd(uint8_t *chan, uint8_t cmd) {
 }
 
 // Set Volume (Left & Right Channels)
-// Source: 0x3D7
+// At: 03d7
 void OSound::setvol(uint8_t *chan) {
    uint8_t vol_l = roms.z80.read8(pos);
 // PCM Percussion Sample
@@ -552,7 +549,7 @@ void OSound::setvol(uint8_t *chan) {
 }
 
 // PCM Command: Set Pitch
-// Source: 0x3C4
+// At: 03c4
 void OSound::pcm_setpitch(uint8_t *chan) {
 // PCM Percussion Sample (Pitch can't be applied to voices)
    if (chan[ch::FM_FLAGS]&BIT_6)
@@ -561,14 +558,14 @@ void OSound::pcm_setpitch(uint8_t *chan) {
 
 // Sets Loop Address For FM & PCM Commands.
 // For example, used by Checkpoint FM sample and Crowd PCM Sample
-// Source: 0x446
+// At: 0446
 void OSound::set_loop_adr() {
    pos = roms.z80.read16(pos) - 1;
 }
 
 // Set Loop Counter For FM & PCM Data
 // LOOP loopNumber, loopCount, loopAddress
-// Source: 0x454
+// At: 0454
 void OSound::do_loop(uint8_t *chan) {
    uint8_t offset = roms.z80.read8(pos++) + 0x18;
    uint8_t a = chan[offset];
@@ -584,7 +581,7 @@ void OSound::do_loop(uint8_t *chan) {
 }
 
 // Write Commands to PCM Channel (For Individual Sound Effects)
-// Source: 0x483
+// At: 0483
 void OSound::pcm_finalize(uint8_t *chan) {
    sound_props &= ~BIT_1; // Clear PCM sound effect triggered
    memcpy(pcm_ram + 0x40, chan_ram + CH09_CMDS1, 8); // Channel 9 Blocks
@@ -617,23 +614,22 @@ const static uint16_t PCM_PERCUSSION[] = {
 // Play PCM Sample.
 // This routine is used both for standalone samples, and samples used by the music.
 //
-// +0 [Word]: Start Address In Bank
-// +1 [Byte]: End Address (<< 8 + 1)
-// +2 [Byte]: Sample Flags
+//	+0 [Word]: Start Address In Bank
+//	+1 [Byte]: End Address (<< 8 + 1)
+//	+2 [Byte]: Sample Flags
 //
-// Bank 0: opr10193.66
-// Bank 1: opr10192.67
-// Bank 2: opr10191.68
+//	Bank 0: opr10193.66
+//	Bank 1: opr10192.67
+//	Bank 2: opr10191.68
 //
-// Source: 0x57A
+// At: 057a
 void OSound::play_pcm_index(uint8_t *chan, uint8_t cmd) {
    if (cmd == 0) {
       calc_end_marker(chan);
       return;
    }
-// ------------------------------------------------------------------------
 // Initalize PCM Effects
-// ------------------------------------------------------------------------
+// ─────────────────────
    if (cmd >= 0xD0) {
    // First sample is at index 0xD0, so reset to 0
       uint16_t pcm_index = PCM_INFO + ((cmd - 0xD0) << 2);
@@ -642,9 +638,8 @@ void OSound::play_pcm_index(uint8_t *chan, uint8_t cmd) {
       chan[ch::PCM_ADR2] = roms.z80.read8(&pcm_index); // Wave End Address
       chan[ch::CTRL] = roms.z80.read8(&pcm_index); // Sample Flags
    }
-// ------------------------------------------------------------------------
 // Initalize PCM Percussion Samples
-// ------------------------------------------------------------------------
+// ────────────────────────────────
    else {
       uint16_t pcm_index = (cmd - 0xC0) << 2;
       w16(&chan[ch::PCM_ADR1L], PCM_PERCUSSION[pcm_index]); // Wave Start Address
@@ -658,9 +653,9 @@ void OSound::play_pcm_index(uint8_t *chan, uint8_t cmd) {
 // Initalize Sound from ROM to RAM. Used for both PCM and YM sounds.
 //
 // Inputs:
-// a = Command, de = dst, hl = src
+//	a = Command, de = dst, hl = src
 //
-// Source: 0x9E8
+// At: 09e8
 void OSound::init_sound(uint8_t cmd, uint16_t src, uint16_t dst) {
    uint16_t dst_backup = dst;
    command_index = cmd - 0x81;
@@ -684,11 +679,10 @@ void OSound::init_sound(uint8_t cmd, uint16_t src, uint16_t dst) {
    }
 }
 
-// Source: 0xCC3
+// At: 0cc3
 void OSound::process_pcm(uint8_t *chan) {
-// ------------------------------------------------------------------------
 // PCM Music Sample (Drums)
-// ------------------------------------------------------------------------
+// ────────────────────────
    if (chan[ch::CTRL]&BIT_7) {
       const uint16_t BASE_ADR = 0xF088; // Channel 2 Base Address
       const uint16_t CHAN_SIZE = 0x10; // Size of each channel entry (2 Channel Increment)
@@ -730,9 +724,8 @@ void OSound::process_pcm(uint8_t *chan) {
    // No need to restore positioning info from stack, as stored in 'pos' variable
       calc_end_marker(chan);
    }
-// ------------------------------------------------------------------------
 // Standard PCM Samples
-// ------------------------------------------------------------------------
+// ────────────────────
    else {
    // Mask on channel pair select
       uint8_t channel_pair = chan[ch::CTRL]&0xC;
@@ -777,7 +770,7 @@ void OSound::process_pcm(uint8_t *chan) {
    }
 }
 
-// Source: 0xDA8
+// At: 0da8
 void OSound::pcm_send_cmds(uint8_t *chan, uint16_t pcm_adr, uint8_t channel_pair) {
    pcm_w(pcm_adr + 0x80, channel_pair); // Write channel pair selected value
    pcm_w(pcm_adr + 0x82, chan[ch::VOL_L]); // Volume left
@@ -805,7 +798,7 @@ void OSound::fm_dotimera() {
 
 // Reset Yamaha YM2151 Chip.
 // Called before inititalizing a new music track, or when z80 has just initalized and has no specific command.
-// Source: 0x561
+// At: 0561
 void OSound::fm_reset() {
 // Clear YM & Drum Channels in RAM (0xF820 - 0xF9DF)
    for (uint16_t i = channel::YM1; i < channel::PCM_FX1; i++)
@@ -814,7 +807,7 @@ void OSound::fm_reset() {
 }
 
 // Write to FM Register With Check
-// Source: 0xA70
+// At: 0a70
 void OSound::fm_write_reg_c(uint8_t ix0, uint8_t reg, uint8_t value) {
 // Is corresponding music channel enabled?
    if (ix0&BIT_2)
@@ -823,7 +816,7 @@ void OSound::fm_write_reg_c(uint8_t ix0, uint8_t reg, uint8_t value) {
 }
 
 // Write to FM Register
-// Source: 0xA75
+// At: 0a75
 void OSound::fm_write_reg(uint8_t reg, uint8_t value) {
 #ifdef TIMER_CODE
 // Return if YM2151 is busy
@@ -844,7 +837,7 @@ void OSound::fm_write_reg(uint8_t reg, uint8_t value) {
 // 2 = End of data block
 // 3 = Next word specifies next address in memory
 //
-// Source: 0xA84
+// At: 0a84
 void OSound::fm_write_block(uint8_t ix0, uint16_t adr, uint8_t chan) {
    uint8_t cmd = roms.z80.read8(&adr);
 // Return if end of data block
@@ -861,7 +854,7 @@ void OSound::fm_write_block(uint8_t ix0, uint16_t adr, uint8_t chan) {
 }
 
 // Write level info to YM Channels
-// Source: 0x91A
+// At: 091a
 void OSound::ym_set_levels() {
 // Clear YM & Drum Channels in RAM (0xF820 - 0xF9DF)
    for (uint16_t i = channel::YM1; i < channel::PCM_FX1; i++)
@@ -919,7 +912,7 @@ const static uint16_t FM_DATA_TABLE[] = {
 
 // This is called first, when setting up YM Samples.
 // The global 'pos' variable stores the location of the block table.
-// Source: 0x515
+// At: 0515
 void OSound::ym_load_patch(uint8_t *chan) {
 // Set block address
    chan[ch::FM_BLOCK] = roms.z80.read8(pos);
@@ -929,7 +922,7 @@ void OSound::ym_load_patch(uint8_t *chan) {
    fm_write_block(chan[ch::FLAGS], adr, chan[ch::FM_FLAGS]&7);
 }
 
-// Source: 0xAAA
+// At: 0aaa
 uint16_t OSound::ym_lookup_data(uint8_t cmd, uint8_t offset, uint8_t block) {
    block = (block - 1) << 1;
 // Address of data for FM routine
@@ -938,7 +931,7 @@ uint16_t OSound::ym_lookup_data(uint8_t cmd, uint8_t offset, uint8_t block) {
 }
 
 // "Connect" Channels To Play Out of Left/Right Speakers.
-// Source: 0x534
+// At: 0534
 void OSound::ym_set_connect(uint8_t *chan, uint8_t pan) {
    uint8_t block = chan[ch::FM_BLOCK]; // FM Routine To Choose from Data Block
    uint16_t adr = ym_lookup_data(chan[ch::COMMAND], 3, block); // Send Block of FM Commands
@@ -954,7 +947,7 @@ void OSound::ym_set_connect(uint8_t *chan, uint8_t pan) {
 
 // iy = chan_ram
 //
-// Source: 0x4BF
+// At: 04bf
 void OSound::ym_end_track(uint8_t *chan) {
 // Get channel number
    uint8_t chan_index = chan[ch::FM_FLAGS]&7;
@@ -974,9 +967,8 @@ void OSound::ym_end_track(uint8_t *chan) {
 // Return if no sound playing on corresponding channel
    if (!(chan[ch::FLAGS]&BIT_7))
       return;
-// ------------------------------------------------------------------------
 // FM Sound effect is playing & Music is playing simultaneously
-// ------------------------------------------------------------------------
+// ────────────────────────────────────────────────────────────
    chan[ch::FLAGS] &= ~BIT_2;
 // Write remaining FM Data block, if specified
    uint8_t block = chan[ch::FM_BLOCK];
@@ -988,7 +980,7 @@ void OSound::ym_end_track(uint8_t *chan) {
 
 // Use Phase and Amplitude Modulation Sensitivity Table
 // Enabled with FM_PHASETBL flag.
-// Source: 0x1D6
+// At: 01d6
 void OSound::read_mod_table(uint8_t *chan) {
    uint16_t adr = ym_lookup_data(chan[ch::COMMAND], 2, chan[ch::FM_PHASETBL]); // Use Routine 2.
    while (true) {
@@ -1018,12 +1010,12 @@ void OSound::read_mod_table(uint8_t *chan) {
    }
 }
 
-// 1/ bc = Read next value in sequence (from address in de)
-// 2/ Store value on stack
-// 3/ Decrement internal pointer
-// 4/ hl =  Address in block + bc
-// 5/ Increment and store next 'de' value in sequence within 0x20 block
-// Source: 0x418
+// 1/	bc = Read next value in sequence (from address in de)
+// 2/	Store value on stack
+// 3/	Decrement internal pointer
+// 4/	hl =  Address in block + bc
+// 5/	Increment and store next 'de' value in sequence within 0x20 block
+// At: 0418
 void OSound::call_adr(uint8_t *chan) {
    uint16_t value = roms.z80.read16(pos);
    pos++;
@@ -1035,21 +1027,20 @@ void OSound::call_adr(uint8_t *chan) {
    pos = value - 1;
 }
 
-// ----------------------------------------------------------------------------
-//                                ENGINE TONE CODE
-// ----------------------------------------------------------------------------
+// ENGINE TONE CODE
+// ────────────────
 // Process Ferrari Engine Tone & Traffic Sound Effects
 //
 // Original addresses used:
-// 0xFC00: Engine Channel - Player's Car
-// 0xFC20: Engine Channel - Traffic 1
-// 0xFC40: Engine Channel - Traffic 2
-// 0xFC60: Engine Channel - Traffic 3
-// 0xFC80: Engine Channel - Traffic 4
+//	0xFC00: Engine Channel - Player's Car
+//	0xFC20: Engine Channel - Traffic 1
+//	0xFC40: Engine Channel - Traffic 2
+//	0xFC60: Engine Channel - Traffic 3
+//	0xFC80: Engine Channel - Traffic 4
 //
-// counter = Increments every tick (0 - 0xFF)
+//	counter = Increments every tick (0 - 0xFF)
 //
-// Source: 0x7501
+// At: 7501
 void OSound::engine_process() {
 #if 0
 // DEBUG
@@ -1071,7 +1062,7 @@ void OSound::engine_process() {
    }
 }
 
-// Source: 0x7531
+// At: 7531
 void OSound::engine_process_chan(uint8_t *chan, uint8_t *pcm) {
 // Return if PCM Sample Being Played On Channel
    if (engine_channel < 3) {
@@ -1080,10 +1071,10 @@ void OSound::engine_process_chan(uint8_t *chan, uint8_t *pcm) {
    }
 // Read Engine Data that has been sent by 68K CPU
    engine_read_data(chan, pcm);
-// ------------------------------------------------------------------------
+// ────────────────────────────────────────────────────────────────────────
 // Car is stationary, do rev effect at start line.
 // This bit is set whenever the music start is triggered
-// ------------------------------------------------------------------------
+// ────────────────────────────────────────────────────────────────────────
    if (sound_props&BIT_0) {
    // 0x7663
       uint16_t revs = r16(pcm); // Read Revs/Pitch which has just been stored by engine_read_data
@@ -1206,7 +1197,7 @@ void OSound::engine_process_chan(uint8_t *chan, uint8_t *pcm) {
 
 // Only called for odd number channels
 // I've not really worked out what this does yet
-// Source: 0x78C7
+// At: 78c7
 void OSound::unk78c7(uint8_t *chan, uint8_t *pcm) {
    uint16_t adr; // Channel address in RAM
    if (engine_channel == 1) {
@@ -1233,7 +1224,7 @@ void OSound::unk78c7(uint8_t *chan, uint8_t *pcm) {
    chan[ch_engines::VOL0] = chan_ram[adr_offset++];
 }
 
-// Source: 0x75DA
+// At: 75da
 void OSound::ferrari_vol_pan(uint8_t *chan, uint8_t *pcm) {
 // Adjust Engine Volume and write to new memory area (0x6)
    engine_adjust_volume(chan);
@@ -1265,7 +1256,7 @@ void OSound::ferrari_vol_pan(uint8_t *chan, uint8_t *pcm) {
 
 // Set Table Index For Engine Sample Start / End Addresses
 // Table starts at ENGINE_ADR_TABLE offset in ROM.
-// Source: 0x7819
+// At: 7819
 uint16_t OSound::engine_get_table_adr(uint8_t *chan, uint8_t *pcm) {
    int16_t off = r16(pcm + 0x80) - 0x52;
    int16_t table_offset;
@@ -1285,7 +1276,7 @@ uint16_t OSound::engine_get_table_adr(uint8_t *chan, uint8_t *pcm) {
 }
 
 // Setup engine addresses from table (START, LOOP)
-// Source: 0x77AD
+// At: 77ad
 // bpset 77b0, 1, {printf "start adr:%02x pos:=%02x", bc, hl; g}
 uint16_t OSound::engine_set_adr(uint16_t &pos, uint8_t *chan, uint8_t *pcm) {
    uint16_t start_adr = roms.z80.read16(pos++);
@@ -1311,7 +1302,7 @@ uint16_t OSound::engine_set_adr(uint16_t &pos, uint8_t *chan, uint8_t *pcm) {
    return start_adr;
 }
 
-// Source: 0x7853
+// At: 7853
 void OSound::engine_set_adr_end(uint16_t &pos, uint16_t loop_adr, uint8_t *chan, uint8_t *pcm) {
 // Set wave end address from table
    pcm[0x6] = roms.z80.read8(++pos);
@@ -1326,7 +1317,7 @@ void OSound::engine_set_adr_end(uint16_t &pos, uint16_t loop_adr, uint8_t *chan,
 }
 
 // Thicken engine effect by panning left/right dependent on channel.
-// Source: 0x77EA
+// At: 77ea
 void OSound::vol_thicken(uint16_t &pos, uint8_t *chan, uint8_t *pcm) {
    pos++; // Address of volume multiplier
 // Odd Channels: Pan Left
@@ -1342,7 +1333,7 @@ void OSound::vol_thicken(uint16_t &pos, uint8_t *chan, uint8_t *pcm) {
 }
 
 // Get Adjusted Volume
-// Source: 0x78A7
+// At: 78a7
 uint8_t OSound::get_adjusted_vol(uint16_t &pos, uint8_t *chan) {
    uint8_t multiply = roms.z80.read8(pos);
    uint16_t vol = (chan[ch_engines::VOL1]*multiply) >> 6;
@@ -1353,7 +1344,7 @@ uint8_t OSound::get_adjusted_vol(uint16_t &pos, uint8_t *chan) {
 
 // bpset 7877, 1, {printf "bc=%02x hl=%02x", bc, hl; g}
 // Set Engine Pitch From Table
-// Source: 0x7870
+// At: 7870
 void OSound::engine_set_pitch(uint16_t &pos, uint8_t *pcm) {
    pos++; // Increment to pitch entry in table
    uint16_t bc = r16(pcm + 0x82);
@@ -1378,7 +1369,7 @@ void OSound::engine_set_pitch(uint16_t &pos, uint8_t *pcm) {
 }
 
 // Mute an engine channel
-// Source: 0x7639
+// At: 7639
 void OSound::engine_mute_channel(uint8_t *chan, uint8_t *pcm, bool do_check) {
 // Return if already muted
    if (do_check && (chan[ch_engines::ACTIVE]&BIT_0))
@@ -1399,7 +1390,7 @@ void OSound::engine_mute_channel(uint8_t *chan, uint8_t *pcm, bool do_check) {
 }
 
 // Adjust engine volume and write to new memory area
-// Source: 0x76D7
+// At: 76d7
 void OSound::engine_adjust_volume(uint8_t *chan) {
    uint16_t vol = (chan[ch_engines::VOL1]*0x18) >> 6;
    if (vol > 0x3F)
@@ -1410,7 +1401,7 @@ void OSound::engine_adjust_volume(uint8_t *chan) {
 // Set engine pan.
 // Adjust Volume and write to new memory area
 // Also write to ix (PCM Channel RAM)
-// Source: 0x76FD
+// At: 76fd
 void OSound::engine_set_pan(uint16_t &pos, uint8_t *chan, uint8_t *pcm) {
    uint16_t pitch = r16(chan + ch_engines::PITCH_L) >> 1;
    pitch += roms.z80.read8(++pos);
@@ -1432,7 +1423,7 @@ void OSound::engine_set_pan(uint16_t &pos, uint8_t *chan, uint8_t *pcm) {
 }
 
 // Read Engine Data & Store the engine pitch and volume to PCM Channel RAM
-// Source: 0x778D
+// At: 778d
 void OSound::engine_read_data(uint8_t *chan, uint8_t *pcm) {
    uint16_t pitch = (engine_data[sound::ENGINE_PITCH_H] << 8) + engine_data[sound::ENGINE_PITCH_L];
    pitch = (pitch >> 5)&0x1FF;
@@ -1442,13 +1433,12 @@ void OSound::engine_read_data(uint8_t *chan, uint8_t *pcm) {
    chan[ch_engines::VOL0] = engine_data[sound::ENGINE_VOL];
 }
 
-// ----------------------------------------------------------------------------
-//                               PASSING TRAFFIC FX
-// ----------------------------------------------------------------------------
+// PASSING TRAFFIC FX
+// ──────────────────
 // should be 0x9b 0x9b 0xe3 0xe3 for starting traffic
 
 // Process Passing Traffic Channels
-// Source: 0x7AFB
+// At: 7afb
 void OSound::traffic_process() {
    if ((engine_counter&1) == 0)
       return;
@@ -1461,7 +1451,7 @@ void OSound::traffic_process() {
 }
 
 // Process Single Channel Of Traffic Sounds
-// Source: 0x7B1F
+// At: 7b1f
 void OSound::traffic_process_chan(uint8_t *pcm) {
 // No slide/pitch reduction applied yet
    if (!(pcm[0x82]&BIT_4)) {
@@ -1512,7 +1502,7 @@ void OSound::traffic_process_chan(uint8_t *pcm) {
 const uint8_t TRAFFIC_PITCH_H[] = { 0, 2, 4, 4, 0, 0xF8, 0xF8, 0xF8, 0xF8, 0xF8, 0xF8, 0xF8 };
 
 // Process traffic entry. Set volume, panning & pitch based on distance of traffic.
-// Source: 0x7B82
+// At: 7b82
 void OSound::traffic_process_entry(uint8_t *pcm) {
 // Wave Start/End Address has not been setup yet
    if (!(pcm[0x82]&BIT_2)) {
@@ -1538,7 +1528,7 @@ void OSound::traffic_process_entry(uint8_t *pcm) {
 }
 
 // Disable Traffic PCM Channel
-// Source: 0x7BDC
+// At: 7bdc
 void OSound::traffic_disable(uint8_t *pcm) {
    pcm[0x86] |= BIT_0; // Disable sound
    pcm[0x82] = 0; // Clear Flags
@@ -1552,7 +1542,7 @@ void OSound::traffic_disable(uint8_t *pcm) {
 }
 
 // Set Traffic Volume Multiplier
-// Source: 0x7C28
+// At: 7c28
 void OSound::traffic_set_vol(uint8_t *pcm) {
 // Return if volume index is not set
    uint8_t vol_entry = pcm[0x80];
@@ -1568,37 +1558,37 @@ void OSound::traffic_set_vol(uint8_t *pcm) {
 }
 
 // Traffic Panning Indexes are as follows:
-// 0 = Both
-// 1 = Pan Left
-// 2 = Pan Left More
-// 3 = Hard Left Pan
+//	0 = Both
+//	1 = Pan Left
+//	2 = Pan Left More
+//	3 = Hard Left Pan
 //
-// 5 = Both
-// 6 = Hard Pan Right
-// 7 = Pan Right More
-// 8 = Pan Right
+//	5 = Both
+//	6 = Hard Pan Right
+//	7 = Pan Right More
+//	8 = Pan Right
 const uint8_t TRAFFIC_PANNING[] = {
    0x10, 0x10, 0x10, 0x10, 0x10, 0x00, 0x08, 0x0D, // Right Channel
    0x10, 0x0D, 0x08, 0x00, 0x10, 0x10, 0x10, 0x10 // Left Channel
 };
 
 // Set Traffic Panning On Channel From Table
-// Source: 0x7BFA
+// At: 7bfa
 void OSound::traffic_set_pan(uint8_t *pcm) {
    pcm[0x03] = traffic_get_vol(pcm[0x81] + 0, pcm); // Set Volume Right
    pcm[0x02] = traffic_get_vol(pcm[0x81] + 8, pcm); // Set Volume Left
 }
 
 // Read Traffic Volume Value from Table And Multiply Appropriately
-// Source: 0x7C16
+// At: 7c16
 uint8_t OSound::traffic_get_vol(uint16_t pos, uint8_t *pcm) {
-// return volume from table*multiplier
+// return volume from table × multiplier
    return (TRAFFIC_PANNING[pos]*pcm[0x83]) >> 4;
 }
 
 // Has Traffic Volume or Pitch changed?
 // Set relevant flags when it has to denote the fact.
-// Source: 0x7C48
+// At: 7c48
 void OSound::traffic_note_changes(uint8_t new_vol, uint8_t *pcm) {
 // Denote no volume entry change
    if (new_vol == pcm[0x80])

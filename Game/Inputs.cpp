@@ -1,7 +1,6 @@
 // Process Inputs.
-//
-// - Read & Process inputs and controls.
-// - Note, this class does not contain platform specific code.
+// -	Read & Process inputs and controls.
+// -	Note, this class does not contain platform specific code.
 //
 // Copyright Chris White.
 // See License.txt for more details.
@@ -62,9 +61,8 @@ void OInputs::tick() {
 
 // DIGITAL CONTROLS: Digital Simulation of analog steering
 void OInputs::digital_steering() {
-// ------------------------------------------------------------------------
 // STEERING
-// ------------------------------------------------------------------------
+// ────────
    if (input.is_pressed(Input::LEFT)) {
    // Recentre wheel immediately if facing other way
       if (input_steering > STEERING_CENTRE) input_steering = STEERING_CENTRE;
@@ -92,9 +90,8 @@ void OInputs::digital_steering() {
 
 // DIGITAL CONTROLS: Digital Simulation of analog pedals
 void OInputs::digital_pedals() {
-// ------------------------------------------------------------------------
 // ACCELERATION
-// ------------------------------------------------------------------------
+// ────────────
    if (input.is_pressed(Input::ACCEL)) {
       input_acc += acc_inc;
       if (input_acc > 0xFF) input_acc = 0xFF;
@@ -102,9 +99,8 @@ void OInputs::digital_pedals() {
       input_acc -= acc_inc;
       if (input_acc < 0) input_acc = 0;
    }
-// ------------------------------------------------------------------------
 // BRAKE
-// ------------------------------------------------------------------------
+// ─────
    if (input.is_pressed(Input::BRAKE)) {
       input_brake += brake_inc;
       if (input_brake > 0xFF) input_brake = 0xFF;
@@ -115,9 +111,8 @@ void OInputs::digital_pedals() {
 }
 
 void OInputs::do_gear() {
-// ------------------------------------------------------------------------
 // GEAR SHIFT
-// ------------------------------------------------------------------------
+// ──────────
 // Automatic Gears: Don't do anything
    if (config.controls.gear == config.controls.GEAR_AUTO)
       return;
@@ -145,7 +140,7 @@ void OInputs::do_gear() {
 // Read, Adjust & Write Analogue Inputs
 // In the original, these values are set during a H-Blank routine
 //
-// Source: 74E2
+// At: 74e2
 void OInputs::adjust_inputs() {
 // Cap Steering Value
    if (input_steering < STEERING_MIN) input_steering = STEERING_MIN;
@@ -189,12 +184,13 @@ void OInputs::adjust_inputs() {
 // Simplified version of do credits routine.
 // I have not ported the coin chute handling code, or dip switch routines.
 //
-// Returns: 0 (No Coin Inserted)
-//          1 (Coin Chute 1 Used)
-//          2 (Coin Chute 2 Used)
-//          3 (Key Pressed / Service Button)
+// Returns:
+//	0 (No Coin Inserted)
+//	1 (Coin Chute 1 Used)
+//	2 (Coin Chute 2 Used)
+//	3 (Key Pressed / Service Button)
 //
-// Source: 0x6DE0
+// At: 6de0
 uint8_t OInputs::do_credits() {
    if (input.has_pressed(Input::COIN)) {
       if (!config.engine.freeplay && ostats.credits < 9) {
@@ -221,9 +217,8 @@ uint8_t OInputs::do_credits() {
    return 0;
 }
 
-// ------------------------------------------------------------------------------------------------
 // Menu Selection Controls
-// ------------------------------------------------------------------------------------------------
+// ───────────────────────
 bool OInputs::is_analog_l() {
    if (input_steering < STEERING_CENTRE - 0x10) {
       if (--delay1 < 0) {

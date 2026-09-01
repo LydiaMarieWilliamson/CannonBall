@@ -3,11 +3,9 @@
 // This is the SDL specific audio code.
 // If porting to a non-SDL platform, you would need to replace this class.
 //
-// It takes the output from the PCM and YM chips, mixes them and then
-// outputs appropriately.
+// It takes the output from the PCM and YM chips, mixes them and then outputs appropriately.
 //
-// In order to achieve seamless audio, when audio is enabled the framerate
-// is adjusted to essentially sync the video to the audio output.
+// In order to achieve seamless audio, when audio is enabled the framerate is adjusted to essentially sync the video to the audio output.
 //
 // This is based upon code from the Atari800 emulator project.
 // Copyright (c) 1998-2008 Atari800 development team
@@ -19,9 +17,8 @@
 #include "Game/Sound/SoundInt.hpp"
 
 #ifdef COMPILE_SOUND_CODE
-// ----------------------------------------------------------------------------
 // SDL Sound Implementation & Callback Function
-// ----------------------------------------------------------------------------
+// ────────────────────────────────────────────
 // Note that these variables are accessed by two separate threads.
 uint8_t *dsp_buffer;
 static int dsp_buffer_bytes;
@@ -33,7 +30,7 @@ static int bytes_per_sample; // Number of bytes per sample entry (usually 4 byte
 // SDL Audio Callback Function
 extern void fill_audio(void *udata, Uint8 *stream, int len);
 
-// ----------------------------------------------------------------------------
+// ────────────────────────────────────────────
 
 Audio::Audio() {
    sound_enabled = false;
@@ -49,11 +46,9 @@ void Audio::init() {
 
 void Audio::start_audio() {
    if (!sound_enabled) {
-   // Since many GNU/Linux distros are infected with PulseAudio, SDL2 could chose PA as first
-   // driver option before ALSA, and PA doesn't obbey our sample number requests, resulting
-   // in audio gaps, if we're on a GNU/Linux we force ALSA.
-   // Else we accept whatever SDL2 wants to give us or what the user specifies on SDL_AUDIODRIVER
-   // enviroment variable.
+   // Since many GNU/Linux distros are infected with PulseAudio, SDL2 could chose PA as first driver option before ALSA,
+   // and PA doesn't obey our sample number requests, resulting in audio gaps, if we're on a GNU/Linux we force ALSA.
+   // Else we accept whatever SDL2 wants to give us or what the user specifies on SDL_AUDIODRIVER enviroment variable.
       std::string platform = SDL_GetPlatform();
       if (platform == "Linux") {
          if (SDL_InitSubSystem(SDL_INIT_AUDIO) != 0)
@@ -305,8 +300,8 @@ void Audio::clear_wav() {
 //
 // Called when the audio device is ready for more data.
 //
-// stream:  A pointer to the audio buffer to be filled
-// len:     The length (in bytes) of the audio buffer
+// stream:	A pointer to the audio buffer to be filled
+// len:		The length (in bytes) of the audio buffer
 void fill_audio(void *udata, Uint8 *stream, int len) {
    int gap;
    int newpos;

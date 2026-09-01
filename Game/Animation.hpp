@@ -1,9 +1,9 @@
 // Animation Sequences.
 //
 // Used in three areas of the game:
-// - The sequence at the start with the Ferrari driving in from the side
-// - Flag Waving Man
-// - 5 x End Sequences
+// -	The sequence at the start with the Ferrari driving in from the side
+// -	Flag Waving Man
+// -	5 × End Sequences
 //
 // See "SpriteMove.hpp" for the specific format used by animated sprites.
 // It is essentially a deviation from the normal sprites in the game.

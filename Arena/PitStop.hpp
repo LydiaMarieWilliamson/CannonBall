@@ -2,12 +2,11 @@
 //
 // Diagnostics Modes. Based On Original Code, with modifications.
 // Mostly of use for real cabinets.
-//
-// - CRT Check
-// - SMARTYPI Interface Check
-// - Motor Hardware Test
-// - Brake/Start Lamp Test
-// - Control Input Test
+// -	CRT Check
+// -	SMARTYPI Interface Check
+// -	Motor Hardware Test
+// -	Brake/Start Lamp Test
+// -	Control Input Test
 //
 // Copyright Chris White.
 // See License.txt for more details.

@@ -3,8 +3,7 @@
 // (c) 1997-2002 Jarek Burczynski (s0246@poczta.onet.pl, bujar@mame.net)
 // Some of the optimizing ideas by Tatsuyuki Satoh
 //
-// This driver is based upon the MAME source code, with some minor
-// modifications to integrate it into the Cannonball framework.
+// This driver is based upon the MAME source code, with some minor modifications to integrate it into the Cannonball framework.
 //
 // See http://mamedev.org/source/docs/license.txt for more details.
 #include <stdlib.h>
@@ -72,24 +71,23 @@ uint32_t timer_A_index_old; // timer A previous index
 uint32_t timer_B_index_old; // timer B previous index
 
 // Frequency-deltas to get the closest frequency possible.
-// There are 11 octaves because of DT2 (max 950 cents over base frequency)
-// and LFO phase modulation (max 800 cents below AND over base frequency)
-// Summary:   octave  explanation
-//            0       note code - LFO PM
-//            1       note code
-//            2       note code
-//            3       note code
-//            4       note code
-//            5       note code
-//            6       note code
-//            7       note code
-//            8       note code
-//            9       note code + DT2 + LFO PM
-//            10      note code + DT2 + LFO PM
+// There are 11 octaves because of DT2 (max 950 cents over base frequency) and LFO phase modulation (max 800 cents below AND over base frequency)
+// Summary:	octave	explanation
+//		0	note code - LFO PM
+//		1	note code
+//		2	note code
+//		3	note code
+//		4	note code
+//		5	note code
+//		6	note code
+//		7	note code
+//		8	note code
+//		9	note code + DT2 + LFO PM
+//		10	note code + DT2 + LFO PM
 uint32_t freq[11*768]; // 11 octaves, 768 'cents' per octave
 
-// Frequency deltas for DT1. These deltas alter operator frequency
-// after it has been taken from frequency-deltas table.
+// Frequency deltas for DT1.
+// These deltas alter operator frequency after it has been taken from frequency-deltas table.
 int32_t dt1_freq[8*32]; // 8 DT1 levels, 32 KC values
 
 uint32_t noise_tab[32]; // 17bit Noise Generator periods
@@ -128,9 +126,9 @@ uint32_t noise_tab[32]; // 17bit Noise Generator periods
 #define MINOUT        (-32768)
 
 // TL_TAB_LEN is calculated as:
-// 13 - sinus amplitude bits     (Y axis)
-// 2  - sinus sign bit           (Y axis)
-// TL_RES_LEN - sinus resolution (X axis)
+//	13 - sinus amplitude bits     (Y axis)
+//	2  - sinus sign bit           (Y axis)
+//	TL_RES_LEN - sinus resolution (X axis)
 #define TL_TAB_LEN (13*2*TL_RES_LEN)
 static signed int tl_tab[TL_TAB_LEN];
 
@@ -251,26 +249,25 @@ static const uint8_t eg_rate_shift[32 + 64 + 32] = { // Envelope Generator count
 // This table defines offset in frequency-deltas table.
 // User's Manual page 22
 //
-// Values below were calculated using formula: value =  orig.val/1.5625
-//
-// DT2=0 DT2=1 DT2=2 DT2=3
-// 0     600   781   950
+// Values below were calculated using formula: value = orig.val/1.5625
+//	DT2=0	DT2=1	DT2=2	DT2=3
+//	0	600	781	950
 static const uint32_t dt2_tab[4] = { 0, 384, 500, 608 };
 
 // DT1 defines offset in Hertz from base note
 // This table is converted while initialization...
 // Detune table shown in YM2151 User's Manual is wrong (verified on the real chip)
-static const uint8_t dt1_tab[4*32] = { // 4*32 DT1 values
-// DT1=0
+static const uint8_t dt1_tab[4*32] = { // 4×32 DT1 values
+// DT1 = 0
    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-// DT1=1
+// DT1 = 1
    0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2,
    2, 3, 3, 3, 4, 4, 4, 5, 5, 6, 6, 7, 8, 8, 8, 8,
-// DT1=2
+// DT1 = 2
    1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5,
    5, 6, 6, 7, 8, 8, 9,10,11,12,13,14,16,16,16,16,
-// DT1=3
+// DT1 = 3
    2, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 6, 6, 7,
    8, 8, 9,10,11,12,13,14,16,17,19,20,22,22,22,22
 };
@@ -330,16 +327,13 @@ static const uint16_t phaseinc_rom[768] = {
 //
 // Here are just 256 samples out of much longer data.
 //
-// It does NOT repeat every 256 samples on real chip and I wasnt able to find
-// the point where it repeats (even in strings as long as 131072 samples).
+// It does NOT repeat every 256 samples on real chip and I wasnt able to find the point where it repeats (even in strings as long as 131072 samples).
 //
-// I only put it here because its better than nothing and perhaps
-// someone might be able to figure out the real algorithm.
+// I only put it here because its better than nothing and perhaps someone might be able to figure out the real algorithm.
 //
-// Note that (due to the way the LFO output is calculated) it is quite
-// possible that two values: 0x80 and 0x00 might be wrong in this table.
+// Note that (due to the way the LFO output is calculated) it is quite possible that two values: 0x80 and 0x00 might be wrong in this table.
 // To be exact:
-//     some 0x80 could be 0x81 as well as some 0x00 could be 0x01.
+//	some 0x80 could be 0x81 as well as some 0x00 could be 0x01.
 static const uint8_t lfo_noise_waveform[256] = {
    0xFF, 0xEE, 0xD3, 0x80, 0x58, 0xDA, 0x7F, 0x94, 0x9E, 0xE3, 0xFA, 0x00, 0x4D, 0xFA, 0xFF, 0x6A,
    0x7A, 0xDE, 0x49, 0xF6, 0x00, 0x33, 0xBB, 0x63, 0x91, 0x60, 0x51, 0xFF, 0x00, 0xD8, 0x7F, 0xDE,
@@ -1109,10 +1103,9 @@ int YM2151::read_status() {
 }
 
 // Initialize YM2151 emulator(s).
-//
-// 'num' is the number of virtual YM2151's to allocate
-// 'clock' is the chip clock in Hz
-// 'rate' is sampling rate
+// ▪	'num' is the number of virtual YM2151's to allocate
+// ▪	'clock' is the chip clock in Hz
+// ▪	'rate' is sampling rate
 void YM2151::init(int rate, int fps) {
    SoundChip::init(STEREO, rate, fps);
    this->sampfreq = rate;
@@ -1311,204 +1304,197 @@ void YM2151::chan7_calc() {
 }
 
 // The 'rate' is calculated from following formula (example on decay rate):
-//   rks = notecode after key scaling (a value from 0 to 31)
-//   DR = value written to the chip register
-//   rate = 2*DR + rks; (max rate = 2*31+31 = 93)
+//	rks = notecode after key scaling (a value from 0 to 31)
+//	DR = value written to the chip register
+//	rate = 2*DR + rks; (max rate = 2*31 + 31 = 93)
 // Four MSBs of the 'rate' above are the 'main' rate (from 00 to 15)
 // Two LSBs of the 'rate' above are the value 'x' (the shape type).
-// (e.g. '11 2' means that 'rate' is 11*4+2=46)
+// (e.g. '11 2' means that 'rate' is 11*4 + 2 = 46)
 //
-// NOTE: A 'sample' in the description below is actually 3 output samples,
-// thats because the Envelope Generator clock is equal to internal_clock/3.
+// NOTE:
+// ▪	A 'sample' in the description below is actually 3 output samples, thats because the Envelope Generator clock is equal to internal_clock/3.
 //
-// Single '-' (minus) character in the diagrams below represents one sample
-// on the output; this is for rates 11 x (11 0, 11 1, 11 2 and 11 3)
+// Single '-' (minus) character in the diagrams below represents one sample on the output; this is for rates 11 × (11 0, 11 1, 11 2 and 11 3)
 //
 // these 'main' rates:
-// 00 x: single '-' = 2048 samples; (ie. level can change every 2048 samples)
-// 01 x: single '-' = 1024 samples;
-// 02 x: single '-' = 512 samples;
-// 03 x: single '-' = 256 samples;
-// 04 x: single '-' = 128 samples;
-// 05 x: single '-' = 64 samples;
-// 06 x: single '-' = 32 samples;
-// 07 x: single '-' = 16 samples;
-// 08 x: single '-' = 8 samples;
-// 09 x: single '-' = 4 samples;
-// 10 x: single '-' = 2 samples;
-// 11 x: single '-' = 1 sample; (ie. level can change every 1 sample)
+//	00 x: single '-' = 2048 samples; (ie. level can change every 2048 samples)
+//	01 x: single '-' = 1024 samples;
+//	02 x: single '-' = 512 samples;
+//	03 x: single '-' = 256 samples;
+//	04 x: single '-' = 128 samples;
+//	05 x: single '-' = 64 samples;
+//	06 x: single '-' = 32 samples;
+//	07 x: single '-' = 16 samples;
+//	08 x: single '-' = 8 samples;
+//	09 x: single '-' = 4 samples;
+//	10 x: single '-' = 2 samples;
+//	11 x: single '-' = 1 sample; (ie. level can change every 1 sample)
 //
-// Shapes for rates 11 x look like this:
-// rate:       step:
-// 11 0        01234567
+// Shapes for rates 11 × look like this:
+//	rate:       step:
+//	11 0        01234567
 //
-// level:
-// 0           --
-// 1             --
-// 2               --
-// 3                 --
+//	level:
+//	0           ──
+//	1             ──
+//	2               ──
+//	3                 ──
 //
-// rate:       step:
-// 11 1        01234567
+//	rate:       step:
+//	11 1        01234567
 //
-// level:
-// 0           --
-// 1             --
-// 2               -
-// 3                -
-// 4                 --
+//	level:
+//	0           ──
+//	1             ──
+//	2               ─
+//	3                ─
+//	4                 ──
 //
-// rate:       step:
-// 11 2        01234567
+//	rate:       step:
+//	11 2        01234567
 //
-// level:
-// 0           --
-// 1             -
-// 2              -
-// 3               --
-// 4                 -
-// 5                  -
+//	level:
+//	0           ──
+//	1             ─
+//	2              ─
+//	3               ──
+//	4                 ─
+//	5                  ─
 //
-// rate:       step:
-// 11 3        01234567
+//	rate:       step:
+//	11 3        01234567
 //
-// level:
-// 0           --
-// 1             -
-// 2              -
-// 3               -
-// 4                -
-// 5                 -
-// 6                  -
+//	level:
+//	0           ──
+//	1             ─
+//	2              ─
+//	3               ─
+//	4                ─
+//	5                 ─
+//	6                  ─
 //
-// For rates 12 x, 13 x, 14 x and 15 x output level changes on every
-// sample - this means that the waveform looks like this: (but the level
-// changes by different values on different steps)
-// 12 3        01234567
+// For rates 12 ×, 13 ×, 14 × and 15 × output level changes on every sample - this means that the waveform looks like this:
+// (but the level changes by different values on different steps)
+//	12 3        01234567
 //
-// 0           -
-// 2            -
-// 4             -
-// 8              -
-// 10              -
-// 12               -
-// 14                -
-// 18                 -
-// 20                  -
+//	0           ─
+//	2            ─
+//	4             ─
+//	8              ─
+//	10              ─
+//	12               ─
+//	14                ─
+//	18                 ─
+//	20                  ─
 //
 // Notes about the timing:
-// ----------------------
-//
+// ───────────────────────
 // 1. Synchronism
+// Output level of each two (or more) voices running at the same 'main' rate (e.g. 11 0 and 11 1 in the diagram below)
+// will always be changing in sync, even if there're started with some delay.
 //
-// Output level of each two (or more) voices running at the same 'main' rate
-// (e.g. 11 0 and 11 1 in the diagram below) will always be changing in sync,
-// even if there're started with some delay.
+// Note that, in the diagram below, the decay phase in channel 0 starts at sample #2, while in channel 1 it starts at sample #6.
+// Anyway, both channels will always change their levels at exactly the same (following) samples.
 //
-// Note that, in the diagram below, the decay phase in channel 0 starts at
-// sample #2, while in channel 1 it starts at sample #6. Anyway, both channels
-// will always change their levels at exactly the same (following) samples.
+//	(S - start point of this channel, A - attack phase, D - decay phase):
 //
-// (S - start point of this channel, A-attack phase, D-decay phase):
+//	step:
+//	01234567012345670123456
 //
-// step:
-// 01234567012345670123456
+//	channel 0:
+//	¦  ──
+//	¦ │  ──
+//	¦ │    ─
+//	¦ │     ─
+//	¦ │      ──
+//	¦ │        ──
+//	¦│           ──
+//	¦│             ─
+//	¦│              ─
+//	¦│               ──
+//	¦AADDDDDDDDDDDDDDDD
+//	¦S
+//	¦01234567012345670123456
 //
-// channel 0:
-//   --
-//  |  --
-//  |    -
-//  |     -
-//  |      --
-//  |        --
-// |           --
-// |             -
-// |              -
-// |               --
-// AADDDDDDDDDDDDDDDD
-// S
-//
-// 01234567012345670123456
-// channel 1:
-//       -
-//      | -
-//      |  --
-//      |    --
-//      |      --
-//      |        -
-//     |          -
-//     |           --
-//     |             --
-//     |               --
-//     AADDDDDDDDDDDDDDDD
-//     S
-// 01234567012345670123456
+//	channel 1:
+//	¦      ─
+//	¦     │ ─
+//	¦     │  ──
+//	¦     │    ──
+//	¦     │      ──
+//	¦     │        ─
+//	¦    │          ─
+//	¦    │           ──
+//	¦    │             ──
+//	¦    │               ──
+//	¦    AADDDDDDDDDDDDDDDD
+//	¦    S
+//	¦01234567012345670123456
 //
 // 2. Shifted (delayed) synchronism
 //
-// Output of each two (or more) voices running at different 'main' rate
-// (9 1, 10 1 and 11 1 in the diagrams below) will always be changing
-// in 'delayed-sync' (even if there're started with some delay as in "1.")
+// Output of each two (or more) voices running at different 'main' rate (9 1, 10 1 and 11 1 in the diagrams below)
+// will always be changing in 'delayed-sync' (even if there're started with some delay as in "1.")
 //
-// Note that the shapes are delayed by exactly one sample per one 'main' rate
-// increment. (Normally one would expect them to start at the same samples.)
+// Note that the shapes are delayed by exactly one sample per one 'main' rate increment.
+// (Normally one would expect them to start at the same samples.)
 //
-// See diagram below (* - start point of the shape).
+// See diagram below (▪ - start point of the shape).
 //
-// cycle:
-// 0123456701234567012345670123456701234567012345670123456701234567
+//	cycle:
+//	0123456701234567012345670123456701234567012345670123456701234567
 //
-// rate 09 1
-// *-------
-//         --------
-//                 ----
-//                     ----
-//                         --------
-//                                 *-------
-//                                 |       --------
-//                                 |               ----
-//                                 |                   ----
-//                                 |                       --------
-// rate 10 1                       |
-// --                              |
-//   *---                          |
-//       ----                      |
-//           --                    |
-//             --                  |
-//               ----              |
-//                   *---          |
-//                   |   ----      |
-//                   |       --    | | <- one step (two samples) delay between 9 1 and 10 1
-//                   |         --  | |
-//                   |           ----|
-//                   |               *---
-//                   |                   ----
-//                   |                       --
-//                   |                         --
-//                   |                           ----
-// rate 11 1         |
-// -                 |
-//  --               |
-//    *-             |
-//      --           |
-//        -          |
-//         -         |
-//          --       |
-//            *-     |
-//              --   |
-//                -  || <- one step (one sample) delay between 10 1 and 11 1
-//                 - ||
-//                  --|
-//                    *-
-//                      --
-//                        -
-//                         -
-//                          --
-//                            *-
-//                              --
-//                                -
-//                                 -
-//                                  --
+//	¦rate 09 1
+//	¦▪───────
+//	¦        ────────
+//	¦                ────
+//	¦                    ────
+//	¦                        ────────
+//	¦                                ▪───────
+//	¦                                │       ────────
+//	¦                                │               ────
+//	¦                                │                   ────
+//	¦                                │                       ────────
+//	¦rate 10 1                       │
+//	¦──                              │
+//	¦  ▪───                          │
+//	¦      ────                      │
+//	¦          ──                    │
+//	¦            ──                  │
+//	¦              ────              │
+//	¦                  ▪───          │
+//	¦                  │   ────      │
+//	¦                  │       ──    │ │ ← one step (two samples) delay between 9 1 and 10 1
+//	¦                  │         ──  │ │
+//	¦                  │           ────│
+//	¦                  │               ▪───
+//	¦                  │                   ────
+//	¦                  │                       ──
+//	¦                  │                         ──
+//	¦                  │                           ────
+//	¦rate 11 1         │
+//	¦─                 │
+//	¦ ──               │
+//	¦   ▪─             │
+//	¦     ──           │
+//	¦       ─          │
+//	¦        ─         │
+//	¦         ──       │
+//	¦           ▪─     │
+//	¦             ──   │
+//	¦               ─  ││ ← one step (one sample) delay between 10 1 and 11 1
+//	¦                ─ ││
+//	¦                 ──│
+//	¦                   ▪─
+//	¦                     ──
+//	¦                       ─
+//	¦                        ─
+//	¦                         ──
+//	¦                           ▪─
+//	¦                             ──
+//	¦                               ─
+//	¦                                ─
+//	¦                                 ──
 void YM2151::advance_eg() {
    YM2151Operator *op;
    unsigned int i;
@@ -1640,9 +1626,9 @@ void YM2151::advance() {
    lfa = a*amd/128;
    lfp = p*pmd/128;
 // The Noise Generator of the YM2151 is 17-bit shift register.
-// Input to the bit16 is negated (bit0 XOR bit3) (EXNOR).
-// Output of the register is negated (bit0 XOR bit3).
-// Simply use bit16 as the noise output.
+// ▪	Input to the bit16 is negated (bit0 XOR bit3) (EXNOR).
+// ▪	Output of the register is negated (bit0 XOR bit3).
+// ▪	Simply use bit16 as the noise output.
    noise_p += noise_f;
    i = (noise_p >> 16); // number of events (shifts of the shift register)
    noise_p &= 0xffff;
@@ -1687,9 +1673,8 @@ void YM2151::advance() {
 // CSM keyon line seems to be ORed with the KO line inside of the chip.
 // The result is that it only works when KO (register 0x08) is off, ie. 0
 //
-// Interesting effect is that when timer A is set to 1023, the KEY ON happens
-// on every sample, so there is no KEY OFF at all - the result is that
-// the sound played is the same as after normal KEY ON.
+// Interesting effect is that when timer A is set to 1023, the KEY ON happens on every sample, so there is no KEY OFF at all -
+// the result is that the sound played is the same as after normal KEY ON.
    if (csm_req) { // CSM KEYON/KEYOFF seqeunce request
       if (csm_req == 2) { // KEY ON
          op = &oper[0]; // CH 0 M1
@@ -1714,10 +1699,9 @@ void YM2151::advance() {
 }
 
 // Generate samples for one of the YM2151's
-//
-// 'num' is the number of virtual YM2151
-// '**buffers' is table of pointers to the buffers: left and right
-// 'length' is the number of samples that should be generated
+// ▪	'num' is the number of virtual YM2151
+// ▪	'**buffers' is table of pointers to the buffers: left and right
+// ▪	'length' is the number of samples that should be generated
 void YM2151::stream_update() {
    SoundChip::clear_buffer();
    uint32_t i;

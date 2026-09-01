@@ -51,10 +51,9 @@ void RomLoader::unload(void) {
    rom = NULL;
 }
 
-// ------------------------------------------------------------------------------------------------
 // Filename based ROM loader
+// ─────────────────────────
 // Advantage: Simpler. Does not require <dirent.h>
-// ------------------------------------------------------------------------------------------------
 int RomLoader::load_rom(const char *filename, const int offset, const int length, const int expected_crc, const uint8_t interleave, const bool verbose) {
    std::string path = config.data.rom_path;
    path += std::string(filename);
@@ -87,10 +86,9 @@ int RomLoader::load_rom(const char *filename, const int offset, const int length
    return 0; // success
 }
 
-// --------------------------------------------------------------------------------------------
 // Create Unordered Map of files in ROM directory by CRC32 value
+// ─────────────────────────────────────────────────────────────
 // This should be faster than brute force searching every file in the directory every time.
-// --------------------------------------------------------------------------------------------
 int RomLoader::create_map() {
    map_created = true;
    std::string path = config.data.rom_path;
@@ -122,10 +120,9 @@ int RomLoader::create_map() {
    return 0; // success
 }
 
-// ------------------------------------------------------------------------------------------------
 // Search and load ROM by CRC32 value as opposed to filename.
+// ──────────────────────────────────────────────────────────
 // Advantage: More resilient to renamed romsets.
-// ------------------------------------------------------------------------------------------------
 int RomLoader::load_crc32(const char *debug, const int offset, const int length, const int expected_crc, const uint8_t interleave, const bool verbose) {
    if (!map_created)
       create_map();
@@ -159,9 +156,8 @@ int RomLoader::load_crc32(const char *debug, const int offset, const int length,
    return 0; // success
 }
 
-// --------------------------------------------------------------------------------------------
 // Load Binary File (LayOut Levels, Tilemap Data etc.)
-// --------------------------------------------------------------------------------------------
+// ───────────────────────────────────────────────────
 int RomLoader::load_binary(const char *filename) {
    std::ifstream src(filename, std::ios::in | std::ios::binary);
    if (!src) {

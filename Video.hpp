@@ -1,8 +1,7 @@
 // Video Rendering.
-//
-// - Renders the System 16 Video Layers
-// - Handles Reads and Writes to these layers from the main game code
-// - Interfaces with platform specific rendering code
+// -	Renders the System 16 Video Layers
+// -	Handles Reads and Writes to these layers from the main game code
+// -	Interfaces with platform specific rendering code
 //
 // Copyright Chris White.
 // See License.txt for more details.

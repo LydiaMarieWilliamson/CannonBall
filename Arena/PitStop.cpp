@@ -2,12 +2,11 @@
 //
 // Diagnostics Modes. Based On Original Code, with modifications.
 // Mostly of use for real cabinets.
-//
-// - CRT Check
-// - SMARTYPI Interface Check
-// - Motor Hardware Test
-// - Brake/Start Lamp Test
-// - Control Input Test
+// -	CRT Check
+// -	SMARTYPI Interface Check
+// -	Motor Hardware Test
+// -	Brake/Start Lamp Test
+// -	Control Input Test
 //
 // Copyright Chris White.
 // See License.txt for more details.
@@ -115,9 +114,8 @@ bool CabDiag::tick() {
    return done;
 }
 
-// ------------------------------------------------------------------------------------------------
 // OUTPUT TEST
-// ------------------------------------------------------------------------------------------------
+// ───────────
 void CabDiag::init_output() {
    blit_box();
 // Draw Text
@@ -145,9 +143,8 @@ void CabDiag::tick_output() {
    }
 }
 
-// ------------------------------------------------------------------------------------------------
 // INPUT TEST
-// ------------------------------------------------------------------------------------------------
+// ──────────
 void CabDiag::init_input() {
    blit_box();
 // Draw Text
@@ -190,9 +187,8 @@ void CabDiag::tick_input() {
    ohud.blit_text_new(x, y++, Utils::to_hex_string(input.a_accel).c_str(), 0x80); // ACCEL
 }
 
-// ------------------------------------------------------------------------------------------------
 // CRT POSITION AND COLOUR TEST
-// ------------------------------------------------------------------------------------------------
+// ────────────────────────────
 void CabDiag::init_crt() {
 // Draw Text
    ohud.blit_text_new(15, 2, "DIAGNOSTIC", 0x86);
@@ -254,9 +250,8 @@ void CabDiag::blit7_block(uint32_t *adr, uint32_t data) {
    }
 }
 
-// ------------------------------------------------------------------------------------------------
 // MOTOR DIAGNOSTICS TEST
-// ------------------------------------------------------------------------------------------------
+// ──────────────────────
 void CabDiag::init_motor_test() {
    blit_box();
 // Draw Text

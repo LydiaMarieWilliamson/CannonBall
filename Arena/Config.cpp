@@ -60,19 +60,17 @@ ptree pt_config;
 
 void Config::load() {
 // Load XML file and put its contents in property tree.
-// No namespace qualification is needed, because of Koenig
-// lookup on the second argument. If reading fails, exception
-// is thrown.
+// No namespace qualification is needed, because of Koenig lookup on the second argument.
+// If reading fails, exception is thrown.
    try {
       read_xml(data.cfg_file, pt_config, boost::property_tree::xml_parser::trim_whitespace);
    } catch(std::exception &e) {
       std::cout << "Error: " << e.what() << "\n";
    }
-// ------------------------------------------------------------------------
 // Data Settings
-// ------------------------------------------------------------------------
+// ─────────────
    data.rom_path = pt_config.get("data.rompath", "ROMs/"); // Path to ROMs
-   data.res_path = pt_config.get("data.respath", "Res/"); // Path to ROMs
+   data.res_path = pt_config.get("data.respath", "Res/"); // Path to Game Data
    data.save_path = pt_config.get("data.savepath", "./"); // Path to Save Data
    data.crc32 = pt_config.get("data.crc32", 1);
    data.file_scores = data.save_path + "TopPlay.xml";
@@ -81,14 +79,12 @@ void Config::load() {
    data.file_ttrial_jap = data.save_path + "TopLapsJap.xml";
    data.file_cont = data.save_path + "TopRuns.xml";
    data.file_cont_jap = data.save_path + "TopRunsJap.xml";
-// ------------------------------------------------------------------------
 // Menu Settings
-// ------------------------------------------------------------------------
+// ─────────────
    menu.enabled = pt_config.get("menu.enabled", 1);
    menu.road_scroll_speed = pt_config.get("menu.roadspeed", 50);
-// ------------------------------------------------------------------------
 // Video Settings
-// ------------------------------------------------------------------------
+// ──────────────
    video.mode = pt_config.get("video.mode", 2); // Video Mode: Default is Full Screen
    video.scale = pt_config.get("video.window.scale", 2); // Video Scale: Default is 2x
    video.scanlines = pt_config.get("video.scanlines", 0); // Scanlines
@@ -99,9 +95,8 @@ void Config::load() {
    video.filtering = pt_config.get("video.filtering", 0); // Open GL Filtering Mode
    video.vsync = pt_config.get("video.vsync", 1); // Use V-Sync where available (e.g. Open GL)
    video.shadow = pt_config.get("video.shadow", 0); // Shadow Settings
-// ------------------------------------------------------------------------
 // Sound Settings
-// ------------------------------------------------------------------------
+// ──────────────
    sound.enabled = pt_config.get("sound.enable", 1);
    sound.rate = pt_config.get("sound.rate", 44100);
    sound.advertise = pt_config.get("sound.advertise", 1);
@@ -130,15 +125,13 @@ void Config::load() {
          sound.music_timer = 99;
       sound.music_timer = outils::DEC_TO_HEX[sound.music_timer]; // convert to hexadecimal
    }
-// ------------------------------------------------------------------------
 // SMARTYPI Settings
-// ------------------------------------------------------------------------
+// ─────────────────
    smartypi.enabled = pt_config.get("smartypi.<xmlattr>.enabled", 0);
    smartypi.ouputs = pt_config.get("smartypi.outputs", 1);
    smartypi.cabinet = pt_config.get("smartypi.cabinet", 1);
-// ------------------------------------------------------------------------
 // Controls
-// ------------------------------------------------------------------------
+// ────────
    controls.gear = pt_config.get("controls.gear", 0);
    controls.steer_speed = pt_config.get("controls.steerspeed", 3);
    controls.pedal_speed = pt_config.get("controls.pedalspeed", 4);
@@ -184,9 +177,8 @@ void Config::load() {
    controls.max_force = pt_config.get("controls.analog.haptic.max_force", 9000);
    controls.min_force = pt_config.get("controls.analog.haptic.min_force", 8500);
    controls.force_duration = pt_config.get("controls.analog.haptic.force_duration", 20);
-// ------------------------------------------------------------------------
 // Engine Settings
-// ------------------------------------------------------------------------
+// ───────────────
    engine.dip_time = pt_config.get("engine.time", 0);
    engine.dip_traffic = pt_config.get("engine.traffic", 1);
    engine.freeze_timer = engine.dip_time == 4;
@@ -217,9 +209,8 @@ void Config::load() {
          engine.hiscore_timer = 99;
       engine.hiscore_timer = outils::DEC_TO_HEX[engine.hiscore_timer]; // convert to hexadecimal
    }
-// ------------------------------------------------------------------------
 // Time Trial Mode
-// ------------------------------------------------------------------------
+// ───────────────
    ttrial.laps = pt_config.get("time_trial.laps", 5);
    ttrial.traffic = pt_config.get("time_trial.traffic", 3);
    cont_traffic = pt_config.get("continuous.traffic", 3);

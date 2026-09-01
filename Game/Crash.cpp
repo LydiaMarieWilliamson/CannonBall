@@ -1,20 +1,18 @@
 // Collision & Crash Code.
 //
 // There are two types of collision: Scenery & Traffic.
-//
-// 1/ Traffic: The Ferrari will spin after a collision.
-// 2/ Scenery: There are three types of scenery collision:
-//    - Low speed bump. Car rises slightly in the air and stalls.
-//    - Mid speed spin. Car spins and slides after collision.
-//    - High speed flip. If slightly slower, car rolls into screen.
-//      Otherwise, grows towards screen and vanishes
+// 1/	Traffic: The Ferrari will spin after a collision.
+// 2/	Scenery: There are three types of scenery collision:
+//	-	Low speed bump. Car rises slightly in the air and stalls.
+//	-	Mid speed spin. Car spins and slides after collision.
+//	-	High speed flip. If slightly slower, car rolls into screen.
+//		Otherwise, grows towards screen and vanishes
 //
 // Known Issues With Original Code:
-// - Passenger sprites flicker if they land moving in the water on Stage 1
+// -	Passenger sprites flicker if they land moving in the water on Stage 1
 //
 // The Ferrari sprite is used differently by the crash code.
-// As there's only one of them, I've rolled the additional variables into
-// this class.
+// As there's only one of them, I've rolled the additional variables into this class.
 //
 // Copyright Chris White.
 // See License.txt for more details.
@@ -71,7 +69,7 @@ void OCrash::enable() {
    outrun.ttrial.crashes++;
 }
 
-// Source: 0x1128
+// At: 1128
 void OCrash::clear_crash_state() {
    spin_control1 = 0;
    coll_count1 = 0;
@@ -116,7 +114,7 @@ void OCrash::tick() {
       else osprites.do_spr_order_shadows(spr_pass2s);
 }
 
-// Source: 0x1162
+// At: 1162
 void OCrash::do_crash() {
    switch (outrun.game_state) {
       case GS_INIT_MUSIC:
@@ -138,9 +136,8 @@ void OCrash::do_crash() {
          spr_ferrari->road_priority = spr_ferrari->counter;
       return;
    }
-// ------------------------------------------------------------------------
 // cont1: Adjust steering
-// ------------------------------------------------------------------------
+// ──────────────────────
    int16_t steering_adjust = oinputs.steering_adjust;
    oinputs.steering_adjust = 0;
    if (!oferrari.car_ctrl_active) {
@@ -152,9 +149,8 @@ void OCrash::do_crash() {
          oinputs.steering_adjust = steering_adjust >> 1;
       }
    }
-// ------------------------------------------------------------------------
 // Determine whether to init spin or crash code
-// ------------------------------------------------------------------------
+// ────────────────────────────────────────────
    int16_t spin2_copy = spin_control2;
 // dec_spin2:
    if (spin2_copy != 0) {
@@ -178,7 +174,7 @@ void OCrash::do_crash() {
       crash_switch();
 }
 
-// Source: 0x1224
+// At: 1224
 void OCrash::spin_switch(const uint16_t ctrl) {
    crash_counter++;
    crash_z = 0;
@@ -201,7 +197,7 @@ void OCrash::spin_switch(const uint16_t ctrl) {
 
 // Init Crash.
 //
-// Source: 0x1252
+// At: 1252
 void OCrash::crash_switch() {
    crash_counter++;
    crash_z = 0;
@@ -241,7 +237,7 @@ void OCrash::crash_switch() {
 
 // Init Collision. Used For Spin & Flip
 //
-// Source: 0x1962
+// At: 1962
 void OCrash::init_collision() {
    oferrari.car_state = OFerrari::CAR_ANIM_SEQ; // Denote car animation sequence
 // Enable crash sprites
@@ -276,7 +272,7 @@ void OCrash::init_collision() {
 }
 
 // This code also triggers a flip, if the crash_type is set correctly.
-// Source: 0x138C
+// At: 138c
 void OCrash::do_collision() {
    if (olevelobjs.collision_sprite) {
       olevelobjs.collision_sprite = 0;
@@ -303,7 +299,7 @@ void OCrash::do_collision() {
          }
       }
    }
-// 0x13F8
+// At 13f8
    uint32_t property_table = addr + (frame << 3);
    crash_z = spr_ferrari->counter;
    spr_ferrari->zoom = 0x80;
@@ -327,7 +323,7 @@ void OCrash::do_collision() {
    spinflipcount2 = crash_spin_count; // Expired: spinflipcount
    if (spinflipcount1) {
       frame++;
-   // 0x1470
+   // At 1470
    // Initialize Car Flip
       if (!spin_control1 && !spin_control2 && frame == 2 && crash_type != CRASH_SPIN) {
          crash_state = 2; // flip
@@ -354,7 +350,7 @@ void OCrash::do_collision() {
          }
       }
    }
-// 0x14F4
+// At 14f4
    frame = 0;
 // Last spin
    if (--spinflipcount1 <= 0) {
@@ -375,7 +371,7 @@ void OCrash::do_collision() {
    done(spr_ferrari);
 }
 
-// Source: 0x1D0C
+// At: 1d0c
 void OCrash::end_collision() {
 // Enable 'normal' Ferrari object
    oferrari.spr_ferrari->control |= OSprites::ENABLE;
@@ -412,7 +408,7 @@ void OCrash::end_collision() {
 }
 
 // Low Speed Bump - Car Rises in air and sinks
-// Source: 0x12BE
+// At: 12be
 void OCrash::do_bump() {
    oferrari.car_ctrl_active = false; // Disable user control of car
    spr_ferrari->zoom = 0x80; // Set Entry Number For Zoom Lookup Table
@@ -443,7 +439,7 @@ void OCrash::do_bump() {
    done(spr_ferrari);
 }
 
-// Source: 0x1562
+// At: 1562
 void OCrash::do_car_flip() {
 // Do this if during the flip, the car has recollided with a new sprite + slow crash (similar to spin_collide)
    if (olevelobjs.collision_sprite && crash_speed == 1) {
@@ -489,9 +485,8 @@ void OCrash::do_car_flip() {
    olevelobjs.collision_sprite = 0; // Moved this for clarity
    uint32_t frames = addr + (frame << 3);
    spr_ferrari->addr = roms.rom0p->read32(frames);
-// ------------------------------------------------------------------------
 // Fast Crash: Car Heads towards camera in sky, before vanishing (0x161E)
-// ------------------------------------------------------------------------
+// ──────────────────────────────────────────────────────────────────────
    if (crash_speed == 0) {
       spr_shadow->control &= ~OSprites::ENABLE; // Disable Shadow
       spr_ferrari->counter += crash_zinc; // Increment Crash Z
@@ -504,9 +499,8 @@ void OCrash::do_car_flip() {
       } else
          crash_zinc++;
    }
-// ------------------------------------------------------------------------
 // Slow Crash (0x1648 flip_slower)
-// ------------------------------------------------------------------------
+// ───────────────────────────────
    else {
       spr_ferrari->counter -= crash_zinc; // Decrement Crash Z
       if (crash_zinc > 2)
@@ -571,7 +565,7 @@ void OCrash::do_car_flip() {
 }
 
 // Init Delay/Girl Pointing Finger
-// Source: 0x175C
+// At: 175c
 void OCrash::init_finger(uint32_t frames) {
    crash_spin_count = 1; // Denote Crash has taken place
 // Do Delay whilst girl points finger
@@ -594,7 +588,7 @@ void OCrash::init_finger(uint32_t frames) {
 }
 
 // Post Crash: Slide Car Slightly, then trigger smoke
-// Source: 0x17D2
+// At: 17d2
 void OCrash::trigger_smoke() {
    crash_z = spr_ferrari->counter;
    int16_t slide_copy = slide;
@@ -630,7 +624,7 @@ void OCrash::trigger_smoke() {
    done(spr_ferrari);
 }
 
-// Source: 0x1870
+// At: 1870
 void OCrash::post_flip_anim() {
    oferrari.car_ctrl_active = false; // Car and road updates disabled
    if (--crash_delay > 0) {
@@ -662,7 +656,7 @@ void OCrash::post_flip_anim() {
 }
 
 // Pan Camera Back To Centre After Flip
-// Source: 0x18EC
+// At: 18ec
 void OCrash::pan_camera() {
    oferrari.car_ctrl_active = true;
    oinitengine.car_x_pos += camera_xinc;
@@ -681,7 +675,7 @@ void OCrash::pan_camera() {
    done(spr_ferrari);
 }
 
-// Source: 0x1C7E
+// At: 1c7e
 void OCrash::init_spin1() {
    osoundint.queue_sound(sound::INIT_SLIP);
    uint16_t car_inc = oinitengine.car_increment >> 16;
@@ -704,7 +698,7 @@ void OCrash::init_spin1() {
    spr_ferrari->road_priority = spr_ferrari->counter;
 }
 
-// Source: 0x1C10
+// At: 1c10
 void OCrash::init_spin2() {
    osoundint.queue_sound(sound::INIT_SLIP);
    uint16_t car_inc = oinitengine.car_increment >> 16;
@@ -726,7 +720,7 @@ void OCrash::init_spin2() {
 
 // Collision: Slow
 // Rebound and bounce car in air
-// Source: 0x19EE
+// At: 19ee
 void OCrash::collide_slow() {
    osoundint.queue_sound(sound::REBOUND);
 // Setup shift value for car bump, based on current speed, which ultimately determines how much car rises in air
@@ -758,7 +752,7 @@ void OCrash::collide_slow() {
 
 // Collision: Medium
 // Spin car
-// Source: 0x1A98
+// At: 1a98
 void OCrash::collide_med() {
    osoundint.queue_sound(sound::INIT_SLIP);
 // Set number of spins based on car speed
@@ -782,7 +776,7 @@ void OCrash::collide_med() {
 // Collision: Fast
 // Spin, Then Flip Car
 //
-// Source: 0x1B12
+// At: 1b12
 void OCrash::collide_fast() {
    osoundint.queue_sound(sound::CRASH1);
    uint16_t car_inc = oinitengine.car_increment >> 16;
@@ -823,7 +817,7 @@ void OCrash::collide_fast() {
    spr_ferrari->road_priority = spr_ferrari->counter;
 }
 
-// Source: 0x1556
+// At: 1556
 void OCrash::done(oentry *sprite) {
    osprites.map_palette(sprite);
    if (oroad.get_view_mode() != ORoad::VIEW_INCAR || crash_type == CRASH_FLIP)
@@ -831,15 +825,14 @@ void OCrash::done(oentry *sprite) {
    sprite->road_priority = sprite->counter;
 }
 
-// ------------------------------------------------------------------------------------------------
-//                                      SHADOW CRASH ROUTINES
-// ------------------------------------------------------------------------------------------------
+// SHADOW CRASH ROUTINES
+// ─────────────────────
 
 // Render Shadow
 //
 // Disabled during fast car flip, when car rapidly heading towards screen
 //
-// Source: 0x1DF2
+// At: 1df2
 void OCrash::do_shadow(oentry *src_sprite, oentry *dst_sprite) {
    uint8_t shadow_shift;
 // Ferrari Shadow
@@ -862,19 +855,17 @@ void OCrash::do_shadow(oentry *src_sprite, oentry *dst_sprite) {
       osprites.do_spr_order_shadows(dst_sprite);
 }
 
-// ------------------------------------------------------------------------------------------------
-//                                     PASSENGER CRASH ROUTINES
-// ------------------------------------------------------------------------------------------------
+// PASSENGER CRASH ROUTINES
+// ────────────────────────
 
 // Flips & Spins Only
 //
 // Process passengers during crash scenario.
 //
-// Source: 0x1E66
+// At: 1e66
 void OCrash::do_crash_passengers(oentry *sprite) {
-// --------------------------------------------------------------------------------------------
 // Flip car
-// --------------------------------------------------------------------------------------------
+// ────────
    if (crash_state == 2) {
    // Update pointer to functions
       if (sprite == spr_pass1)
@@ -885,9 +876,8 @@ void OCrash::do_crash_passengers(oentry *sprite) {
       crash_pass_flip(sprite);
       return;
    }
-// --------------------------------------------------------------------------------------------
 // Non-Flip
-// --------------------------------------------------------------------------------------------
+// ────────
    if (crash_state < 5)
       crash_pass1(sprite);
    else
@@ -899,11 +889,10 @@ void OCrash::do_crash_passengers(oentry *sprite) {
 }
 
 // Position Passenger Sprites During Crash (But Not Flip)
+// -	Process passenger sprites in crash scenario
+// -	Called separately for man and girl
 //
-// - Process passenger sprites in crash scenario
-// - Called separately for man and girl
-//
-// Source: 0x1EA6
+// At: 1ea6
 void OCrash::crash_pass1(oentry *sprite) {
    uint32_t frames = (sprite == spr_pass1? outrun.adr.sprite_crash_man1: outrun.adr.sprite_crash_girl1) + (spin_pass_frame << 3);
    sprite->addr = roms.rom0p->read32(frames);
@@ -925,17 +914,16 @@ void OCrash::crash_pass1(oentry *sprite) {
 }
 
 // Passenger animations following the crash sequence i.e. when car is stationary
+//	3 = hands battering,
+//	2 = man scratches head, girl taps car
+//	1 = man scratch head & girl points
+//	0 = man subdued & girl points
 //
-// 3 = hands battering,
-// 2 = man scratches head, girl taps car
-// 1 = man scratch head & girl points
-// 0 = man subdued & girl points
+// -	Process passenger sprites in crash scenario
+// -	Called separately for man and girl
+// -	Selects which passenger animation to play
 //
-// - Process passenger sprites in crash scenario
-// - Called separately for man and girl
-// - Selects which passenger animation to play
-//
-// Source: 0x1F26
+// At: 1f26
 void OCrash::crash_pass2(oentry *sprite) {
    uint32_t frames = (sprite == spr_pass1? outrun.adr.sprite_crash_man2: outrun.adr.sprite_crash_girl2);
 // Use coll_count2 to select one of the three animations that can be played
@@ -1004,11 +992,11 @@ void OCrash::crash_pass2(oentry *sprite) {
 // Handle passenger animation sequence during car flip
 //
 // 3 main stages:
-// 1/ Flip passengers out of car
-// 2/ Passengers sit up on road after crash
-// 3/ Passengers turn head and look at car (only if camera pan)
+// 1/	Flip passengers out of car
+// 2/	Passengers sit up on road after crash
+// 3/	Passengers turn head and look at car (only if camera pan)
 //
-// Source: 0x1FDE
+// At: 1fde
 void OCrash::crash_pass_flip(oentry *sprite) {
 // Some of these variable names really need refactoring
    sprite->reload = 0; // clear passenger flip control
@@ -1021,7 +1009,7 @@ void OCrash::crash_pass_flip(oentry *sprite) {
    flip_start(sprite);
 }
 
-// Source: 0x201A
+// At: 201a
 void OCrash::flip_start(oentry *sprite) {
    if (outrun.game_state != GS_ATTRACT && outrun.game_state != GS_INGAME) {
       osprites.do_spr_order_shadows(sprite);
@@ -1046,7 +1034,7 @@ void OCrash::flip_start(oentry *sprite) {
 }
 
 // Flip passengers out of car
-// Source: 0x2066
+// At: 2066
 void OCrash::pass_flip(oentry *sprite) {
 // Fast crash
    if (crash_speed == 0) {
@@ -1081,7 +1069,7 @@ void OCrash::pass_flip(oentry *sprite) {
    int16_t y_change = (((int8_t)roms.rom0p->read8(6 + frames))*offset) >> 9; // d1
    sprite->y = -(oroad.road_y[oroad.road_p0 + offset] >> 4) + 223;
    sprite->y -= y_change;
-// 2138
+// At 2138
    sprite->priority = offset;
    if (crash_side)
       sprite->control |= OSprites::HFLIP;
@@ -1113,7 +1101,7 @@ void OCrash::pass_flip(oentry *sprite) {
 }
 
 // Passengers sit up on road after crash
-// Source: 0x205A
+// At: 205a
 void OCrash::pass_situp(oentry *sprite) {
 // Update passenger x position
    int16_t x_diff = (oferrari.car_x_diff*sprite->counter) >> 9;
@@ -1138,7 +1126,7 @@ void OCrash::pass_situp(oentry *sprite) {
 }
 
 // Passengers turn head and look at car (only if camera pan)
-// Source: 0x222C
+// At: 222c
 void OCrash::pass_turnhead(oentry *sprite) {
 // Update passenger x position
    int16_t x_diff = (oferrari.car_x_diff*sprite->counter) >> 9;

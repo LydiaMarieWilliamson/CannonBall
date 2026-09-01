@@ -3,8 +3,7 @@
 // (c) 1997-2002 Jarek Burczynski (s0246@poczta.onet.pl, bujar@mame.net)
 // Some of the optimizing ideas by Tatsuyuki Satoh
 //
-// This driver is based upon the MAME source code, with some minor
-// modifications to integrate it into the Cannonball framework.
+// This driver is based upon the MAME source code, with some minor modifications to integrate it into the Cannonball framework.
 //
 // See http://mamedev.org/source/docs/license.txt for more details.
 #pragma once
@@ -19,7 +18,7 @@ typedef struct {
    uint32_t freq; // operator frequency count
    int32_t dt1; // current DT1 (detune 1 phase inc/decrement) value
    uint32_t mul; // frequency count multiply
-   uint32_t dt1_i; // DT1 index*32
+   uint32_t dt1_i; // DT1 index × 32
    uint32_t dt2; // current DT2 (detune 2) value
    signed int *connects; // operator output 'direction'
 // only M1 (operator 0) is filled with this data:

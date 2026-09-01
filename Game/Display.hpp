@@ -1,10 +1,9 @@
 // Heads-Up Display (HUD) Code
-//
-// - Score Rendering
-// - Timer Rendering
-// - Rev Rendering
-// - Minimap Rendering
-// - Text Rendering
+// -	Score Rendering
+// -	Timer Rendering
+// -	Rev Rendering
+// -	Minimap Rendering
+// -	Text Rendering
 //
 // Copyright Chris White.
 // See License.txt for more details.

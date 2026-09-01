@@ -1,9 +1,8 @@
 // Traffic Routines.
-//
-// - Traffic spawning.
-// - Traffic logic, lane changing & movement.
-// - Collisions.
-// - Traffic panning and volume control to pass to sound program.
+// -	Traffic spawning.
+// -	Traffic logic, lane changing & movement.
+// -	Collisions.
+// -	Traffic panning and volume control to pass to sound program.
 //
 // Copyright Chris White.
 // See License.txt for more details.
@@ -84,7 +83,7 @@ void OTraffic::init_stage1_traffic() {
 
 // Tick Spawned Traffic Objects
 //
-// Source: 0x521A
+// At: 521a
 void OTraffic::tick() {
 // Lock traffic spawning to 30fps frame rate.
    if (outrun.tick_frame)
@@ -113,18 +112,17 @@ void OTraffic::tick() {
 }
 
 // Disable Traffic Routines
-// Source: 0x4A78
+// At: 4a78
 void OTraffic::disable_traffic() {
    for (uint8_t i = OSprites::SPRITE_TRAFF1; i <= OSprites::SPRITE_TRAFF8; i++)
       osprites.jump_table[i].control &= ~OSprites::ENABLE;
 }
 
 // Master Function to determine when to spawn traffic
+// 1.	Toggle animation frame to control wheels of traffic
+// 2.	Spawn traffic when appropriate
 //
-// 1. Toggle animation frame to control wheels of traffic
-// 2. Spawn traffic when appropriate
-//
-// Source: 0x4AC8
+// At: 4ac8
 void OTraffic::spawn_traffic() {
    if (obonus.bonus_control || outrun.game_state == GS_MAP || outrun.game_state == GS_MUSIC || outrun.game_state == GS_BEST2)
       return;
@@ -159,7 +157,7 @@ void OTraffic::spawn_traffic() {
 // Spawn individual vehicle. Called by master function.
 // Cars are spawned on the horizon
 //
-// Source: 0x4BAC
+// At: 4bac
 void OTraffic::spawn_car(oentry *sprite) {
    sprite->control |= OSprites::ENABLE | OSprites::TRAFFIC_SPRITE;
    sprite->draw_props = oentry::BOTTOM;
@@ -188,10 +186,10 @@ void OTraffic::spawn_car(oentry *sprite) {
    rnd = (int8_t)rnd; // ext.w
    sprite->traffic_orig_speed = (rnd >> 2) + 200;
 #if 0
-// hack////////////////////////////////////////////////////////////////////////////
+// ━━━ Hack ━━━
    sprite->traffic_orig_speed = 1;
    traffic_speed_avg = 0;
-// hack////////////////////////////////////////////////////////////////////////////
+// ━━━ Hack ━━━
 #endif
    sprite->traffic_speed = traffic_speed_avg;
 // Randomize Type of traffic to spawn
@@ -208,7 +206,7 @@ void OTraffic::spawn_car(oentry *sprite) {
 
 // Check Traffic Collision
 //
-// Source: 0x4DAA
+// At: 4daa
 void OTraffic::tick_spawned_sprite(oentry *sprite) {
    if (outrun.tick_frame) {
    // Force side of road when in bonus mode, or road splitting
@@ -321,7 +319,7 @@ void OTraffic::move_spawned_sprite(oentry *sprite) {
 }
 
 // skip_lane_change:
-// Source: 0x4F0C
+// At: 4f0c
 void OTraffic::update_props(oentry *sprite) {
    int32_t z_adjust = (((oinitengine.car_increment >> 16) - sprite->traffic_speed)*(sprite->z >> 16)) << 5;
    if (config.tick_fps == 60)
@@ -369,10 +367,9 @@ void OTraffic::update_props(oentry *sprite) {
    int16_t y = oroad.road_y[oroad.road_p0 - (0x10/2)] - oroad.road_y[oroad.road_p0];
 // 0 = No Incline, 10 = Flat Road/Incline
    int8_t incline = (y < 0x12)? 0x10: 0; // d1
-// ------------------------------------------------------------------------
 // Cap Player X Position
+// ─────────────────────
 // Set Horizontal Flip Depending On Position Of Car In Relation To Player
-// ------------------------------------------------------------------------
    x = oinitengine.car_x_pos - (oroad.road_width >> 16);
    if (sprite->control&OSprites::TRAFFIC_RHS) {
       x += (oroad.road_width >> 16) << 1;
@@ -396,12 +393,12 @@ void OTraffic::update_props(oentry *sprite) {
    } else {
       sprite->control |= OSprites::HFLIP;
    }
-// ------------------------------------------------------------------------
+// ────────────────────────────────────────────────────────────────────────
 // Set palette, sprite data etc. based on:
-// 1/ Traffic Type
-// 2/ Uphill/Straight Road Section
-// 3/ Position of Car in relation to player on x axis
-// ------------------------------------------------------------------------
+// 1/	Traffic Type
+// 2/	Uphill/Straight Road Section
+// 3/	Position of Car in relation to player on x axis
+// ────────────────────────────────────────────────────────────────────────
    sprite->pal_src = roms.rom0p->read8(outrun.adr.traffic_props + sprite->type + 4) + traffic_pal_cycle;
    int16_t traffic_type = (roms.rom0p->read8(outrun.adr.traffic_props + sprite->type + 7) << 5) + (traffic_frame << 2) + incline;
    sprite->addr = roms.rom0p->read32(outrun.adr.traffic_data + traffic_type);
@@ -415,12 +412,11 @@ void OTraffic::set_zoom_lookup(oentry *sprite) {
    if (road_priority > 0x7F)
       road_priority = 0x7F;
 // Traffic Properties Table
-//
-// +0 [Long] Sprite data address
-// +4 [Byte] Palette
-// +5 [Byte] Collision Mask. Probably to do with the strength/impact of the collision
-// +6 [Byte] Zoom Lookup Value for Width/Height
-// +7 [Byte] Traffic Type
+//	+0 [Long]	Sprite data address
+//	+4 [Byte]	Palette
+//	+5 [Byte]	Collision Mask. Probably to do with the strength/impact of the collision
+//	+6 [Byte]	Zoom Lookup Value for Width/Height
+//	+7 [Byte]	Traffic Type
    uint8_t zoom_lookup = roms.rom0p->read8(outrun.adr.traffic_props + sprite->type + 6);
    switch (zoom_lookup) {
       case 0:
@@ -443,20 +439,20 @@ void OTraffic::set_zoom_lookup(oentry *sprite) {
 // Based on difficulty selected and stage number.
 //
 // Maximum Traffic Per Level
-//
-//          | Easy | Norm | Hard | VHar |
-//          '------'------'------'------'
-// Stage 1  |   2      3      4      5  |
-//          '---------------------------'
-// Stage 2  |   2      4      5      6  |
-//          '---------------------------'
-// Stage 3  |   3      5      6      7  |
-//          '---------------------------'
-// Stage 4  |   4      6      7      8  |
-//          '---------------------------'
-// Stage 5  |   5      7      8      8  |
-//          '---------------------------'
-// Source: 0x846E
+//		┌──────┬──────┬──────┬──────┐
+//		│ Easy │ Norm │ Hard │ VHar │
+//		├──────┴──────┴──────┴──────┤
+//	Stage 1	│   2      3      4      5  │
+//		├───────────────────────────┤
+//	Stage 2	│   2      4      5      6  │
+//		├───────────────────────────┤
+//	Stage 3	│   3      5      6      7  │
+//		├───────────────────────────┤
+//	Stage 4	│   4      6      7      8  │
+//		├───────────────────────────┤
+//	Stage 5	│   5      7      8      8  │
+//		└───────────────────────────┘
+// At: 846e
 void OTraffic::set_max_traffic() {
    if (outrun.cannonball_mode == Outrun::MODE_ORIGINAL) {
       const static uint8_t MAX_TRAFFIC[] = {
@@ -473,27 +469,24 @@ void OTraffic::set_max_traffic() {
    }
 }
 
-// -------------
 // Traffic Logic
-// -------------
-//
-// 1/ Handles Traffic to Traffic behaviour
-// 2/ Adjusts speed of cars to avoid running into each other
-// 3/ Sets various sprite bits to denote where traffic is in relation to each other
-// 4/ Calculates average speed of all traffic
+// ─────────────
+// 1/	Handles Traffic to Traffic behaviour
+// 2/	Adjusts speed of cars to avoid running into each other
+// 3/	Sets various sprite bits to denote where traffic is in relation to each other
+// 4/	Calculates average speed of all traffic
 //
 // Notes:
-// Processes sprite in hardware ready format and extracts original addresses where necessary.
+// ▪	Processes sprite in hardware ready format and extracts original addresses where necessary.
 //
 // In use:
+//	d5 = Count of number of traffic sprites spawned
+//	d7 = Loop counter
 //
-// d5 = Count of number of traffic sprites spawned
-// d7 = Loop counter
+//	a2 = Address of sprite in jump table
+//	a4 = Address of sprite ready for HW
 //
-// a2 = Address of sprite in jump table
-// a4 = Address of sprite ready for HW
-//
-// Source: 0x7990
+// At: 7990
 void OTraffic::traffic_logic() {
    uint16_t sprite_count = osprites.sprite_count - osprites.spr_cnt_shadow;
    uint16_t spawned = 0; // d5
@@ -558,7 +551,7 @@ void OTraffic::traffic_logic() {
    calculate_avg_speed(spawned);
 }
 
-// Source: 7A6A
+// At: 7a6a
 void OTraffic::calculate_avg_speed(uint16_t c) {
    traffic_count = c;
    if (traffic_count != 0)
@@ -567,12 +560,11 @@ void OTraffic::calculate_avg_speed(uint16_t c) {
 }
 
 // Check For Traffic Collisions
+// -	Check for collision between traffic sprite and player car
+// -	Setup the skid counter for the player's car
+// -	Adjust player's speed
 //
-// - Check for collision between traffic sprite and player car
-// - Setup the skid counter for the player's car
-// - Adjust player's speed
-//
-// Source: 0x50DE
+// At: 50de
 void OTraffic::check_collision(oentry *sprite) {
    int16_t d0 = 0;
 // Check for collision
@@ -617,7 +609,7 @@ void OTraffic::check_collision(oentry *sprite) {
 
 // Passing Traffic Sound Effects
 // Handle up to four cars passing simulataneously
-// Source: 0x7A8C
+// At: 7a8c
 void OTraffic::traffic_sound() {
 // Clear traffic data
    osoundint.engine_data[sound::TRAFFIC1] = 0;

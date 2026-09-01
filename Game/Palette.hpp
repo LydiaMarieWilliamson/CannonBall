@@ -11,12 +11,11 @@
 class OPalette {
 public:
 // Palette Manipulation Control
+//	0 = Palette manipulation deactivated
 //
-// 0 = Palette manipulation deactivated
-//
-// Bit 0 = Set to enable/disable palette manipulation
-// Bit 1 = Set when fade difference calculated, and fade in progress
-// Bit 2 = Set when memory areas have been setup for fade
+//	Bit 0 = Set to enable/disable palette manipulation
+//	Bit 1 = Set when fade difference calculated, and fade in progress
+//	Bit 2 = Set when memory areas have been setup for fade
    uint8_t pal_manip_ctrl;
    OPalette(void);
    ~OPalette(void);
@@ -39,21 +38,20 @@ private:
 // Used for fades between colours when switching stages.
 //
 // Format:
-//
-// +00 [word] Current Palette Entry
-// +02 [word] Repacked RGB bits (from 06, 08, 0A) in final format
-// +04 [word] Next Palette Entry
-// +06 [word] Current BLUE bits  [i.e current fade, this is constantly adjusted]
-// +08 [word] Current GREEN bits [i.e current fade, this is constantly adjusted]
-// +0A [word] Current RED bits   [i.e current fade, this is constantly adjusted]
-// +0C [word] BLUE Difference between palette entries
-// +0E [word] GREEN Difference between palette entries
-// +10 [word] RED Difference between palette entries
-// (9 words per entry, 0x18 entries)
+//	+00 [word] Current Palette Entry
+//	+02 [word] Repacked RGB bits (from 06, 08, 0A) in final format
+//	+04 [word] Next Palette Entry
+//	+06 [word] Current BLUE bits  [i.e current fade, this is constantly adjusted]
+//	+08 [word] Current GREEN bits [i.e current fade, this is constantly adjusted]
+//	+0A [word] Current RED bits   [i.e current fade, this is constantly adjusted]
+//	+0C [word] BLUE Difference between palette entries
+//	+0E [word] GREEN Difference between palette entries
+//	+10 [word] RED Difference between palette entries
+//	(9 words per entry, 0x18 entries)
    uint16_t pal_fade[9*0x18];
 // Has new sky palette initalized (for level transitions)
-// Bit 0 = Set to denote that new sky palette info has been setup/copied to RAM. Cleared when bit 1 set.
-// Bit 1 = Set to indicate sky palette data should be cycled
+//	Bit 0 = Set to denote that new sky palette info has been setup/copied to RAM. Cleared when bit 1 set.
+//	Bit 1 = Set to indicate sky palette data should be cycled
    uint8_t sky_palette_init;
 // For palette fade manipulations
    uint8_t cycle_counter;

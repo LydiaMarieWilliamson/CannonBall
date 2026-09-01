@@ -1,13 +1,10 @@
 // Process Outputs.
+// -	Only the Deluxe Moving Motor Code is ported for now.
+// -	This is used by the force-feedback haptic system.
 //
-// - Only the Deluxe Moving Motor Code is ported for now.
-// - This is used by the force-feedback haptic system.
+// One thing to note is that this code was originally intended to drive a moving hydraulic cabinet, not to be mapped to a haptic device.
 //
-// One thing to note is that this code was originally intended to drive
-// a moving hydraulic cabinet, not to be mapped to a haptic device.
-//
-// Therefore, it's not perfect when used in this way, but the results
-// aren't bad :)
+// Therefore, it's not perfect when used in this way, but the results aren't bad :)
 //
 // Copyright Chris White.
 // See License.txt for more details.
@@ -29,10 +26,10 @@ public:
    const static int MODE_FFEEDBACK = 2; // Force Feedback for Wheels
    const static int MODE_RUMBLE = 3; // Simple rumble for controllers
 // Hardware Motor Control:
-// 0 = Switch off
-// 5 = Left
-// 8 = Centre
-// B = Right
+//	0 = Switch off
+//	5 = Left
+//	8 = Centre
+//	B = Right
    uint8_t hw_motor_control, hw_motor_control_old;
 // Digital Outputs
    enum {

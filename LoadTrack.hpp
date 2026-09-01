@@ -1,11 +1,9 @@
 // Track Loading Code.
 //
-// Abstracts the level format, so that the original ROMs as well as
-// in conjunction with track data from the LayOut editor.
-//
-// - Handles levels (path, width, height, scenery)
-// - Handles additional level sections (road split, end section)
-// - Handles road/level related palettes
+// Abstracts the level format, so that the original ROMs as well as in conjunction with track data from the LayOut editor.
+// -	Handles levels (path, width, height, scenery)
+// -	Handles additional level sections (road split, end section)
+// -	Handles road/level related palettes
 //
 // Copyright Chris White.
 // See License.txt for more details.

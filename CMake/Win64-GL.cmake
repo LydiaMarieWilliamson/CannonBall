@@ -1,6 +1,5 @@
-## -----------------------------------------------------------------------------
 ## CannonBall Windows Setup
-## -----------------------------------------------------------------------------
+## ────────────────────────
 ## Library Locations
 set(LibDir c:/coding/lib)
 set(BoostDir ${LibDir}/boost_1_74_0)
@@ -11,12 +10,9 @@ set(DxDir c:/dxsdk)
 set(OPENGL 1)
 
 ## Platform Specific Libraries
-set(PlatformLinkLibs
-   opengl32 ## For OpenGL
-   glu32    ## For OpenGL
-   dxguid   ## Direct X Haptic Support
-   dinput8  ## Direct X Haptic Support
-)
+## opengl32 and glu32 are for OpenGL.
+## dxguid and dinput8 are for Direct X Haptic Support.
+set(PlatformLinkLibs opengl32 glu32 dxguid dinput8)
 
 ## Platform Specific Link Directories
 set(PlatformLinkDirs "${DxDir}/lib")

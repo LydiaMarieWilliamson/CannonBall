@@ -1,16 +1,14 @@
 // Ferrari Rendering & Handling Code.
 //
-// Much of the handling code is very messy. As such, the translated code
-// isn't great as I tried to focus on accuracy rather than refactoring.
+// Much of the handling code is very messy.
+// As such, the translated code isn't great as I tried to focus on accuracy rather than refactoring.
 //
 // A good example of the randomness is a routine I've named
-//   do_sound_score_slip()
-// which performs everything from updating the score, setting the audio
-// engine tone, triggering smoke effects etc. in an interwoven fashion.
+//	do_sound_score_slip()
+// which performs everything from updating the score, setting the audio engine tone, triggering smoke effects etc. in an interwoven fashion.
 //
 // The Ferrari sprite has different properties to other game objects
-// As there's only one of them, I've rolled the additional variables into
-// this class.
+// As there's only one of them, I've rolled the additional variables into this class.
 //
 // Copyright Chris White.
 // See License.txt for more details.
@@ -28,9 +26,8 @@ public:
    oentry *spr_pass2;
 // Ferrari Shadow Sprite Object
    oentry *spr_shadow;
-// -------------------------------------------------------------------------
 // Ferrari Colours
-// -------------------------------------------------------------------------
+// ───────────────
 // Palette to use (change Ferrari colours)
    uint16_t ferrari_pal;
    const static uint16_t PAL_RED = 2;
@@ -38,9 +35,8 @@ public:
    const static uint16_t PAL_YELLOW = 261;
    const static uint16_t PAL_GREEN = 266;
    const static uint16_t PAL_CYAN = 271;
-// -------------------------------------------------------------------------
 // Main Switch Variables
-// -------------------------------------------------------------------------
+// ─────────────────────
    enum {
    // Initialise Intro Animation Sequences
       FERRARI_SEQ1 = 0,
@@ -60,19 +56,17 @@ public:
    int16_t steering_old;
    bool car_ctrl_active;
 // Car State
-//
-// -1 = Animation Sequence (Crash / Drive In)
-// 0  = Normal
-// 1  = Smoke from wheels
+//	-1	= Animation Sequence (Crash / Drive In)
+//	0	= Normal
+//	+1	= Smoke from wheels
    int8_t car_state;
    enum { CAR_ANIM_SEQ = -1, CAR_NORMAL = 0, CAR_SMOKE = 1 };
 // Auto breaking for end sequence
    bool auto_brake;
 // Torque table index lookup
-//
-// 00 = Start line only
-// 10 = Low gear
-// 1F = High gear
+//	00 = Start line only
+//	10 = Low gear
+//	1F = High gear
 //
 // Increments between the values
 //
@@ -84,11 +78,10 @@ public:
 // Higher values result in reaching higher revs faster!
    uint8_t rev_shift;
 // State of car wheels
-//
-// 0 = On Road
-// 1 = Left Wheel Off-Road
-// 2 = Right Wheel Off-Road
-// 3 = Both Wheels Off-Road
+//	0 = On Road
+//	1 = Left Wheel Off-Road
+//	2 = Right Wheel Off-Road
+//	3 = Both Wheels Off-Road
    uint8_t wheel_state;
    enum {
       WHEELS_ON = 0,
@@ -97,10 +90,9 @@ public:
       WHEELS_OFF = 3
    };
 // Wheel Traction
-//
-// 0 = Both Wheels Have Traction
-// 1 = One Wheel Has Traction
-// 2 = No Wheels Have Traction
+//	0 = Both Wheels Have Traction
+//	1 = One Wheel Has Traction
+//	2 = No Wheels Have Traction
    uint8_t wheel_traction;
    enum {
       TRACTION_ON = 0,
@@ -115,9 +107,8 @@ public:
    uint16_t car_inc_old;
 // Difference between car_x_pos and car_x_old
    int16_t car_x_diff;
-// -------------------------------------------------------------------------
 // Engine Stop Flag
-// -------------------------------------------------------------------------
+// ────────────────
 // Flag set when switching back to in-game engine, to be used with revs_post_stop
 // This is used to adjust the rev boost when returning to game
    int16_t rev_stop_flag;
@@ -125,15 +116,13 @@ public:
 // Set by user being on revs before initialization.
    int16_t revs_post_stop;
    int16_t acc_post_stop;
-// -------------------------------------------------------------------------
 // Engine Sounds. Probably needs to be moved
-// -------------------------------------------------------------------------
+// ─────────────────────────────────────────
 // Sound: Adjusted rev value (to be used to set pitch sound fx)
    uint16_t rev_pitch1;
    uint16_t rev_pitch2;
-// -------------------------------------------------------------------------
 // Ferrari Specific Values
-// -------------------------------------------------------------------------
+// ───────────────────────
 // *22 [Word] AI Curve Counter. Increments During Curve. Resets On Straight.
    int16_t sprite_ai_counter;
 // *24 [Word] AI Curve Value. 0x96 - curve_next.
@@ -180,9 +169,8 @@ private:
    const static uint16_t OFFROAD_BOUNDS = 0x1F4;
 // Used by set_car_x
    int16_t road_width_old;
-// -------------------------------------------------------------------------
 // Controls
-// -------------------------------------------------------------------------
+// ────────
    int16_t accel_value;
    int16_t accel_value_bak;
    int16_t brake_value;
@@ -202,9 +190,8 @@ private:
    int8_t gear_counter;
 // Previous rev adjustment (stored)
    int32_t rev_adjust;
-// -------------------------------------------------------------------------
 // Smoke
-// -------------------------------------------------------------------------
+// ─────
 // Counter for smoke after changing gear. Values over 0 result in smoke
    int16_t gear_smoke;
 // Similar to above

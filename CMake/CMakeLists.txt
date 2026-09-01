@@ -1,24 +1,20 @@
-## -----------------------------------------------------------------------------
 ## CannonBall CMake setup
-##
+## ━━━━━━━━━━━━━━━━━━━━━━
 ## For ports, please try not to edit this file directly.
 ## Everything should go into a Win64.cmake equivalent.
-## -----------------------------------------------------------------------------
 cmake_minimum_required(VERSION 3.3.2) ## Might compile lower, but untested
 project(CannonBall)
 
-## -----------------------------------------------------------------------------
 ## Directory Setup
-## -----------------------------------------------------------------------------
+## ───────────────
 ## CMake default file (override with -DTARGET=file)
 set(DCMAKE Linux-GL.cmake)
 
 ## Source location
 set(SrcDir ..)
 
-## -----------------------------------------------------------------------------
 ## Platform Specific Setup
-## -----------------------------------------------------------------------------
+## ───────────────────────
 ## Include relevant CMAKE file (default, mingw, pandora etc.)
 if(TARGET)
    if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/${TARGET}")
@@ -33,9 +29,8 @@ else()
    include(${DCMAKE})
 endif(TARGET)
 
-## -----------------------------------------------------------------------------
 ## Project Source Files
-## -----------------------------------------------------------------------------
+## ────────────────────
 set(Src
    "${SrcDir}/DirEnt.h" "${SrcDir}/Globals.hpp" "${SrcDir}/Types.hpp"
    "${SrcDir}/LoadROM.hpp" "${SrcDir}/LoadTrack.hpp" "${SrcDir}/Main.hpp"
@@ -136,9 +131,8 @@ endif(WIN32)
 
 add_executable(CannonBall ${Srcs})
 
-## -----------------------------------------------------------------------------
 ## Compiler Definitions
-## -----------------------------------------------------------------------------
+## ────────────────────
 if(OPENGL)
    add_definitions(-DWITH_OPENGL)
 endif()
@@ -146,9 +140,8 @@ if(OPENGLES)
    add_definitions(-DWITH_OPENGLES)
 endif()
 
-## -----------------------------------------------------------------------------
 ## Library Setup
-## -----------------------------------------------------------------------------
+## ─────────────
 set(BOOST_INCLUDEDIR ${BoostDir})
 find_package(Boost REQUIRED)
 
@@ -162,9 +155,8 @@ include_directories(${SrcDir} ${BOOST_INCLUDEDIR} ${SDL2_INCLUDE_DIRS})
 link_directories(${PlatformLinkDirs})
 target_link_libraries(CannonBall ${SDL2_LIBRARIES} ${PlatformLinkLibs})
 
-## -----------------------------------------------------------------------------
-## Copy useful files to build destination
-## -----------------------------------------------------------------------------
+## Copy useful files to the build destination
+## ──────────────────────────────────────────
 configure_file(../Res/Config.xml ./Config.xml COPYONLY)
 configure_file(../Res/ConsoleDB.txt ./Res/ConsoleDB.txt COPYONLY)
 configure_file(../Res/TileMap.bin ./Res/TileMap.bin COPYONLY)

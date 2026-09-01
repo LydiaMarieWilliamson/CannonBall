@@ -3,11 +3,9 @@
 // This is the SDL specific audio code.
 // If porting to a non-SDL platform, you would need to replace this class.
 //
-// It takes the output from the PCM and YM chips, mixes them and then
-// outputs appropriately.
+// It takes the output from the PCM and YM chips, mixes them and then outputs appropriately.
 //
-// In order to achieve seamless audio, when audio is enabled the framerate
-// is adjusted to essentially sync the video to the audio output.
+// In order to achieve seamless audio, when audio is enabled the framerate is adjusted to essentially sync the video to the audio output.
 //
 // This is based upon code from the Atari800 emulator project.
 // Copyright (c) 1998-2008 Atari800 development team

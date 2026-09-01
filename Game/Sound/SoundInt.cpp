@@ -1,8 +1,7 @@
 // Interface to Ported Z80 Code.
 // Handles the interface between 68000 program code and Z80.
 //
-// Also abstracted here, so the more complex OSound class isn't exposed
-// to the main code directly
+// Also abstracted here, so the more complex OSound class isn't exposed to the main code directly
 //
 // Copyright Chris White.
 // See License.txt for more details.
@@ -39,7 +38,7 @@ void OSoundInt::init() {
 }
 
 // Clear sound queue
-// Source: 0x5086
+// At: 5086
 void OSoundInt::reset() {
    sound_counter = 0;
    sound_head = 0;
@@ -60,12 +59,11 @@ void OSoundInt::tick() {
    audio_ticks -= max_ticks;
 }
 
-// ----------------------------------------------------------------------------
 // Sound Queuing Code
-// ----------------------------------------------------------------------------
+// ──────────────────
 // Play Queued Sounds & Send Engine Noise Commands to Z80
 // Was called by horizontal interrupt routine
-// Source: 0x564E
+// At: 564e
 void OSoundInt::play_queued_sound() {
    if (!has_booted) {
       sound_head = 0;
@@ -93,7 +91,7 @@ void OSoundInt::play_queued_sound() {
 
 // Queue a sound in service mode
 // Used to trigger both sound effects and music
-// Source: 0x56C6
+// At: 56c6
 void OSoundInt::queue_sound_service(uint8_t snd) {
    if (has_booted)
       add_to_queue(snd);
@@ -103,7 +101,7 @@ void OSoundInt::queue_sound_service(uint8_t snd) {
 
 // Queue a sound in-game
 // Note: This version has an additional check, so that certain sounds aren't played depending on game mode
-// Source: 0x56D4
+// At: 56d4
 void OSoundInt::queue_sound(uint8_t snd) {
    if (has_booted) {
       if (outrun.game_state == GS_ATTRACT) {
