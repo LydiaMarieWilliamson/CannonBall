@@ -31,32 +31,32 @@ public:
 // This is a limitation in the original game.
 // We just leave the larger array in place when changing the settings.
 // Total sprite entries in Jump Table (start at offset #3)
-   const static uint8_t SPRITE_ENTRIES = 0x62;
+   const static Num1 SPRITE_ENTRIES = 0x62;
 // This is initalized based on the config
-   uint8_t no_sprites;
+   Num1 no_sprites;
 // Total number of object entries, including SPRITE_ENTRIES, FERRARI, PASSENGERS, TRAFFIC etc.
-   const static uint8_t JUMP_ENTRIES_TOTAL = SPRITE_ENTRIES + 24;
-   const static uint8_t SPRITE_FERRARI = SPRITE_ENTRIES + 1;
-   const static uint8_t SPRITE_PASS1 = SPRITE_ENTRIES + 2; // Passengers
-   const static uint8_t SPRITE_PASS2 = SPRITE_ENTRIES + 3;
-   const static uint8_t SPRITE_SHADOW = SPRITE_ENTRIES + 4; // Ferrari Shadow
-   const static uint8_t SPRITE_SMOKE1 = SPRITE_ENTRIES + 5; // Ferrari Tyre Smoke/Effects
-   const static uint8_t SPRITE_SMOKE2 = SPRITE_ENTRIES + 6;
-   const static uint8_t SPRITE_TRAFF1 = SPRITE_ENTRIES + 7; // 8 Traffic Entries
-   const static uint8_t SPRITE_TRAFF2 = SPRITE_ENTRIES + 8;
-   const static uint8_t SPRITE_TRAFF3 = SPRITE_ENTRIES + 9;
-   const static uint8_t SPRITE_TRAFF4 = SPRITE_ENTRIES + 10;
-   const static uint8_t SPRITE_TRAFF5 = SPRITE_ENTRIES + 11;
-   const static uint8_t SPRITE_TRAFF6 = SPRITE_ENTRIES + 12;
-   const static uint8_t SPRITE_TRAFF7 = SPRITE_ENTRIES + 13;
-   const static uint8_t SPRITE_TRAFF8 = SPRITE_ENTRIES + 14;
-   const static uint8_t SPRITE_CRASH = SPRITE_ENTRIES + 15;
-   const static uint8_t SPRITE_CRASH_SHADOW = SPRITE_ENTRIES + 16;
-   const static uint8_t SPRITE_CRASH_PASS1 = SPRITE_ENTRIES + 17;
-   const static uint8_t SPRITE_CRASH_PASS1_S = SPRITE_ENTRIES + 18;
-   const static uint8_t SPRITE_CRASH_PASS2 = SPRITE_ENTRIES + 19;
-   const static uint8_t SPRITE_CRASH_PASS2_S = SPRITE_ENTRIES + 20;
-   const static uint8_t SPRITE_FLAG = SPRITE_ENTRIES + 21; // Flag Man
+   const static Num1 JUMP_ENTRIES_TOTAL = SPRITE_ENTRIES + 24;
+   const static Num1 SPRITE_FERRARI = SPRITE_ENTRIES + 1;
+   const static Num1 SPRITE_PASS1 = SPRITE_ENTRIES + 2; // Passengers
+   const static Num1 SPRITE_PASS2 = SPRITE_ENTRIES + 3;
+   const static Num1 SPRITE_SHADOW = SPRITE_ENTRIES + 4; // Ferrari Shadow
+   const static Num1 SPRITE_SMOKE1 = SPRITE_ENTRIES + 5; // Ferrari Tyre Smoke/Effects
+   const static Num1 SPRITE_SMOKE2 = SPRITE_ENTRIES + 6;
+   const static Num1 SPRITE_TRAFF1 = SPRITE_ENTRIES + 7; // 8 Traffic Entries
+   const static Num1 SPRITE_TRAFF2 = SPRITE_ENTRIES + 8;
+   const static Num1 SPRITE_TRAFF3 = SPRITE_ENTRIES + 9;
+   const static Num1 SPRITE_TRAFF4 = SPRITE_ENTRIES + 10;
+   const static Num1 SPRITE_TRAFF5 = SPRITE_ENTRIES + 11;
+   const static Num1 SPRITE_TRAFF6 = SPRITE_ENTRIES + 12;
+   const static Num1 SPRITE_TRAFF7 = SPRITE_ENTRIES + 13;
+   const static Num1 SPRITE_TRAFF8 = SPRITE_ENTRIES + 14;
+   const static Num1 SPRITE_CRASH = SPRITE_ENTRIES + 15;
+   const static Num1 SPRITE_CRASH_SHADOW = SPRITE_ENTRIES + 16;
+   const static Num1 SPRITE_CRASH_PASS1 = SPRITE_ENTRIES + 17;
+   const static Num1 SPRITE_CRASH_PASS1_S = SPRITE_ENTRIES + 18;
+   const static Num1 SPRITE_CRASH_PASS2 = SPRITE_ENTRIES + 19;
+   const static Num1 SPRITE_CRASH_PASS2_S = SPRITE_ENTRIES + 20;
+   const static Num1 SPRITE_FLAG = SPRITE_ENTRIES + 21; // Flag Man
 // Jump Table Sprite Entries
    oentry jump_table[JUMP_ENTRIES_TOTAL];
 // Converted sprite entries in RAM for hardware.
@@ -64,28 +64,28 @@ public:
 // Jump Table 2 Entries For Sprite Control
 // ───────────────────────────────────────
 // +22 [Word]	Road Position For Next Segment Of Sprites
-   uint16_t seg_pos;
+   Num2 seg_pos;
 // +24 [Byte]	Number Of Sprites In Segment
-   uint8_t seg_total_sprites;
+   Num1 seg_total_sprites;
 // +26 [Word]	Sprite Frequency Bitmask
-   uint16_t seg_sprite_freq;
+   Num2 seg_sprite_freq;
 // +28 [Word]	Sprite Info Offset - Start Value. Loaded Into 2A.
-   int16_t seg_spr_offset2;
+   Int2 seg_spr_offset2;
 // +2A [Word]	Sprite Info Offset
-   int16_t seg_spr_offset1;
+   Int2 seg_spr_offset1;
 // +2C [Long]	Sprite Info Base - Lookup for Sprite X World, Sprite Y World, Sprite Type Table Info [8 byte boundary blocks in ROM]
-   uint32_t seg_spr_addr;
+   Num4 seg_spr_addr;
 // Speed at which sprites should scroll. Depends on granular position difference.
-   uint16_t sprite_scroll_speed;
+   Num2 sprite_scroll_speed;
 // Shadow multiplication value (signed). Offsets the shadow from the sprite.
 // Adjusted by the tilemap horizontal scroll, so shadows change depending on how much we've scrolled left and right
-   int16_t shadow_offset;
+   Int2 shadow_offset;
 // Number of sprites to draw for sprite drawing routine (sum of spr_cnt_main and spr_cnt_shadow).
-   uint16_t sprite_count;
+   Num2 sprite_count;
 // Number of sprites to draw
-   uint16_t spr_cnt_main;
+   Num2 spr_cnt_main;
 // Number of shadows to draw
-   uint16_t spr_cnt_shadow;
+   Num2 spr_cnt_shadow;
    OSprites(void);
    ~OSprites(void);
    void init();
@@ -99,20 +99,20 @@ public:
    void blit_sprites();
    void do_spr_order_shadows(oentry *);
    void do_sprite(oentry *);
-   void set_sprite_xy(oentry *, osprite *, uint16_t, uint16_t);
-   void set_hrender(oentry *, osprite *, uint16_t, uint16_t);
-   void move_sprite(oentry *, uint8_t);
+   void set_sprite_xy(oentry *, osprite *, Num2, Num2);
+   void set_hrender(oentry *, osprite *, Num2, Num2);
+   void move_sprite(oentry *, Num1);
 private:
 // Start of Sprite RAM
-   static const uint32_t SPRITE_RAM = 0x130000;
+   static const Num4 SPRITE_RAM = 0x130000;
 // Palette Ram: Sprite Entries Start Here
-   static const uint32_t PAL_SPRITES = 0x121000;
+   static const Num4 PAL_SPRITES = 0x121000;
 // Denote whether to swap sprite ram
    bool do_sprite_swap;
 // Store the next available sprite colour palette (0 - 7F)
-   uint8_t spr_col_pal;
+   Num1 spr_col_pal;
 // Stores number of palette entries to copy from rom to palram
-   int16_t pal_copy_count;
+   Int2 pal_copy_count;
 // Palette Addresses. Used in conjunction with palette lookup table.
 // Originally stored between 0x61602 - 0x617FF in RAM
 // Format:
@@ -124,12 +124,12 @@ private:
 //
 //	etc.
    const static int PAL_ENTRIES = 0x100; // hardware palette entries (before extra CannonBall palettes)
-   uint16_t pal_addresses[PAL_ENTRIES]; // todo: rename to pal_mapping
+   Num2 pal_addresses[PAL_ENTRIES]; // todo: rename to pal_mapping
 // Palette Lookup Table (was 0x100, but extended to account for extra palettes in CannonBall)
-   uint8_t pal_lookup[PAL_LOOKUP_LENGTH];
+   Num1 pal_lookup[PAL_LOOKUP_LENGTH];
 // Converted sprite entries in RAM for hardware.
-   uint8_t sprite_order[0x2000];
-   uint8_t sprite_order2[0x2000];
+   Num1 sprite_order[0x2000];
+   Num1 sprite_order2[0x2000];
    void sprite_control();
    void hide_hwsprite(oentry *, osprite *);
    void finalise_sprites();

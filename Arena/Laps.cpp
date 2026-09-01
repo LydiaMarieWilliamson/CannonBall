@@ -14,12 +14,12 @@
 
 // Track Selection: Ferrari Position Per Track
 // This is a link to a sprite object that represents part of the course map.
-static const uint8_t FERRARI_POS[] = {
+static const Num1 FERRARI_POS[] = {
    1, 5, 3, 11, 9, 7, 19, 17, 15, 13, 24, 23, 22, 21, 20
 };
 
 // Map Stage Number to Internal Lookup
-static const uint8_t STAGE_LOOKUP[] = {
+static const Num1 STAGE_LOOKUP[] = {
    0x00,
    0x09, 0x08,
    0x12, 0x11, 0x10,
@@ -27,7 +27,7 @@ static const uint8_t STAGE_LOOKUP[] = {
    0x24, 0x23, 0x22, 0x21, 0x20
 };
 
-TTrial::TTrial(uint16_t *best_times) {
+TTrial::TTrial(Num2 *best_times) {
    this->best_times = best_times;
 }
 

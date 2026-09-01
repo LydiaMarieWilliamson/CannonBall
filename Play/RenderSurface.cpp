@@ -49,8 +49,8 @@ bool Render::init(int src_width, int src_height, int scale, int video_mode, int 
       src_rect.x = 0;
       src_rect.y = 0;
       if (video_mode == video_settings_t::MODE_FULL) {
-         uint32_t w = (scn_width << 16)/src_width;
-         uint32_t h = (scn_height << 16)/src_height;
+         Num4 w = (scn_width << 16)/src_width;
+         Num4 h = (scn_height << 16)/src_height;
          dst_rect.w = (src_width*std::min(w, h)) >> 16;
          dst_rect.h = (src_height*std::min(w, h)) >> 16;
          screen_xoff = scn_width - dst_rect.w;
@@ -104,7 +104,7 @@ bool Render::init(int src_width, int src_height, int scale, int video_mode, int 
    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, src_width, src_height);
 // Convert the SDL pixel surface to 32 bit.
 // This is potentially a larger surface area than the internal pixel array.
-   screen_pixels = (uint32_t *)surface->pixels;
+   screen_pixels = (Num4 *)surface->pixels;
 // SDL Pixel Format Information
    Rshift = surface->format->Rshift;
    Gshift = surface->format->Gshift;
@@ -145,8 +145,8 @@ bool Render::finalize_frame() {
    return true;
 }
 
-void Render::draw_frame(uint16_t *pixels) {
-   uint32_t *spix = screen_pixels;
+void Render::draw_frame(Num2 *pixels) {
+   Num4 *spix = screen_pixels;
 // Lookup real RGB value from rgb array for backbuffer
    for (int i = 0; i < (src_width*src_height); i++)
       *(spix++) = rgb[*(pixels++)];

@@ -59,7 +59,7 @@ void OSmoke::draw_ferrari_smoke(oentry *sprite) {
 // Wheels Off-Road
 // ───────────────
    if (oferrari.wheel_state != OFerrari::WHEELS_ON) {
-      uint32_t smoke_adr = roms.rom0p->read32(outrun.adr.smoke_data + smoke_type_offroad);
+      Num4 smoke_adr = roms.rom0p->read32(outrun.adr.smoke_data + smoke_type_offroad);
    // Left Wheel Only
       if (sprite == &osprites.jump_table[OSprites::SPRITE_SMOKE2] && oferrari.wheel_state == OFerrari::WHEELS_LEFT_OFF)
          tick_smoke_anim(sprite, 1, smoke_adr);
@@ -95,7 +95,7 @@ void OSmoke::draw_ferrari_smoke(oentry *sprite) {
 // -	Use SetSmokeSprite1 entry point when road could potentially be splitting
 // At: a94c
 void OSmoke::setup_smoke_sprite(bool force_load) {
-   uint16_t stage_lookup = outrun.cannonball_mode != Outrun::MODE_ORIGINAL? oroad.stage_lookup_off: 0;
+   Num2 stage_lookup = outrun.cannonball_mode != Outrun::MODE_ORIGINAL? oroad.stage_lookup_off: 0;
 // Check whether we should load new sprite data when transitioning between stages
    if (!force_load) {
       bool set = load_smoke_data&BIT_0;
@@ -104,7 +104,7 @@ void OSmoke::setup_smoke_sprite(bool force_load) {
       stage_lookup = oroad.stage_lookup_off + 8;
    }
 // Set Smoke Colour When On Road
-   const static uint8_t ONROAD_SMOKE[] = {
+   const static Num1 ONROAD_SMOKE[] = {
       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // Stage 1
       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // Stage 2
       0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, // Stage 3
@@ -114,7 +114,7 @@ void OSmoke::setup_smoke_sprite(bool force_load) {
    smoke_type_onroad = ONROAD_SMOKE[stage_lookup] << 2;
    smoke_type_slip = smoke_type_onroad;
 // Set Smoke Colour When Off Road
-   const static uint8_t OFFROAD_SMOKE[] = {
+   const static Num1 OFFROAD_SMOKE[] = {
       0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // Stage 1
       0x09, 0x09, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // Stage 2
       0x02, 0x09, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, // Stage 3
@@ -132,13 +132,13 @@ void OSmoke::setup_smoke_sprite(bool force_load) {
 //		= 1: Use revs to determine animation speed
 //	a5	= Smoke Sprite Plume
 // At: a9b6
-void OSmoke::tick_smoke_anim(oentry *sprite, int8_t anim_ctrl, uint32_t addr) {
+void OSmoke::tick_smoke_anim(oentry *sprite, Int1 anim_ctrl, Num4 addr) {
    sprite->x = oferrari.spr_ferrari->x;
    sprite->y = oferrari.spr_ferrari->y;
 // Use revs to set sprite counter reload value
 // ───────────────────────────────────────────
    if (anim_ctrl == 1) {
-      int16_t revs = 0;
+      Int2 revs = 0;
    // Force smoke during animation sequence
       if (oferrari.car_state == OFerrari::CAR_ANIM_SEQ)
          revs = 0x80;
@@ -170,7 +170,7 @@ void OSmoke::tick_smoke_anim(oentry *sprite, int8_t anim_ctrl, uint32_t addr) {
                }
             }
          }
-         int16_t z_shift = ocrash.crash_spin_count - 1;
+         Int2 z_shift = ocrash.crash_spin_count - 1;
          if (z_shift == 0) z_shift = 1;
          sprite->z = 0xFF >> z_shift;
       }
@@ -178,7 +178,7 @@ void OSmoke::tick_smoke_anim(oentry *sprite, int8_t anim_ctrl, uint32_t addr) {
 // Use car speed to set sprite counter reload value
 // ────────────────────────────────────────────────
    else {
-      uint16_t car_inc = (oinitengine.car_increment >> 16);
+      Num2 car_inc = (oinitengine.car_increment >> 16);
       if (car_inc > 0xFF) car_inc = 0xFF;
       sprite->reload = 7 - (car_inc >> 5);
       sprite->z = 0;
@@ -206,10 +206,10 @@ void OSmoke::tick_smoke_anim(oentry *sprite, int8_t anim_ctrl, uint32_t addr) {
       }
    }
 // setup_smoke:
-   uint16_t frame = (sprite->xw1&7) << 3;
+   Num2 frame = (sprite->xw1&7) << 3;
    sprite->addr = roms.rom0p->read32(addr + frame);
    sprite->pal_src = roms.rom0p->read8(addr + frame + 5);
-   uint16_t smoke_z = roms.rom0p->read8(addr + frame + 4) + sprite->z;
+   Num2 smoke_z = roms.rom0p->read8(addr + frame + 4) + sprite->z;
    if (smoke_z > 0xFF) smoke_z = 0xFF;
 // inc_crash_z:
 // When setting up smoke, include crash_z value into zoom if necessary
@@ -218,8 +218,8 @@ void OSmoke::tick_smoke_anim(oentry *sprite, int8_t anim_ctrl, uint32_t addr) {
    }
 // Set Sprite Zoom
    if (smoke_z <= 0x40) smoke_z = 0x40;
-   uint8_t shift = (roms.rom0p->read8(addr + frame + 7)&2) >> 1;
-   uint8_t zoom = smoke_z >> shift;
+   Num1 shift = (roms.rom0p->read8(addr + frame + 7)&2) >> 1;
+   Num1 zoom = smoke_z >> shift;
    if (zoom <= 0x40) zoom = 0x40;
    sprite->zoom = zoom;
 // Set Sprite Y
@@ -228,8 +228,8 @@ void OSmoke::tick_smoke_anim(oentry *sprite, int8_t anim_ctrl, uint32_t addr) {
    sprite->priority = oferrari.spr_ferrari->priority + ((roms.rom0p->read8(addr + frame + 7) >> 4)&0xF);
    sprite->road_priority = sprite->priority;
 // Set Sprite X
-   uint8_t hflip = (roms.rom0p->read8(addr + frame + 7)&1);
-   int8_t x = ((roms.rom0p->read8(addr + frame + 6) >> 3)&0x1E);
+   Num1 hflip = (roms.rom0p->read8(addr + frame + 7)&1);
+   Int1 x = ((roms.rom0p->read8(addr + frame + 6) >> 3)&0x1E);
 // Enhancement: When viewing in-car, spread the spray out
    if (oroad.get_view_mode() == ORoad::VIEW_INCAR)
       x += 10;

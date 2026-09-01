@@ -13,7 +13,7 @@ OSoundInt osoundint;
 OSound osound;
 
 OSoundInt::OSoundInt() {
-   pcm_ram = new uint8_t[PCM_RAM_SIZE];
+   pcm_ram = new Num1[PCM_RAM_SIZE];
    has_booted = false;
 }
 
@@ -30,9 +30,9 @@ void OSoundInt::init() {
    ym->init(config.sound.rate, config.fps);
    reset();
 // Clear PCM Chip RAM
-   for (uint16_t i = 0; i < PCM_RAM_SIZE; i++)
+   for (Num2 i = 0; i < PCM_RAM_SIZE; i++)
       pcm_ram[i] = 0;
-   for (uint8_t i = 0; i < 8; i++)
+   for (Num1 i = 0; i < 8; i++)
       engine_data[i] = 0;
    osound.init(ym, pcm_ram);
 }
@@ -92,7 +92,7 @@ void OSoundInt::play_queued_sound() {
 // Queue a sound in service mode
 // Used to trigger both sound effects and music
 // At: 56c6
-void OSoundInt::queue_sound_service(uint8_t snd) {
+void OSoundInt::queue_sound_service(Num1 snd) {
    if (has_booted)
       add_to_queue(snd);
    else
@@ -102,7 +102,7 @@ void OSoundInt::queue_sound_service(uint8_t snd) {
 // Queue a sound in-game
 // Note: This version has an additional check, so that certain sounds aren't played depending on game mode
 // At: 56d4
-void OSoundInt::queue_sound(uint8_t snd) {
+void OSoundInt::queue_sound(Num1 snd) {
    if (has_booted) {
       if (outrun.game_state == GS_ATTRACT) {
       // Return if we are not playing sound in attract mode
@@ -116,7 +116,7 @@ void OSoundInt::queue_sound(uint8_t snd) {
       queue_clear();
 }
 
-void OSoundInt::add_to_queue(uint8_t snd) {
+void OSoundInt::add_to_queue(Num1 snd) {
 // Add sound to the tail end of the queue
    queue[sound_tail] = snd;
    sound_tail = (sound_tail + 1)&QUEUE_LENGTH;

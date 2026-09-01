@@ -14,15 +14,15 @@
 // Cactus 3          : 23 pixels
 // Cactus 2          : 12 pixels
 // Cactus 1          :  4 pixels
-const static uint16_t SIZE5 = 0x0028; // Smallest Sprite
-const static uint16_t SIZE4 = 0x001E;
-const static uint16_t SIZE3 = 0x0014; // Medium Sprite
-const static uint16_t SIZE2 = 0x000A;
-const static uint16_t SIZE1 = 0x0000; // Largest Sprite
+const static Num2 SIZE5 = 0x0028; // Smallest Sprite
+const static Num2 SIZE4 = 0x001E;
+const static Num2 SIZE3 = 0x0014; // Medium Sprite
+const static Num2 SIZE2 = 0x000A;
+const static Num2 SIZE1 = 0x0000; // Largest Sprite
 
-const static uint16_t UNUSED = 0x0000;
+const static Num2 UNUSED = 0x0000;
 
-const static uint16_t ZOOM_LOOKUP[] = {
+const static Num2 ZOOM_LOOKUP[] = {
 // Smallest Sprite In Set
    0x03F0, 0x0000, SIZE5, UNUSED,
    0x03F0, 0x0000, SIZE5, UNUSED,

@@ -51,21 +51,21 @@
 
 #include "Audio/SegaPCM.hpp"
 
-SegaPCM::SegaPCM(uint32_t clock, RomLoader *rom, uint8_t *ram, int32_t bank) {
+SegaPCM::SegaPCM(Num4 clock, RomLoader *rom, Num1 *ram, Int4 bank) {
    this->ram = ram;
    pcm_rom = rom->rom;
-   low = new uint8_t[16];
+   low = new Num1[16];
    max_addr = rom->length;
    bankshift = bank&0xFF;
    rgnmask = max_addr - 1;
-   int32_t mask = bank >> 16;
+   Int4 mask = bank >> 16;
    if (mask == 0)
       mask = BANK_MASK7 >> 16;
-   int32_t rom_mask;
+   Int4 rom_mask;
    for (rom_mask = 1; rom_mask < max_addr; rom_mask *= 2);
    rom_mask--;
    bankmask = mask&(rom_mask >> bankshift);
-   for (int32_t i = 0; i < 0x100; i++)
+   for (Int4 i = 0; i < 0x100; i++)
       ram[i] = 0xff;
 }
 
@@ -73,7 +73,7 @@ SegaPCM::~SegaPCM() {
    delete[]low;
 }
 
-void SegaPCM::init(int32_t rate, int32_t fps) {
+void SegaPCM::init(Int4 rate, Int4 fps) {
    this->sample_freq = rate;
    downsample = (32000.0/(double)rate);
    SoundChip::init(STEREO, rate, fps);
@@ -83,17 +83,17 @@ void SegaPCM::stream_update() {
    SoundChip::clear_buffer();
 // loop over channels
    for (int ch = 0; ch < 16; ch++) {
-      uint8_t *regs = ram + 8*ch;
+      Num1 *regs = ram + 8*ch;
    // only process active channels
       if ((regs[0x86]&1) == 0) {
-         uint8_t *rom = pcm_rom + ((regs[0x86]&bankmask) << bankshift);
-         uint32_t addr = (regs[0x85] << 16) | (regs[0x84] << 8) | low[ch];
-         uint32_t loop = (regs[0x05] << 16) | (regs[0x04] << 8);
-         uint8_t end = regs[0x06] + 1;
-         uint32_t i;
+         Num1 *rom = pcm_rom + ((regs[0x86]&bankmask) << bankshift);
+         Num4 addr = (regs[0x85] << 16) | (regs[0x84] << 8) | low[ch];
+         Num4 loop = (regs[0x05] << 16) | (regs[0x04] << 8);
+         Num1 end = regs[0x06] + 1;
+         Num4 i;
       // loop over samples on this channel
          for (i = 0; i < frame_size; i++) {
-            int8_t v = 0;
+            Int1 v = 0;
          // handle looping if we've hit the end
             if ((addr >> 16) == end) {
                if ((regs[0x86]&2) == 0) {

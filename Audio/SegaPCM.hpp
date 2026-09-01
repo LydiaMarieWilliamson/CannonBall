@@ -14,24 +14,24 @@
 
 class SegaPCM: public SoundChip {
 public:
-   static const uint32_t BANK_256 = (11);
-   static const uint32_t BANK_512 = (12);
-   static const uint32_t BANK_12M = (13);
-   static const uint32_t BANK_MASK7 = (0x70 << 16);
-   static const uint32_t BANK_MASKF = (0xf0 << 16);
-   static const uint32_t BANK_MASKF8 = (0xf8 << 16);
-   SegaPCM(uint32_t clock, RomLoader *rom, uint8_t *ram, int32_t bank);
+   static const Num4 BANK_256 = (11);
+   static const Num4 BANK_512 = (12);
+   static const Num4 BANK_12M = (13);
+   static const Num4 BANK_MASK7 = (0x70 << 16);
+   static const Num4 BANK_MASKF = (0xf0 << 16);
+   static const Num4 BANK_MASKF8 = (0xf8 << 16);
+   SegaPCM(Num4 clock, RomLoader *rom, Num1 *ram, Int4 bank);
    ~SegaPCM();
-   void init(int32_t rate, int32_t fps);
+   void init(Int4 rate, Int4 fps);
    void stream_update();
 private:
 // PCM Chip Emulation
-   uint8_t *ram;
-   uint8_t *low;
-   uint8_t *pcm_rom;
-   int32_t max_addr;
-   int32_t bankshift;
-   int32_t bankmask;
-   int32_t rgnmask;
+   Num1 *ram;
+   Num1 *low;
+   Num1 *pcm_rom;
+   Int4 max_addr;
+   Int4 bankshift;
+   Int4 bankmask;
+   Int4 rgnmask;
    double downsample;
 };

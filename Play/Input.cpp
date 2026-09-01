@@ -165,7 +165,7 @@ void Input::handle_controller_axis(SDL_ControllerAxisEvent *evt) {
    handle_axis(evt->axis, evt->value);
 }
 
-void Input::handle_axis(const uint8_t ax, const int16_t value) {
+void Input::handle_axis(const Num1 ax, const Int2 value) {
 // Analog Controls
    if (analog) {
       int workingv = value;
@@ -231,7 +231,7 @@ int Input::scale_trigger(const int value) {
 
 // Store the last analog axis to be pressed and depressed beyond the cap value for config purposes
 // ───────────────────────────────────────────────────────────────────────────────────────────────
-void Input::store_last_axis(const uint8_t ax, const int16_t value) {
+void Input::store_last_axis(const Num1 ax, const Int2 value) {
    const static int CAP = SDL_JOYSTICK_AXIS_MAX/4;
    if (std::abs(value) > CAP)
       axis_last = ax;
@@ -282,7 +282,7 @@ void Input::handle_controller_up(SDL_ControllerButtonEvent *evt) {
    handle_joy(evt->button, false);
 }
 
-void Input::handle_joy(const uint8_t button, const bool is_pressed) {
+void Input::handle_joy(const Num1 button, const bool is_pressed) {
    if (button == pad_config[0]) keys[ACCEL] = is_pressed;
    if (button == pad_config[1]) keys[BRAKE] = is_pressed;
    if (button == pad_config[2]) keys[GEAR1] = is_pressed;

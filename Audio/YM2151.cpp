@@ -17,38 +17,38 @@ signed int mem; // one sample delay memory
 
 YM2151Operator oper[32]; // the 32 operators
 
-uint32_t pan[16]; // channels output masks (0xffffffff = enable)
+Num4 pan[16]; // channels output masks (0xffffffff = enable)
 
-uint32_t eg_cnt; // global envelope generator counter
-uint32_t eg_timer; // global envelope generator counter works at frequency = chipclock/64/3
-uint32_t eg_timer_add; // step of eg_timer
-uint32_t eg_timer_overflow; // envelope generator timer overlfows every 3 samples (on real chip)
+Num4 eg_cnt; // global envelope generator counter
+Num4 eg_timer; // global envelope generator counter works at frequency = chipclock/64/3
+Num4 eg_timer_add; // step of eg_timer
+Num4 eg_timer_overflow; // envelope generator timer overlfows every 3 samples (on real chip)
 
-uint32_t lfo_phase; // accumulated LFO phase (0 to 255)
-uint32_t lfo_timer; // LFO timer
-uint32_t lfo_timer_add; // step of lfo_timer
-uint32_t lfo_overflow; // LFO generates new output when lfo_timer reaches this value
-uint32_t lfo_counter; // LFO phase increment counter
-uint32_t lfo_counter_add; // step of lfo_counter
-uint8_t lfo_wsel; // LFO waveform (0-saw, 1-square, 2-triangle, 3-random noise)
-uint8_t amd; // LFO Amplitude Modulation Depth
-int8_t pmd; // LFO Phase Modulation Depth
-uint32_t lfa; // LFO current AM output
-int32_t lfp; // LFO current PM output
+Num4 lfo_phase; // accumulated LFO phase (0 to 255)
+Num4 lfo_timer; // LFO timer
+Num4 lfo_timer_add; // step of lfo_timer
+Num4 lfo_overflow; // LFO generates new output when lfo_timer reaches this value
+Num4 lfo_counter; // LFO phase increment counter
+Num4 lfo_counter_add; // step of lfo_counter
+Num1 lfo_wsel; // LFO waveform (0-saw, 1-square, 2-triangle, 3-random noise)
+Num1 amd; // LFO Amplitude Modulation Depth
+Int1 pmd; // LFO Phase Modulation Depth
+Num4 lfa; // LFO current AM output
+Int4 lfp; // LFO current PM output
 
-uint8_t test; // TEST register
-uint8_t ct; // output control pins (bit1-CT2, bit0-CT1)
+Num1 test; // TEST register
+Num1 ct; // output control pins (bit1-CT2, bit0-CT1)
 
-uint32_t noise; // noise enable/period register (bit 7 - noise enable, bits 4-0 - noise period
-uint32_t noise_rng; // 17 bit noise shift register
-uint32_t noise_p; // current noise 'phase'
-uint32_t noise_f; // current noise period
+Num4 noise; // noise enable/period register (bit 7 - noise enable, bits 4-0 - noise period
+Num4 noise_rng; // 17 bit noise shift register
+Num4 noise_p; // current noise 'phase'
+Num4 noise_f; // current noise period
 
-uint32_t csm_req; // CSM KEY ON / KEY OFF sequence request
+Num4 csm_req; // CSM KEY ON / KEY OFF sequence request
 
-uint32_t irq_enable; // IRQ enable for timer B (bit 3) and timer A (bit 2); bit 7 - CSM mode (keyon to all slots, everytime timer A overflows)
-uint32_t status; // chip status (BUSY, IRQ Flags)
-uint8_t connects[8]; // channels connections
+Num4 irq_enable; // IRQ enable for timer B (bit 3) and timer A (bit 2); bit 7 - CSM mode (keyon to all slots, everytime timer A overflows)
+Num4 status; // chip status (BUSY, IRQ Flags)
+Num1 connects[8]; // channels connections
 
 #ifdef USE_MAME_TIMERS
 // ASG 980324 -- added for tracking timers
@@ -58,17 +58,17 @@ attotime timer_A_time[1024]; // timer A times for MAME
 attotime timer_B_time[256]; // timer B times for MAME
 int irqlinestate;
 #else
-uint8_t tim_A; // timer A enable (0-disabled)
-uint8_t tim_B; // timer B enable (0-disabled)
-int32_t tim_A_val; // current value of timer A
-int32_t tim_B_val; // current value of timer B
-uint32_t tim_A_tab[1024]; // timer A deltas
-uint32_t tim_B_tab[256]; // timer B deltas
+Num1 tim_A; // timer A enable (0-disabled)
+Num1 tim_B; // timer B enable (0-disabled)
+Int4 tim_A_val; // current value of timer A
+Int4 tim_B_val; // current value of timer B
+Num4 tim_A_tab[1024]; // timer A deltas
+Num4 tim_B_tab[256]; // timer B deltas
 #endif
-uint32_t timer_A_index; // timer A index
-uint32_t timer_B_index; // timer B index
-uint32_t timer_A_index_old; // timer A previous index
-uint32_t timer_B_index_old; // timer B previous index
+Num4 timer_A_index; // timer A index
+Num4 timer_B_index; // timer B index
+Num4 timer_A_index_old; // timer A previous index
+Num4 timer_B_index_old; // timer B previous index
 
 // Frequency-deltas to get the closest frequency possible.
 // There are 11 octaves because of DT2 (max 950 cents over base frequency) and LFO phase modulation (max 800 cents below AND over base frequency)
@@ -84,13 +84,13 @@ uint32_t timer_B_index_old; // timer B previous index
 //		8	note code
 //		9	note code + DT2 + LFO PM
 //		10	note code + DT2 + LFO PM
-uint32_t freq[11*768]; // 11 octaves, 768 'cents' per octave
+Num4 freq[11*768]; // 11 octaves, 768 'cents' per octave
 
 // Frequency deltas for DT1.
 // These deltas alter operator frequency after it has been taken from frequency-deltas table.
-int32_t dt1_freq[8*32]; // 8 DT1 levels, 32 KC values
+Int4 dt1_freq[8*32]; // 8 DT1 levels, 32 KC values
 
-uint32_t noise_tab[32]; // 17bit Noise Generator periods
+Num4 noise_tab[32]; // 17bit Noise Generator periods
 
 #define M_PI             3.14159265358979323846
 
@@ -138,10 +138,10 @@ static signed int tl_tab[TL_TAB_LEN];
 static unsigned int sin_tab[SIN_LEN];
 
 // translate from D1L to volume index (16 D1L levels)
-static uint32_t d1l_tab[16];
+static Num4 d1l_tab[16];
 
 #define RATE_STEPS (8)
-static const uint8_t eg_inc[19*RATE_STEPS] = {
+static const Num1 eg_inc[19*RATE_STEPS] = {
 // cycle: 0 1  2 3  4 5  6 7
    0, 1, 0, 1, 0, 1, 0, 1,	// 0:	rates 00..11 0 (increment by 0 or 1)
    0, 1, 0, 1, 1, 1, 0, 1,	// 1:	rates 00..11 1
@@ -167,7 +167,7 @@ static const uint8_t eg_inc[19*RATE_STEPS] = {
 #define O(a) (a*RATE_STEPS)
 
 // note that there is no O(17) in this table - it's directly in the code
-static const uint8_t eg_rate_select[32 + 64 + 32] = { // Envelope Generator rates (32 + 64 rates + 32 RKS)
+static const Num1 eg_rate_select[32 + 64 + 32] = { // Envelope Generator rates (32 + 64 rates + 32 RKS)
 // 32 dummy (infinite time) rates
    O(18), O(18), O(18), O(18), O(18), O(18), O(18), O(18),
    O(18), O(18), O(18), O(18), O(18), O(18), O(18), O(18),
@@ -208,7 +208,7 @@ static const uint8_t eg_rate_select[32 + 64 + 32] = { // Envelope Generator rate
 // mask  2047, 1023, 511, 255, 127, 63, 31, 15, 7,  3, 1,  0,  0,  0,  0,  0
 
 #define O(a) (a*1)
-static const uint8_t eg_rate_shift[32 + 64 + 32] = { // Envelope Generator counter shifts (32 + 64 rates + 32 RKS)
+static const Num1 eg_rate_shift[32 + 64 + 32] = { // Envelope Generator counter shifts (32 + 64 rates + 32 RKS)
 // 32 infinite time rates
    O(0), O(0), O(0), O(0), O(0), O(0), O(0), O(0),
    O(0), O(0), O(0), O(0), O(0), O(0), O(0), O(0),
@@ -252,12 +252,12 @@ static const uint8_t eg_rate_shift[32 + 64 + 32] = { // Envelope Generator count
 // Values below were calculated using formula: value = orig.val/1.5625
 //	DT2=0	DT2=1	DT2=2	DT2=3
 //	0	600	781	950
-static const uint32_t dt2_tab[4] = { 0, 384, 500, 608 };
+static const Num4 dt2_tab[4] = { 0, 384, 500, 608 };
 
 // DT1 defines offset in Hertz from base note
 // This table is converted while initialization...
 // Detune table shown in YM2151 User's Manual is wrong (verified on the real chip)
-static const uint8_t dt1_tab[4*32] = { // 4×32 DT1 values
+static const Num1 dt1_tab[4*32] = { // 4×32 DT1 values
 // DT1 = 0
    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -272,7 +272,7 @@ static const uint8_t dt1_tab[4*32] = { // 4×32 DT1 values
    8, 8, 9,10,11,12,13,14,16,17,19,20,22,22,22,22
 };
 
-static const uint16_t phaseinc_rom[768] = {
+static const Num2 phaseinc_rom[768] = {
    1299, 1300, 1301, 1302, 1303, 1304, 1305, 1306, 1308, 1309, 1310, 1311, 1313, 1314, 1315, 1316,
    1318, 1319, 1320, 1321, 1322, 1323, 1324, 1325, 1327, 1328, 1329, 1330, 1332, 1333, 1334, 1335,
    1337, 1338, 1339, 1340, 1341, 1342, 1343, 1344, 1346, 1347, 1348, 1349, 1351, 1352, 1353, 1354,
@@ -334,7 +334,7 @@ static const uint16_t phaseinc_rom[768] = {
 // Note that (due to the way the LFO output is calculated) it is quite possible that two values: 0x80 and 0x00 might be wrong in this table.
 // To be exact:
 //	some 0x80 could be 0x81 as well as some 0x00 could be 0x01.
-static const uint8_t lfo_noise_waveform[256] = {
+static const Num1 lfo_noise_waveform[256] = {
    0xFF, 0xEE, 0xD3, 0x80, 0x58, 0xDA, 0x7F, 0x94, 0x9E, 0xE3, 0xFA, 0x00, 0x4D, 0xFA, 0xFF, 0x6A,
    0x7A, 0xDE, 0x49, 0xF6, 0x00, 0x33, 0xBB, 0x63, 0x91, 0x60, 0x51, 0xFF, 0x00, 0xD8, 0x7F, 0xDE,
    0xDC, 0x73, 0x21, 0x85, 0xB2, 0x9C, 0x5D, 0x24, 0xCD, 0x91, 0x9E, 0x76, 0x7F, 0x20, 0xFB, 0xF3,
@@ -362,7 +362,7 @@ static const uint8_t lfo_noise_waveform[256] = {
 static FILE *sample[9];
 #endif
 
-YM2151::YM2151(float volume, uint32_t clock) {
+YM2151::YM2151(float volume, Num4 clock) {
    this->volume = volume;
    this->clock = clock;
 }
@@ -425,7 +425,7 @@ void YM2151::init_tables() {
 // calculate d1l_tab table
    for (i = 0; i < 16; i++) {
       m = (i != 15? i: i + 16)*(4.0/ENV_STEP); // every 3 'dB' except for all bits = 1 = 45+48 'dB'
-      d1l_tab[i] = (uint32_t)m;
+      d1l_tab[i] = (Num4)m;
 #if 0
       logerror("d1l_tab[%02x] = %08x\n", i, d1l_tab[i]);
 #endif
@@ -514,7 +514,7 @@ void YM2151::init_chip_tables() {
       // calculate phase increment
          phaseinc = (Hz*SIN_LEN)/(double)sampfreq;
       // positive and negative values
-         dt1_freq[(j + 0)*32 + i] = (int32_t)(phaseinc*mult);
+         dt1_freq[(j + 0)*32 + i] = (Int4)(phaseinc*mult);
          dt1_freq[(j + 4)*32 + i] = -dt1_freq[(j + 0)*32 + i];
 #if 0
       {
@@ -572,7 +572,7 @@ void YM2151::init_chip_tables() {
 #if 0
       noise_tab[i] = j*64; // number of chip clock cycles per one shift
 #else
-      noise_tab[i] = (uint32_t)(j*64*scaler);
+      noise_tab[i] = (Num4)(j*64*scaler);
 #endif
 #if 0
       logerror("noise_tab[%02x] = %08x\n", i, noise_tab[i]);
@@ -761,8 +761,8 @@ void YM2151::set_connect(YM2151Operator *om1, int cha, int v) {
 }
 
 void YM2151::refresh_EG(YM2151Operator *op) {
-   uint32_t kc;
-   uint32_t v;
+   Num4 kc;
+   Num4 v;
    kc = op->kc;
 // v = 32 + 2*RATE + RKS = max 126
    v = kc >> op->ks;
@@ -981,7 +981,7 @@ void YM2151::write_reg(int r, int v) {
             case 0x08:
                v &= 0x7f;
                if (v != op->kc) {
-                  uint32_t kc, kc_channel;
+                  Num4 kc, kc_channel;
                   kc_channel = (v - (v >> 2))*64;
                   kc_channel += 768;
                   kc_channel |= (op->kc_i&63);
@@ -1009,7 +1009,7 @@ void YM2151::write_reg(int r, int v) {
             case 0x10:
                v >>= 2;
                if (v != (op->kc_i&63)) {
-                  uint32_t kc_channel;
+                  Num4 kc_channel;
                   kc_channel = v;
                   kc_channel |= (op->kc_i&~63);
                   (op + 0)->kc_i = kc_channel;
@@ -1031,8 +1031,8 @@ void YM2151::write_reg(int r, int v) {
       break;
    // DT1, MUL
       case 0x40: {
-         uint32_t olddt1_i = op->dt1_i;
-         uint32_t oldmul = op->mul;
+         Num4 olddt1_i = op->dt1_i;
+         Num4 oldmul = op->mul;
          op->dt1_i = (v&0x70) << 1;
          op->mul = (v&0x0f)? (v&0x0f) << 1: 1;
          if (olddt1_i != op->dt1_i)
@@ -1047,8 +1047,8 @@ void YM2151::write_reg(int r, int v) {
       break;
    // KS, AR
       case 0x80: {
-         uint32_t oldks = op->ks;
-         uint32_t oldar = op->ar;
+         Num4 oldks = op->ks;
+         Num4 oldar = op->ar;
          op->ks = 5 - (v >> 6);
          op->ar = (v&0x1f)? 32 + ((v&0x1f) << 1): 0;
          if ((op->ar != oldar) || (op->ks != oldks)) {
@@ -1079,7 +1079,7 @@ void YM2151::write_reg(int r, int v) {
       break;
    // DT2, D2R
       case 0xc0: {
-         uint32_t olddt2 = op->dt2;
+         Num4 olddt2 = op->dt2;
          op->dt2 = dt2_tab[v >> 6];
          if (op->dt2 != olddt2)
             op->freq = ((freq[op->kc_i + op->dt2] + op->dt1)*op->mul) >> 1;
@@ -1112,8 +1112,8 @@ void YM2151::init(int rate, int fps) {
    init_tables();
    this->sampfreq = rate? rate: 44100; // avoid division by 0 in init_chip_tables()
    init_chip_tables();
-   lfo_timer_add = (uint32_t)((1 << LFO_SH)*(clock/64.0)/sampfreq);
-   eg_timer_add = (uint32_t)((1 << EG_SH)*(clock/64.0)/sampfreq);
+   lfo_timer_add = (Num4)((1 << LFO_SH)*(clock/64.0)/sampfreq);
+   eg_timer_add = (Num4)((1 << EG_SH)*(clock/64.0)/sampfreq);
    eg_timer_overflow = (3)*(1 << EG_SH);
 #if 0
    logerror("YM2151[init] eg_timer_add = %8x eg_timer_overflow = %8x\n", PSG->eg_timer_add, PSG->eg_timer_overflow);
@@ -1192,7 +1192,7 @@ void YM2151::ym2151_reset_chip() {
 }
 
 signed int YM2151::op_calc(YM2151Operator *OP, unsigned int env, signed int pm) {
-   uint32_t p;
+   Num4 p;
    p = (env << 3) + sin_tab[(((signed int)((OP->phase&~FREQ_MASK) + (pm << 15))) >> FREQ_SH)&SIN_MASK];
    if (p >= TL_TAB_LEN)
       return 0;
@@ -1200,8 +1200,8 @@ signed int YM2151::op_calc(YM2151Operator *OP, unsigned int env, signed int pm) 
 }
 
 signed int YM2151::op_calc1(YM2151Operator *OP, unsigned int env, signed int pm) {
-   uint32_t p;
-   int32_t i;
+   Num4 p;
+   Int4 i;
    i = (OP->phase&~FREQ_MASK) + pm;
 #if 0
    logerror("i = %08x (i >> 16)&511 = %8i phase = %i [pm = %08x] ", i, (i >> 16)&511, OP->phase >> FREQ_SH, pm);
@@ -1215,12 +1215,12 @@ signed int YM2151::op_calc1(YM2151Operator *OP, unsigned int env, signed int pm)
    return tl_tab[p];
 }
 
-#define volume_calc(OP) ((OP)->tl + ((uint32_t)(OP)->volume) + (AM&(OP)->AMmask))
+#define volume_calc(OP) ((OP)->tl + ((Num4)(OP)->volume) + (AM&(OP)->AMmask))
 
 void YM2151::chan_calc(unsigned int chan) {
    YM2151Operator *op;
    unsigned int env;
-   uint32_t AM = 0;
+   Num4 AM = 0;
    m2 = c1 = c2 = mem = 0;
    op = &oper[chan*4]; // M1
    *op->mem_connect = op->mem_value; // restore delayed sample (MEM) value to m2 or c2
@@ -1228,7 +1228,7 @@ void YM2151::chan_calc(unsigned int chan) {
       AM = lfa << (op->ams - 1);
    env = volume_calc(op);
 {
-   int32_t out = op->fb_out_prev + op->fb_out_curr;
+   Int4 out = op->fb_out_prev + op->fb_out_curr;
    op->fb_out_prev = op->fb_out_curr;
    if (!op->connects)
    // algorithm 5
@@ -1259,7 +1259,7 @@ void YM2151::chan_calc(unsigned int chan) {
 void YM2151::chan7_calc() {
    YM2151Operator *op;
    unsigned int env;
-   uint32_t AM = 0;
+   Num4 AM = 0;
    m2 = c1 = c2 = mem = 0;
    op = &oper[7*4]; // M1
    *op->mem_connect = op->mem_value; // restore delayed sample (MEM) value to m2 or c2
@@ -1267,7 +1267,7 @@ void YM2151::chan7_calc() {
       AM = lfa << (op->ams - 1);
    env = volume_calc(op);
 {
-   int32_t out = op->fb_out_prev + op->fb_out_curr;
+   Int4 out = op->fb_out_prev + op->fb_out_curr;
    op->fb_out_prev = op->fb_out_curr;
    if (!op->connects)
    // algorithm 5
@@ -1290,7 +1290,7 @@ void YM2151::chan7_calc() {
       *(op + 2)->connects += op_calc(op + 2, env, c1);
    env = volume_calc(op + 3); // C2
    if (noise&0x80) {
-      int32_t noiseout;
+      Int4 noiseout;
       noiseout = 0;
       if (env < 0x3ff)
          noiseout = (env ^ 0x3ff)*2; // range of the YM2151 noise output is -2044 to 2040
@@ -1521,7 +1521,7 @@ void YM2151::advance_eg() {
             case EG_DEC:
                if (!(eg_cnt&((1 << op->eg_sh_d1r) - 1))) {
                   op->volume += eg_inc[op->eg_sel_d1r + ((eg_cnt >> op->eg_sh_d1r)&7)];
-                  if (op->volume >= (int32_t)op->d1l)
+                  if (op->volume >= (Int4)op->d1l)
                      op->state = EG_SUS;
                }
             break;
@@ -1633,7 +1633,7 @@ void YM2151::advance() {
    i = (noise_p >> 16); // number of events (shifts of the shift register)
    noise_p &= 0xffff;
    while (i) {
-      uint32_t j;
+      Num4 j;
       j = ((noise_rng ^ (noise_rng >> 3))&1) ^ 1;
       noise_rng = (j << 16) | (noise_rng >> 1);
       i--;
@@ -1643,13 +1643,13 @@ void YM2151::advance() {
    i = 8;
    do {
       if (op->pms) { // only when phase modulation from LFO is enabled for this channel
-         int32_t mod_ind = lfp; // -128..+127 (8bits signed)
+         Int4 mod_ind = lfp; // -128..+127 (8bits signed)
          if (op->pms < 6)
             mod_ind >>= (6 - op->pms);
          else
             mod_ind <<= (op->pms - 5);
          if (mod_ind) {
-            uint32_t kc_channel = op->kc_i + mod_ind;
+            Num4 kc_channel = op->kc_i + mod_ind;
             (op + 0)->phase += ((freq[kc_channel + (op + 0)->dt2] + (op + 0)->dt1)*(op + 0)->mul) >> 1;
             (op + 1)->phase += ((freq[kc_channel + (op + 1)->dt2] + (op + 1)->dt1)*(op + 1)->mul) >> 1;
             (op + 2)->phase += ((freq[kc_channel + (op + 2)->dt2] + (op + 2)->dt1)*(op + 2)->mul) >> 1;
@@ -1704,9 +1704,9 @@ void YM2151::advance() {
 // ▪	'length' is the number of samples that should be generated
 void YM2151::stream_update() {
    SoundChip::clear_buffer();
-   uint32_t i;
-   int32_t outl, outr;
-   uint32_t length = frame_size;
+   Num4 i;
+   Int4 outl, outr;
+   Num4 length = frame_size;
 #ifdef USE_MAME_TIMERS
 // ASG 980324 - handled by real timers now
 #else
@@ -1766,8 +1766,8 @@ void YM2151::stream_update() {
       else if (outl < MINOUT) outl = MINOUT;
       if (outr > MAXOUT) outr = MAXOUT;
       else if (outr < MINOUT) outr = MINOUT;
-      write_buffer(LEFT, i, (int16_t)(outl*volume));
-      write_buffer(RIGHT, i, (int16_t)(outr*volume));
+      write_buffer(LEFT, i, (Int2)(outl*volume));
+      write_buffer(RIGHT, i, (Int2)(outr*volume));
 #ifdef USE_MAME_TIMERS
    // ASG 980324 - handled by real timers now
 #else

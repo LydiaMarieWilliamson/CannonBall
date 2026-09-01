@@ -18,7 +18,7 @@
 OMap omap;
 
 // Position of Ferrari in Jump Table
-const uint8_t SPRITE_FERRARI = 25;
+const Num1 SPRITE_FERRARI = 25;
 
 OMap::OMap(void) {
 }
@@ -78,7 +78,7 @@ void OMap::tick() {
             if (--map_stage2 <= 0) { // map_end_route
                map_pos = 0;
                map_stage1++;
-               uint16_t route_info = ostats.routes[1 + map_stage1];
+               Num2 route_info = ostats.routes[1 + map_stage1];
                if (route_info) {
                   map_route = roms.rom0.read8(MAP_ROUTE_LOOKUP + route_info);
                } else {
@@ -119,7 +119,7 @@ void OMap::tick() {
 
 // Render sprites only. No Logic
 void OMap::blit() {
-   for (uint8_t i = 0; i <= MAP_PIECES; i++) {
+   for (Num1 i = 0; i <= MAP_PIECES; i++) {
       oentry *sprite = &osprites.jump_table[i];
       if (sprite->control&OSprites::ENABLE)
          osprites.do_spr_order_shadows(sprite);
@@ -157,13 +157,13 @@ void OMap::draw_course_map() {
 // Draw Mini Car
    move_mini_car(sprite++);
 // Draw Backdrop Map Pieces
-   for (uint8_t i = 26; i <= MAP_PIECES; i++) {
+   for (Num1 i = 26; i <= MAP_PIECES; i++) {
       if (sprite->control&OSprites::ENABLE)
          osprites.do_spr_order_shadows(sprite++);
    }
 }
 
-void OMap::position_ferrari(uint8_t index) {
+void OMap::position_ferrari(Num1 index) {
    oentry *segment = &osprites.jump_table[index];
    osprites.jump_table[SPRITE_FERRARI].x = segment->x - 8;
    osprites.jump_table[SPRITE_FERRARI].y = segment->y;
@@ -187,15 +187,15 @@ void OMap::load_sprites() {
    oroad.road_pos = 0x192 << 16;
 // end hacks
 #endif
-   uint32_t adr = outrun.adr.sprite_coursemap;
-   for (uint8_t i = 0; i <= MAP_PIECES; i++) {
+   Num4 adr = outrun.adr.sprite_coursemap;
+   for (Num1 i = 0; i <= MAP_PIECES; i++) {
       oentry *sprite = &osprites.jump_table[i];
       sprite->id = i + 1;
       sprite->control = roms.rom0p->read8(&adr);
       sprite->draw_props = roms.rom0p->read8(&adr);
       sprite->shadow = roms.rom0p->read8(&adr);
       sprite->zoom = roms.rom0p->read8(&adr);
-      sprite->pal_src = (uint8_t)roms.rom0p->read16(&adr);
+      sprite->pal_src = (Num1)roms.rom0p->read16(&adr);
       sprite->priority = sprite->road_priority = roms.rom0p->read16(&adr);
       sprite->x = roms.rom0p->read16(&adr);
       sprite->y = roms.rom0p->read16(&adr);
@@ -206,7 +206,7 @@ void OMap::load_sprites() {
    }
 // Wide-screen hack to extend sea to edge of screen.
    if (config.s16_x_off != 0 || config.engine.fix_bugs) {
-      for (uint8_t i = 26; i <= 30; i++) {
+      for (Num1 i = 26; i <= 30; i++) {
          oentry *sprite = &osprites.jump_table[i];
          sprite->addr = osprites.jump_table[31].addr;
          sprite->x -= 64;
@@ -222,7 +222,7 @@ void OMap::load_sprites() {
 
 // At: 355a
 void OMap::do_route_final() {
-   int16_t pos = oroad.road_pos >> 16;
+   Int2 pos = oroad.road_pos >> 16;
    if (oinitengine.rd_split_state)
       pos += 0x79C;
    pos = (pos*0x1B)/0x94D;
@@ -282,7 +282,7 @@ void OMap::draw_horiz_end(oentry *sprite) {
 }
 
 // At: 3746
-void OMap::draw_piece(oentry *sprite, uint32_t adr) {
+void OMap::draw_piece(oentry *sprite, Num4 adr) {
 // Update palette of background piece, to highlight route as minicar passes over it
    if (map_route == sprite->id) {
       sprite->priority = 0x102;
@@ -301,11 +301,11 @@ void OMap::move_mini_car(oentry *sprite) {
 // Move Mini Car
    if (!minicar_enable) {
    // Remember that the minimap is angled, so we still need to adjust both the x and y positions
-      uint32_t movement_table = (map_route&1)? MAP_MOVEMENT_RIGHT: MAP_MOVEMENT_LEFT;
-      int16_t pos = (map_stage1 < 4)? map_pos: map_pos >> 1;
+      Num4 movement_table = (map_route&1)? MAP_MOVEMENT_RIGHT: MAP_MOVEMENT_LEFT;
+      Int2 pos = (map_stage1 < 4)? map_pos: map_pos >> 1;
       pos <<= 1; // do not try to merge with previous line
       sprite->x += roms.rom0.read16(movement_table + pos);
-      int16_t y_change = roms.rom0.read16(movement_table + pos + 0x40);
+      Int2 y_change = roms.rom0.read16(movement_table + pos + 0x40);
       sprite->y -= y_change;
       if (y_change == 0)
          sprite->addr = outrun.adr.sprite_minicar_right;

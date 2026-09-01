@@ -49,8 +49,8 @@ void OTiles::write_tilemap_hw() {
 // Input:	None
 // Output:	None
 void OTiles::setup_palette_hud() {
-   uint32_t src_addr = 0x16ED8;
-   uint32_t pal_addr = 0x120000;
+   Num4 src_addr = 0x16ED8;
+   Num4 pal_addr = 0x120000;
 // Write longs of palette data. Read from ROM.
    for (int i = 0; i <= 0x1F; i++) {
       video.write_pal32(&pal_addr, roms.rom0.read32(&src_addr));
@@ -63,11 +63,11 @@ void OTiles::setup_palette_hud() {
 // Input:	None
 // Output:	None
 void OTiles::setup_palette_tilemap() {
-   uint32_t src_addr = 0x16FD8;
-   uint32_t pal_addr = S16_PALETTE_BASE + (8*16); // Palette Entry 8
+   Num4 src_addr = 0x16FD8;
+   Num4 pal_addr = S16_PALETTE_BASE + (8*16); // Palette Entry 8
    for (int i = 0; i < 120; i++) {
-      uint16_t offset = roms.rom0.read8(&src_addr) << 4;
-      uint32_t tile_data_addr = 0x17050 + offset;
+      Num2 offset = roms.rom0.read8(&src_addr) << 4;
+      Num4 tile_data_addr = 0x17050 + offset;
    // Write 4 × longs of palette data. Read from ROM.
       video.write_pal32(&pal_addr, roms.rom0.read32(&tile_data_addr));
       video.write_pal32(&pal_addr, roms.rom0.read32(&tile_data_addr));
@@ -80,8 +80,8 @@ void OTiles::setup_palette_tilemap() {
 void OTiles::setup_palette_widescreen() {
 // Duplicate 10 palette entries from index 44 onwards.
 // This is needed due to the new tiles created for widescreen mode and the sharing of palette / tile indexes in the data structure.
-   uint32_t src_addr = S16_PALETTE_BASE + (44*16);
-   uint32_t pal_addr = S16_PALETTE_BASE + ((64 + 44)*16);
+   Num4 src_addr = S16_PALETTE_BASE + (44*16);
+   Num4 pal_addr = S16_PALETTE_BASE + ((64 + 44)*16);
    for (int i = 0; i < 10; i++) {
       video.write_pal32(&pal_addr, video.read_pal32(&src_addr));
       video.write_pal32(&pal_addr, video.read_pal32(&src_addr));
@@ -120,7 +120,7 @@ void OTiles::reset_tiles_pal() {
 //	Each tilemap comprises a number of name tables.
 // ▪	There can be two FG and two BG layers loaded at once.
 //	This is because the previous and upcoming tilemaps are scrolled between on level switch.
-void OTiles::update_tilemaps(int8_t p) {
+void OTiles::update_tilemaps(Int1 p) {
    if (outrun.service_mode) return;
    page = p;
    switch (tilemap_ctrl&3) {
@@ -152,8 +152,8 @@ void OTiles::clear_tile_info() {
       fg_v_tiles = bg_v_tiles = tilemap_v_off = // +3 words
       fg_addr = bg_addr = 0; // +4 words
 // 2. Clear portion of TEXT RAM containing tilemap info (110E80 - 110FFF)
-   uint32_t dst_addr = HW_FG_PSEL;
-   for (uint8_t i = 0; i <= 0x5F; i++)
+   Num4 dst_addr = HW_FG_PSEL;
+   for (Num1 i = 0; i <= 0x5F; i++)
       video.write_text32(&dst_addr, 0);
 // 3. Clear all of TILE RAM 100000 - 10FFFF
    video.clear_tile_ram();
@@ -173,15 +173,15 @@ void OTiles::clear_tile_info() {
 //	+A [word] - V-Scroll Offset
 //
 // At: d8b2
-void OTiles::init_tilemap(int16_t stage_id) {
-   uint8_t offset = (roms.rom0p->read8(outrun.adr.tiles_def_lookup + stage_id) << 2)*3;
-   uint32_t addr = outrun.adr.tiles_table + offset;
+void OTiles::init_tilemap(Int2 stage_id) {
+   Num1 offset = (roms.rom0p->read8(outrun.adr.tiles_def_lookup + stage_id) << 2)*3;
+   Num4 addr = outrun.adr.tiles_table + offset;
    fg_v_tiles = roms.rom0p->read8(&addr); // Write Default FG Tilemap Height
    bg_v_tiles = roms.rom0p->read8(&addr); // Write Default BG Tilemap Height
    fg_addr = roms.rom0p->read32(&addr); // Write Default FG Tilemap Address
    bg_addr = roms.rom0p->read32(&addr); // Write Default BG Tilemap Address
    tilemap_v_off = roms.rom0p->read16(&addr);
-   int16_t v_off = 0x68 - tilemap_v_off;
+   Int2 v_off = 0x68 - tilemap_v_off;
    oroad.horizon_y_bak = oroad.horizon_y2;
    fg_v_scroll = v_off;
    bg_v_scroll = v_off;
@@ -199,9 +199,9 @@ void OTiles::init_tilemap(int16_t stage_id) {
 // -	ROM Address of Tiles
 // -	V-Scroll Offset
 // At: dc02
-void OTiles::init_tilemap_props(uint16_t stage_id) {
-   uint8_t offset = (roms.rom0p->read8(outrun.adr.tiles_def_lookup + stage_id) << 2)*3;
-   uint32_t addr = outrun.adr.tiles_table + offset;
+void OTiles::init_tilemap_props(Num2 stage_id) {
+   Num1 offset = (roms.rom0p->read8(outrun.adr.tiles_def_lookup + stage_id) << 2)*3;
+   Num4 addr = outrun.adr.tiles_table + offset;
    fg_v_tiles = roms.rom0p->read8(&addr); // Write Default FG Tilemap Height
    bg_v_tiles = roms.rom0p->read8(&addr); // Write Default BG Tilemap Height
    fg_addr = roms.rom0p->read32(&addr); // Write Default FG Tilemap Address
@@ -215,26 +215,26 @@ void OTiles::init_tilemap_props(uint16_t stage_id) {
 // -	The FG tilemap is defined by a 128×64 virtual name table, which is itself composed of four smaller 64×32 name tables.
 //
 // At: dcf2
-void OTiles::copy_fg_tiles(uint32_t dst_addr) {
-   uint32_t src_addr = fg_addr;
-   uint16_t offset = 0; // Offset into Tile RAM (e.g. the name table to use)
+void OTiles::copy_fg_tiles(Num4 dst_addr) {
+   Num4 src_addr = fg_addr;
+   Num2 offset = 0; // Offset into Tile RAM (e.g. the name table to use)
 // Each tiled background is composed of 4 smaller 64×32 name tables. This counter iterates through them.
-   for (uint8_t i = 0; i < 4; i++) {
+   for (Num1 i = 0; i < 4; i++) {
    // next_name_table:
-      uint32_t tileram_addr = dst_addr + offset;
-      int16_t y = fg_v_tiles - 1;
+      Num4 tileram_addr = dst_addr + offset;
+      Int2 y = fg_v_tiles - 1;
    // next_tile_y:
       do {
-         int16_t x = 0x3F; // TILERAM is 0x40 Columns Wide × 8 pixels = 512
+         Int2 x = 0x3F; // TILERAM is 0x40 Columns Wide × 8 pixels = 512
       // next_tilex:
          do {
-            uint32_t data = roms.rom0.read16(&src_addr);
+            Num4 data = roms.rom0.read16(&src_addr);
          // Compression
             if (data == 0) {
-               uint16_t value = roms.rom0.read16(&src_addr); // tile index to copy
-               uint16_t count = roms.rom0.read16(&src_addr); // number of times to copy value
+               Num2 value = roms.rom0.read16(&src_addr); // tile index to copy
+               Num2 count = roms.rom0.read16(&src_addr); // number of times to copy value
             // copy_compressed:
-               for (uint16_t i = 0; i <= count; i++) {
+               for (Num2 i = 0; i <= count; i++) {
                   video.write_tile16(&tileram_addr, value);
                   if (--x < 0)
                      break; // Break out of do/while loop to compression_done
@@ -261,26 +261,26 @@ void OTiles::copy_fg_tiles(uint32_t dst_addr) {
 // Note, this is virtually the same as the foreground method, aside from only copying 3 nametables, instead of 4.
 //
 // At: dd46
-void OTiles::copy_bg_tiles(uint32_t dst_addr) {
-   uint32_t src_addr = bg_addr;
-   uint16_t offset = 0; // Offset into Tile RAM (e.g. the name table to use)
+void OTiles::copy_bg_tiles(Num4 dst_addr) {
+   Num4 src_addr = bg_addr;
+   Num2 offset = 0; // Offset into Tile RAM (e.g. the name table to use)
 // Each tiled background is composed of 3 smaller 64×32 name tables. This counter iterates through them.
-   for (uint8_t i = 0; i < 3; i++) {
+   for (Num1 i = 0; i < 3; i++) {
    // next_name_table:
-      uint32_t tileram_addr = dst_addr + offset;
-      int16_t y = bg_v_tiles - 1;
+      Num4 tileram_addr = dst_addr + offset;
+      Int2 y = bg_v_tiles - 1;
    // next_tile_y:
       do {
-         int16_t x = 0x3F; // TILERAM is 0x40 Columns Wide × 8 pixels = 512
+         Int2 x = 0x3F; // TILERAM is 0x40 Columns Wide × 8 pixels = 512
       // next_tilex:
          do {
-            uint32_t data = roms.rom0.read16(&src_addr);
+            Num4 data = roms.rom0.read16(&src_addr);
          // Compression
             if (data == 0) {
-               uint16_t value = roms.rom0.read16(&src_addr); // tile index to copy
-               uint16_t count = roms.rom0.read16(&src_addr); // number of times to copy value
+               Num2 value = roms.rom0.read16(&src_addr); // tile index to copy
+               Num2 count = roms.rom0.read16(&src_addr); // number of times to copy value
             // copy_compressed:
-               for (uint16_t i = 0; i <= count; i++) {
+               for (Num2 i = 0; i <= count; i++) {
                   video.write_tile16(&tileram_addr, value);
                   if (--x < 0)
                      break; // Break out of do/while loop to compression_done
@@ -368,19 +368,19 @@ void OTiles::clear_old_name_table() {
 // Odd Stages
    if (page&1) {
    // Clear FG Tiles 2 [4 pages, (each 64×32 page table)]
-      for (uint32_t i = 0x104C00; i < 0x108C00; i += 2)
+      for (Num4 i = 0x104C00; i < 0x108C00; i += 2)
          video.write_tile16(i, 0);
    // Clear BG Tiles 2 [3 pages]
-      for (uint32_t i = 0x10B700; i < 0x10E700; i += 2)
+      for (Num4 i = 0x10B700; i < 0x10E700; i += 2)
          video.write_tile16(i, 0);
    }
 // Even
    else {
    // Clear FG Tiles 1 [4 pages, (each 64×32 page table)]
-      for (uint32_t i = 0x100C00; i < 0x104C00; i += 2)
+      for (Num4 i = 0x100C00; i < 0x104C00; i += 2)
          video.write_tile16(i, 0);
    // Clear BG Tiles 1 [3 pages]
-      for (uint32_t i = 0x108700; i < 0x10B700; i += 2)
+      for (Num4 i = 0x108700; i < 0x10B700; i += 2)
          video.write_tile16(i, 0);
    }
 }
@@ -398,9 +398,9 @@ void OTiles::h_scroll_tilemaps() {
    if (oinitengine.end_stage_props&BIT_0) {
    // Road position is used as an offset into the table. (Note it's reset at beginning of road split)
       h_scroll_lookup = roms.rom0.read16(H_SCROLL_TABLE + ((oroad.road_pos >> 16) << 1));
-      int32_t tilemap_h_target = h_scroll_lookup << 5;
+      Int4 tilemap_h_target = h_scroll_lookup << 5;
       tilemap_h_target <<= 16;
-      int32_t tilemap_x = tilemap_h_target - (tilemap_h_scr << 5);
+      Int4 tilemap_x = tilemap_h_target - (tilemap_h_scr << 5);
       if (tilemap_x != 0) {
          tilemap_x >>= 8;
          if (tilemap_x == 0)
@@ -416,9 +416,9 @@ void OTiles::h_scroll_tilemaps() {
    else {
    // scroll_tilemap:
       if (oinitengine.rd_split_state != OInitEngine::SPLIT_NONE && oinitengine.rd_split_state <= 4) return;
-      int32_t tilemap_h_target = (oroad.tilemap_h_target << 5)&0xFFFF;
+      Int4 tilemap_h_target = (oroad.tilemap_h_target << 5)&0xFFFF;
       tilemap_h_target <<= 16;
-      int32_t tilemap_x = tilemap_h_target - (tilemap_h_scr << 5);
+      Int4 tilemap_x = tilemap_h_target - (tilemap_h_scr << 5);
       if (tilemap_x != 0) {
          tilemap_x >>= 8;
          if (tilemap_x == 0)
@@ -442,7 +442,7 @@ void OTiles::h_scroll_tilemaps() {
 // At: dbb8
 void OTiles::v_scroll_tilemaps() {
    oroad.horizon_y_bak = (oroad.horizon_y_bak + oroad.horizon_y2) >> 1;
-   int32_t d0 = (0x100 - oroad.horizon_y_bak - tilemap_v_off - vswap_off);
+   Int4 d0 = (0x100 - oroad.horizon_y_bak - tilemap_v_off - vswap_off);
    tilemap_v_scr ^= d0;
    if (d0 < 0) {
       fg_psel = (fg_psel >> 8) | ((fg_psel&0xFF) << 8); // Swap
@@ -462,14 +462,14 @@ void OTiles::v_scroll_tilemaps() {
 //
 // At: db26
 void OTiles::update_fg_page() {
-   int16_t h = tilemap_h_scr >> 16;
+   Int2 h = tilemap_h_scr >> 16;
    if (oinitengine.rd_split_state == oinitengine.SPLIT_NONE)
       h = -h;
    fg_h_scroll = h;
 // Choose Page 0 - 3
-   int32_t rol7 = h << 7;
+   Int4 rol7 = h << 7;
    h = ((rol7 >> 16)&3) << 1;
-   uint8_t cur_stage = page_split? page + 1: page;
+   Num1 cur_stage = page_split? page + 1: page;
    cur_stage &= 1;
    cur_stage *= 8;
    h += cur_stage;
@@ -477,16 +477,16 @@ void OTiles::update_fg_page() {
 }
 
 void OTiles::update_bg_page() {
-   int16_t h = tilemap_h_scr >> 16;
+   Int2 h = tilemap_h_scr >> 16;
    if (oinitengine.rd_split_state == oinitengine.SPLIT_NONE)
       h = -h;
    h &= 0x7FF;
    h = (h + (h << 1)) >> 2;
    bg_h_scroll = h;
 // Choose Page 0 - 3
-   int32_t rol7 = h << 7;
+   Int4 rol7 = h << 7;
    h = ((rol7 >> 16)&3) << 1;
-   uint8_t cur_stage = page_split? page + 1: page;
+   Num1 cur_stage = page_split? page + 1: page;
    cur_stage &= 1;
    cur_stage = ((cur_stage*2) + cur_stage) << 1;
    h += cur_stage;
@@ -524,9 +524,9 @@ void OTiles::init_next_tilemap() {
 // Originally, both versions had a separate version of this routine.
 //
 // At: dd94
-void OTiles::init_tilemap_palette(uint16_t stage_id) {
+void OTiles::init_tilemap_palette(Num2 stage_id) {
 // Get internal level number
-   uint8_t level = trackloader.stage_data[stage_id];
+   Num1 level = trackloader.stage_data[stage_id];
    switch (level) {
       case 0x3C:
       return;
@@ -585,8 +585,8 @@ void OTiles::init_tilemap_palette(uint16_t stage_id) {
    }
 }
 
-void OTiles::copy_to_palram(const uint8_t blocks, uint32_t src, uint32_t dst) {
-   for (uint8_t i = 0; i <= blocks; i++) {
+void OTiles::copy_to_palram(const Num1 blocks, Num4 src, Num4 dst) {
+   for (Num1 i = 0; i <= blocks; i++) {
       video.write_pal32(&dst, roms.rom0.read32(src));
       video.write_pal32(&dst, roms.rom0.read32(src + 0x4));
       video.write_pal32(&dst, roms.rom0.read32(src + 0x8));
@@ -634,18 +634,18 @@ void OTiles::update_bg_page_split() {
 // Fill tilemap background with a solid color
 //
 // At: e188
-void OTiles::fill_tilemap_color(uint16_t color) {
-   uint32_t pal_addr = 0x1204C2;
-   uint32_t dst = 0x10F000;
-   const uint16_t TILE = color == 0? 0x20: 0x1310; // Default tile value for background
+void OTiles::fill_tilemap_color(Num2 color) {
+   Num4 pal_addr = 0x1204C2;
+   Num4 dst = 0x10F000;
+   const Num2 TILE = color == 0? 0x20: 0x1310; // Default tile value for background
    set_scroll(); // Reset scroll
    video.write_pal16(&pal_addr, color);
-   for (uint16_t i = 0; i <= 0x7FF; i++)
+   for (Num2 i = 0; i <= 0x7FF; i++)
       video.write_tile16(&dst, TILE);
 }
 
 // Set Tilemap Scroll. Reset Pages
-void OTiles::set_scroll(int16_t h_scroll, int16_t v_scroll) {
+void OTiles::set_scroll(Int2 h_scroll, Int2 v_scroll) {
    tilemap_ctrl = TILEMAP_SCROLL; // Use Palette
    fg_h_scroll = h_scroll;
    bg_h_scroll = h_scroll;

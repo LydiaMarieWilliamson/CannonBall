@@ -243,8 +243,8 @@ void OMusic::cycle_music() {
 // Wheel Left = Track 0, Wheel Centre = Track 1, Wheel Right = Track 2
 void OMusic::tick_original(oentry *fm, oentry *dial, oentry *hand) {
 // Note tiles to append to left side of text
-   const uint32_t NOTE_TILES1 = 0x8A7A8A7B;
-   const uint32_t NOTE_TILES2 = 0x8A7C8A7D;
+   const Num4 NOTE_TILES1 = 0x8A7A8A7B;
+   const Num4 NOTE_TILES2 = 0x8A7C8A7D;
 // Steer Left
    if (oinputs.steering_adjust + 0x80 <= 0x55) {
       set_hand(HAND_LEFT, fm, dial, hand);
@@ -337,11 +337,11 @@ void OMusic::blit() {
 //	p―――――――――――――――	Priority flag
 //	―??―――――――――――――	Unknown
 void OMusic::blit_music_select() {
-   const uint32_t TILEMAP_RAM_16 = 0x10F030;
+   const Num4 TILEMAP_RAM_16 = 0x10F030;
 // Palette Ram: 1F Long Entries For Sky Shade On Horizon, For Colour Change Effect
-   const uint32_t PAL_RAM_SKY = 0x120F00;
-   uint32_t src_addr = PAL_MUSIC_SELECT;
-   uint32_t dst_addr = PAL_RAM_SKY;
+   const Num4 PAL_RAM_SKY = 0x120F00;
+   Num4 src_addr = PAL_MUSIC_SELECT;
+   Num4 dst_addr = PAL_RAM_SKY;
 // Write 32 Palette Longs to Palette RAM
    for (int i = 0; i < 32; i++)
       video.write_pal32(&dst_addr, roms.rom0.read32(&src_addr));
@@ -350,10 +350,10 @@ void OMusic::blit_music_select() {
 // Blit to Tilemap 16: Widescreen Version. Uses Custom Tilemap.
 // ────────────────────────────────────────────────────────────
    if (tilemap->loaded && config.s16_x_off > 0) {
-      uint32_t tilemap16 = TILEMAP_RAM_16 - 20;
+      Num4 tilemap16 = TILEMAP_RAM_16 - 20;
       src_addr = 0;
-      const uint16_t rows = tilemap->read16(&src_addr);
-      const uint16_t cols = tilemap->read16(&src_addr);
+      const Num2 rows = tilemap->read16(&src_addr);
+      const Num2 cols = tilemap->read16(&src_addr);
       for (int y = 0; y < rows; y++) {
          dst_addr = tilemap16;
          for (int x = 0; x < cols; x++)
@@ -364,13 +364,13 @@ void OMusic::blit_music_select() {
 // Blit to Tilemap 16: Original 4:3 Version.
 // ─────────────────────────────────────────
    else {
-      uint32_t tilemap16 = TILEMAP_RAM_16;
+      Num4 tilemap16 = TILEMAP_RAM_16;
       src_addr = TILEMAP_MUSIC_SELECT;
       for (int y = 0; y < 28; y++) {
          dst_addr = tilemap16;
          for (int x = 0; x < 40; ) {
          // get next tile
-            uint32_t data = roms.rom0.read16(&src_addr);
+            Num4 data = roms.rom0.read16(&src_addr);
          // No Compression: write tile directly to tile ram
             if (data != 0) {
                video.write_tile16(&dst_addr, data);
@@ -378,9 +378,9 @@ void OMusic::blit_music_select() {
             }
          // Compression
             else {
-               uint16_t value = roms.rom0.read16(&src_addr); // tile index to copy
-               uint16_t count = roms.rom0.read16(&src_addr); // number of times to copy value
-               for (uint16_t i = 0; i <= count; i++) {
+               Num2 value = roms.rom0.read16(&src_addr); // tile index to copy
+               Num2 count = roms.rom0.read16(&src_addr); // number of times to copy value
+               for (Num2 i = 0; i <= count; i++) {
                   video.write_tile16(&dst_addr, value);
                   x++;
                }

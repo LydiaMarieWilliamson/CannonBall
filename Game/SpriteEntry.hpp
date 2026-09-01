@@ -32,28 +32,28 @@ public:
 //		Bit 2 Set if road_width >= 0x118
 //		Bit 1
 //		Bit 0 Set to Horizontally Flip Image
-   uint8_t control;
+   Num1 control;
 // +01 [Byte]	Index Number of Jump 0, 1, 2, 3 etc.
-   uint8_t jump_index;
+   Num1 jump_index;
 // +02 [Long]	Jump Address
-   int8_t function_holder;
+   Int1 function_holder;
 // +06 [Byte]	Multiple Uses. Used to identify sprites.
 //		E.g. Passenger Sprites: Denote Man (0) or Woman (1) Sprite.
 //		Course Map Sprites: Denote piece of map (just iterates from 0 upwards)
-   uint8_t id;
+   Num1 id;
 // +07 [Byte]	Sprite Priority (In relation to tilemaps) & Shadow Settings
 //		Default = 3
-   uint8_t shadow;
+   Num1 shadow;
 // +08 [Byte]	Entry Number For Zoom Lookup Table
 //		Looked up from ROM [0x30000 + (offset*8)]
 //		0 = Hide Sprite
-   uint8_t zoom;
+   Num1 zoom;
 // +09 [Byte]	1/	Draw Routine To Use. [4-bits]: dddd――――
 //		2/	Draw Properties.     [4-bits]: ――――yyxx
 //		For draw routine see SetupSpriteRoutine function
 //			xx 0 = Anchor Centre. 01 = Anchor Left. 10 = Anchor Right
 //			yy 0 = Anchor Centre. 01 = Anchor Top.  10 = Anchor Bottom.
-   uint8_t draw_props;
+   Num1 draw_props;
    enum {
       CENTRE = 0,
       LEFT = 1,
@@ -65,55 +65,55 @@ public:
 //		For the car sprite:
 //			0-2 = Wheels turning
 //			3-5 = Brake lights on, Wheels turning
-   uint16_t pal_src;
+   Num2 pal_src;
 // +0B [Byte]	Sprite Colour Palette: Destination index into PALETTE RAM. 0 - 7F.
-   uint8_t pal_dst;
+   Num1 pal_dst;
 // +0C [Word]	Sprite X (Screen/Camera) \   (Set from world co-ordinates)
 // +0E [Word]	Sprite Y (Screen/Camera) /
-   int16_t x, y;
+   Int2 x, y;
 // +10 [Word]	Sprite Width
-   uint16_t width;
+   Num2 width;
 // +14 [Word]	Sprite to Sprite Priority (Lower Number = Draw Earlier)
-   uint16_t priority;
+   Num2 priority;
 // +16 [Word]	Entry Number In Sprite Destination Table
 //		This is the offset address in memory we want to copy the sprite to.
 //		And is necessary because it ties in with sprite ordering.
-   uint16_t dst_index;
+   Num2 dst_index;
 // +18 [Long]	Address of actual sprite data we want to render. Offset 1/2 into ROM[0x20000].
-   uint32_t addr;
+   Num4 addr;
 // +1C [Word]	Distance into screen or Sprite to Road Priority (High Number = Closer to camera)
-   uint16_t road_priority;
+   Num2 road_priority;
 // +1E [Word]	Sprite Counter Reload Value (For Animations etc.)
-   int16_t reload;
+   Int2 reload;
 // +20 [Word]	Sprite Counter (For Animations etc.)
-   uint16_t counter;
+   Num2 counter;
 // +22 [Word]	Sprite X (World) COPY
-   int16_t xw1;
+   Int2 xw1;
 // +24 [Long]	Sprite Z / Zoom (World) - 0x10000 = Most distant value
-   int32_t z;
+   Int4 z;
 // +28 [Word]	Original Traffic Speed
-   int16_t traffic_speed;
+   Int2 traffic_speed;
 // +2A [Word]	Sprite Type (Actual Object Index)
-   uint16_t type;
+   Num2 type;
 // +2C [Word]	Sprite X (World) COPY
-   int16_t xw2;
+   Int2 xw2;
 // +2E [Word]	Bit 2 - Denote car is close to other traffic [z-axis]
 //		Bit 1 - Denote traffic on RHS
 //		Bit 0 - Denote traffic on LHS
 //		Note: Set to 0xFF on collision
-   uint8_t traffic_proximity;
+   Num1 traffic_proximity;
 // +30 [Word]
-   uint8_t traffic_fx;
+   Num1 traffic_fx;
 // +32 [Word]	Original Traffic Speed
-   int16_t traffic_orig_speed;
+   Int2 traffic_orig_speed;
 // +36 [Word]	Nearby Traffic Speed
-   int16_t traffic_near_speed;
+   Int2 traffic_near_speed;
 // +38 [Word]	Sprite Y (World)
-   uint16_t yw;
+   Num2 yw;
 // +3A [Word]	Passenger Props (Passenger Sprites Only)
-   int16_t pass_props;
+   Int2 pass_props;
 // Initalize to default values
-   void init(uint8_t i) {
+   void init(Num1 i) {
       control = 0;
       jump_index = i;
       function_holder = -1;

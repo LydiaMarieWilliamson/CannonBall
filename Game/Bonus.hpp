@@ -11,7 +11,7 @@
 class OBonus {
 public:
 // Bonus Control
-   int8_t bonus_control;
+   Int1 bonus_control;
    enum {
       BONUS_DISABLE = 0x0, // 0  = Bonus Mode Disabled
       BONUS_INIT = 0x4, // 4  = Init Bonus Mode
@@ -27,7 +27,7 @@ public:
 //	1 = Decrement Bonus Seconds
 //	2 = Clear Bonus Text
 //	3 = Do Not Execute Bonus Text Block
-   int8_t bonus_state;
+   Int1 bonus_state;
    enum {
       BONUS_TEXT_INIT = 0,
       BONUS_TEXT_SECONDS = 1,
@@ -35,7 +35,7 @@ public:
       BONUS_TEXT_DONE = 3,
    };
 // Timer used by bonus mode logic (Added from Rev. A onwards)
-   int16_t bonus_timer;
+   Int2 bonus_timer;
    OBonus(void);
    ~OBonus(void);
    void init();
@@ -46,9 +46,9 @@ private:
 // Stored as hex, but should be converted to decimal for true value.
 //
 // So 0x314 would be 78.8 seconds
-   int16_t bonus_secs;
+   Int2 bonus_secs;
 // Timing counter used in bonus code logic
-   int16_t bonus_counter;
+   Int2 bonus_counter;
    void init_bonus_text();
    void blit_bonus_secs();
    void decrement_bonus_secs();

@@ -28,7 +28,7 @@
 OInitEngine oinitengine;
 
 // Continuous Mode Level Ordering
-const static uint8_t CONTINUOUS_LEVELS[] = { 0, 0x8, 0x9, 0x10, 0x11, 0x12, 0x18, 0x19, 0x1A, 0x1B, 0x20, 0x21, 0x22, 0x23, 0x24 };
+const static Num1 CONTINUOUS_LEVELS[] = { 0, 0x8, 0x9, 0x10, 0x11, 0x12, 0x18, 0x19, 0x1A, 0x1B, 0x20, 0x21, 0x22, 0x23, 0x24 };
 
 // Set to 0 to 4 to test bonus sequence, -1 disables
 const static int DEBUG_BONUS = -1;
@@ -40,7 +40,7 @@ OInitEngine::~OInitEngine() {
 }
 
 // At: 8360
-void OInitEngine::init(int8_t level) {
+void OInitEngine::init(Int1 level) {
    ostats.game_completed = 0;
    ingame_engine = false;
    ingame_counter = 0;
@@ -129,8 +129,8 @@ void OInitEngine::init_road_seg_master() {
 //	Word 4 [+6]:	Segment Width Adjustment SIGNED (Speed at which width is adjusted)
 void OInitEngine::update_road() {
    check_road_split(); // Check/Process road split if necessary
-   uint32_t addr = 0;
-   uint16_t d0 = trackloader.read_width_height(&addr);
+   Num4 addr = 0;
+   Num2 d0 = trackloader.read_width_height(&addr);
 // Update next road section
    if (d0 <= oroad.road_pos >> 16) {
    // Skip road width adjustment if set and adjust height
@@ -140,10 +140,10 @@ void OInitEngine::update_road() {
             oroad.height_lookup = trackloader.read_width_height(&addr); // Set new height lookup section
       } else {
       // At: b87a
-         int16_t width = trackloader.read_width_height(&addr); // Segment road width
-         int16_t change = trackloader.read_width_height(&addr); // Segment adjustment speed
-         if (width != (int16_t)(oroad.road_width >> 16)) {
-            if (width <= (int16_t)(oroad.road_width >> 16))
+         Int2 width = trackloader.read_width_height(&addr); // Segment road width
+         Int2 change = trackloader.read_width_height(&addr); // Segment adjustment speed
+         if (width != (Int2)(oroad.road_width >> 16)) {
+            if (width <= (Int2)(oroad.road_width >> 16))
                change = -change;
             road_width_next = width;
             road_width_adj = change;
@@ -155,15 +155,15 @@ void OInitEngine::update_road() {
 // At: b8bc set_road_width
 // Width of road is changing & car is moving
    if (change_width != 0 && car_increment >> 16 != 0) {
-      int32_t d0 = ((car_increment >> 16)*road_width_adj) << 4;
+      Int4 d0 = ((car_increment >> 16)*road_width_adj) << 4;
       oroad.road_width += d0; // add long here
       if (d0 > 0) {
-         if (road_width_next < (int16_t)(oroad.road_width >> 16)) {
+         if (road_width_next < (Int2)(oroad.road_width >> 16)) {
             change_width = 0;
             oroad.road_width = road_width_next << 16;
          }
       } else {
-         if (road_width_next >= (int16_t)(oroad.road_width >> 16)) {
+         if (road_width_next >= (Int2)(oroad.road_width >> 16)) {
             change_width = 0;
             oroad.road_width = road_width_next << 16;
          }
@@ -180,14 +180,14 @@ void OInitEngine::update_road() {
 //	Word 3 [+4]: Segment Road type (1 = Straight, 2 = Right Bend, 3 = Left Bend)
 // 60a08 = address of next road segment? (e.g. A0 = 0x0001DD86)
 // At: b91c set_road_type:
-   int16_t segment_pos = trackloader.read_curve(0);
+   Int2 segment_pos = trackloader.read_curve(0);
    if (segment_pos != -1) {
-      int16_t d1 = segment_pos - 0x3C;
-      if (d1 <= (int16_t)(oroad.road_pos >> 16)) {
+      Int2 d1 = segment_pos - 0x3C;
+      if (d1 <= (Int2)(oroad.road_pos >> 16)) {
          road_curve_next = trackloader.read_curve(2);
          road_type_next = trackloader.read_curve(4);
       }
-      if (segment_pos <= (int16_t)(oroad.road_pos >> 16)) {
+      if (segment_pos <= (Int2)(oroad.road_pos >> 16)) {
          road_curve = trackloader.read_curve(2);
          road_type = trackloader.read_curve(4);
          trackloader.curve_offset += 6;
@@ -243,7 +243,7 @@ void OInitEngine::update_engine() {
 }
 
 void OInitEngine::update_shadow_offset() {
-   int16_t shadow_off = oroad.tilemap_h_target&0x3FF;
+   Int2 shadow_off = oroad.tilemap_h_target&0x3FF;
    if (shadow_off > 0x1FF)
       shadow_off = -shadow_off + 0x3FF;
    shadow_off >>= 2;
@@ -356,13 +356,13 @@ void OInitEngine::check_stage() {
 // Time Trial Mode
    if (outrun.cannonball_mode == Outrun::MODE_TTRIAL) {
    // Store laptime and reset
-      uint8_t *laptimes = outrun.ttrial.laptimes[outrun.ttrial.current_lap];
+      Num1 *laptimes = outrun.ttrial.laptimes[outrun.ttrial.current_lap];
       laptimes[0] = ostats.stage_times[0][0];
       laptimes[1] = ostats.stage_times[0][1];
       laptimes[2] = ostats.stage_times[0][2];
       ostats.stage_times[0][0] = ostats.stage_times[0][1] = ostats.stage_times[0][2] = 0;
    // Check for new best laptime
-      int16_t counter = ostats.stage_counters[outrun.ttrial.current_lap];
+      Int2 counter = ostats.stage_counters[outrun.ttrial.current_lap];
       if (counter < outrun.ttrial.best_lap_counter) {
          outrun.ttrial.best_lap_counter = counter;
          outrun.ttrial.best_lap[0] = laptimes[0];
@@ -466,7 +466,7 @@ void OInitEngine::init_split1() {
 void OInitEngine::init_split2() {
    rd_split_state = SPLIT_CHOICE2;
 // Manual adjustments to the road width, based on the current position
-   int16_t pos = (((oroad.road_pos >> 16) - 0x3F) << 3) + road_width_orig;
+   Int2 pos = (((oroad.road_pos >> 16) - 0x3F) << 3) + road_width_orig;
    oroad.road_width = (pos << 16) | (oroad.road_width&0xFFFF);
    if (pos > 0xFF) {
       route_updated &= ~BIT_0;
@@ -478,7 +478,7 @@ void OInitEngine::init_split2() {
 // ──────────────────────────────────────────────────────────────
 void OInitEngine::init_split3() {
    rd_split_state = 4;
-   int16_t pos = (((oroad.road_pos >> 16) - 0x3F) << 3) + road_width_orig;
+   Int2 pos = (((oroad.road_pos >> 16) - 0x3F) << 3) + road_width_orig;
    oroad.road_width = (pos << 16) | (oroad.road_width&0xFFFF);
    if (route_updated&BIT_0 || pos <= 0x168) {
       if (oroad.road_width >> 16 > 0x300)
@@ -490,7 +490,7 @@ void OInitEngine::init_split3() {
 // Go Left
    if (car_x_pos > 0) {
       route_selected = -1;
-      uint8_t inc = 1 << (3 - ostats.cur_stage);
+      Num1 inc = 1 << (3 - ostats.cur_stage);
    // One of the following increment values
    //	Stage 1 = +8 (1 << 3 - 0)
    //	Stage 2 = +4 (1 << 3 - 1)
@@ -546,7 +546,7 @@ void OInitEngine::init_split7() {
    rd_split_state = 8;
    oroad.road_ctrl = ORoad::ROAD_BOTH_P0;
    route_selected = ~route_selected; // invert bits
-   int16_t width2 = (oroad.road_width >> 16) << 1;
+   Int2 width2 = (oroad.road_width >> 16) << 1;
    if (route_selected == 0)
       width2 = -width2;
    car_x_pos += width2;
@@ -561,7 +561,7 @@ void OInitEngine::init_split7() {
 void OInitEngine::init_split9() {
    rd_split_state = 10;
 // Calculate narrower road width to merge roads
-   uint16_t d0 = (road_width_merge - ((oroad.road_pos >> 16) - road_width_orig)) << 3;
+   Num2 d0 = (road_width_merge - ((oroad.road_pos >> 16) - road_width_orig)) << 3;
    if (d0 <= RD_WIDTH_MERGE) {
       oroad.road_width = (RD_WIDTH_MERGE << 16) | (oroad.road_width&0xFFFF);
       init_split10();
@@ -599,11 +599,11 @@ void OInitEngine::init_split_next_level() {
 
 // Initialize new segment of road data for bonus sequence
 // At: 8a04
-void OInitEngine::init_bonus(int16_t seq) {
+void OInitEngine::init_bonus(Int2 seq) {
    oroad.road_ctrl = ORoad::ROAD_BOTH_P0_INV;
    oroad.road_pos = 0;
    oroad.tilemap_h_target = 0;
-   oanimseq.end_seq = (uint8_t)seq; // Set End Sequence (0 - 4)
+   oanimseq.end_seq = (Num1)seq; // Set End Sequence (0 - 4)
    trackloader.init_track_bonus(oanimseq.end_seq);
    outrun.game_state = GS_INIT_BONUS;
    rd_split_state = 0x11;
@@ -630,7 +630,7 @@ void OInitEngine::bonus2() {
 // Stretch the road to a wider width. It does this based on the car's current position.
 void OInitEngine::bonus3() {
 // Manual adjustments to the road width, based on the current position
-   int16_t pos = (((oroad.road_pos >> 16) - 0xB6) << 3) + road_width_orig;
+   Int2 pos = (((oroad.road_pos >> 16) - 0xB6) << 3) + road_width_orig;
    oroad.road_width = (pos << 16) | (oroad.road_width&0xFFFF);
    if (pos > 0xFF) {
       route_selected = 0;
@@ -643,7 +643,7 @@ void OInitEngine::bonus3() {
 
 void OInitEngine::bonus4() {
 // Manual adjustments to the road width, based on the current position
-   int16_t pos = (((oroad.road_pos >> 16) - 0xB6) << 3) + road_width_orig;
+   Int2 pos = (((oroad.road_pos >> 16) - 0xB6) << 3) + road_width_orig;
    oroad.road_width = (pos << 16) | (oroad.road_width&0xFFFF);
    if (pos > 0x300) {
    // Set Appropriate Road Control Value, Dependent On Route Chosen
@@ -684,9 +684,9 @@ void OInitEngine::bonus6() {
 // Notes:
 // ▪	Disable with - bpset bd3e, 1, {pc = bd76; g}
 void OInitEngine::set_granular_position() {
-   uint16_t car_inc16 = car_increment >> 16;
-   uint16_t result = car_inc16/0x40;
-   uint16_t rem = car_inc16%0x40;
+   Num2 car_inc16 = car_increment >> 16;
+   Num2 result = car_inc16/0x40;
+   Num2 rem = car_inc16%0x40;
    granular_rem += rem;
 // When the overall counter overflows past 0x40, we must carry a 1 to the unsigned divide :)
    if (granular_rem >= 0x40) {
@@ -697,7 +697,7 @@ void OInitEngine::set_granular_position() {
 }
 
 void OInitEngine::set_fine_position() {
-   uint16_t d0 = oroad.pos_fine - pos_fine_old;
+   Num2 d0 = oroad.pos_fine - pos_fine_old;
    if (d0 > 0xF)
       d0 = 0xF;
    d0 <<= 0xB;
@@ -714,7 +714,7 @@ void OInitEngine::init_crash_bonus() {
    // do_skid:
       if (otraffic.collision_traffic == 1) {
          otraffic.collision_traffic = 2;
-         uint8_t rnd = outils::random()&otraffic.collision_mask;
+         Num1 rnd = outils::random()&otraffic.collision_mask;
          if (rnd == otraffic.collision_mask) {
          // Try to launch crash code and perform a spin
             if (ocrash.coll_count1 == ocrash.coll_count2) {

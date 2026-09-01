@@ -8,6 +8,7 @@
 #pragma once
 
 #include <SDL.h>
+#include "Types.hpp"
 
 class Input {
 public:
@@ -45,7 +46,7 @@ public:
 // Latch last key press for redefines
    int key_press;
 // Latch last joystick button press for redefines
-   int16_t joy_button;
+   Int2 joy_button;
 // Analog Controls
    int wheel, a_wheel;
    int a_accel;
@@ -91,9 +92,9 @@ private:
    void bind_axis(SDL_GameControllerAxis ax, int offset);
    void bind_button(SDL_GameControllerButton button, int offset);
    void handle_key(const int, const bool);
-   void handle_joy(const uint8_t, const bool);
-   void handle_axis(const uint8_t axis, const int16_t value);
-   void store_last_axis(const uint8_t axis, const int16_t value);
+   void handle_joy(const Num1, const bool);
+   void handle_axis(const Num1 axis, const Int2 value);
+   void store_last_axis(const Num1 axis, const Int2 value);
    int scale_trigger(const int);
 };
 extern Input input;

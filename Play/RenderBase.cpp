@@ -25,11 +25,11 @@ bool RenderBase::sdl_screen_size() {
 // See: SDL_PixelFormat
 #define CURRENT_RGB() (r << Rshift) | (g << Gshift) | (b << Bshift);
 
-void RenderBase::convert_palette(uint32_t adr, uint32_t r1, uint32_t g1, uint32_t b1) {
+void RenderBase::convert_palette(Num4 adr, Num4 r1, Num4 g1, Num4 b1) {
    adr >>= 1;
-   uint32_t r = r1*8;
-   uint32_t g = g1*8;
-   uint32_t b = b1*8;
+   Num4 r = r1*8;
+   Num4 g = g1*8;
+   Num4 b = b1*8;
    rgb[adr] = CURRENT_RGB();
 // Create shadow colours at end of RGB array
    r = r1*shadow_multi/31;

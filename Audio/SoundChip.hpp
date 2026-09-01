@@ -11,33 +11,33 @@ class SoundChip {
 public:
    bool initalized;
 // Sample Frequency in use
-   uint32_t sample_freq;
+   Num4 sample_freq;
 // How many channels to support (mono/stereo)
-   uint8_t channels;
+   Num1 channels;
 // Size of the buffer (including channel info)
-   uint32_t buffer_size;
+   Num4 buffer_size;
    SoundChip();
    ~SoundChip();
-   void init(uint8_t, int32_t, int32_t);
+   void init(Num1, Int4, Int4);
 // Pure virtual function. Denotes virtual class.
    virtual void stream_update() = 0;
-   int16_t *get_buffer();
-   void set_volume(uint8_t);
+   Int2 *get_buffer();
+   void set_volume(Num1);
 protected:
-   const static uint8_t MONO = 1;
-   const static uint8_t STEREO = 2;
-   const static uint8_t LEFT = 0;
-   const static uint8_t RIGHT = 1;
+   const static Num1 MONO = 1;
+   const static Num1 STEREO = 2;
+   const static Num1 LEFT = 0;
+   const static Num1 RIGHT = 1;
 // Buffer size for one frame (excluding channel info)
-   uint32_t frame_size;
+   Num4 frame_size;
 // Volume of sound chip
    float volume;
    void clear_buffer();
-   void write_buffer(const uint8_t, uint32_t, int16_t);
-   int16_t read_buffer(const uint8_t, uint32_t);
+   void write_buffer(const Num1, Num4, Int2);
+   Int2 read_buffer(const Num1, Num4);
 private:
 // Sound buffer stream
-   int16_t *buffer;
+   Int2 *buffer;
 // Frames per second
-   uint32_t fps;
+   Num4 fps;
 };

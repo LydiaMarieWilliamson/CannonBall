@@ -41,7 +41,7 @@ struct music_t {
 struct ttrial_settings_t {
    int laps;
    int traffic;
-   uint16_t best_times[15];
+   Num2 best_times[15];
 };
 
 struct menu_settings_t {
@@ -141,9 +141,9 @@ public:
    const static int CABINET_UPRIGHT = 1;
    const static int CABINET_MINI = 2;
 // Internal screen width and height
-   uint16_t s16_width, s16_height;
+   Num2 s16_width, s16_height;
 // Internal screen x offset
-   uint16_t s16_x_off;
+   Num2 s16_x_off;
 // 30 or 60 fps
    int fps;
 // Original game ticks sprites at 30fps but background scroll at 60fps

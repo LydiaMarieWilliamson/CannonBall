@@ -33,7 +33,7 @@ public:
    oanimsprite anim_obj7; // 10
    oanimsprite anim_obj8; // 10
 // End sequence to display (0-4)
-   uint8_t end_seq;
+   Num1 end_seq;
    OAnimSeq(void);
    ~OAnimSeq(void);
 #if 0
@@ -48,9 +48,9 @@ public:
    void tick_end_seq();
 private:
 // End Sequence Animation Position
-   int16_t seq_pos;
+   Int2 seq_pos;
 // End Sequence State (0 = Init, 1 = Tick)
-   uint8_t end_seq_state;
+   Num1 end_seq_state;
 // Used for Ferrari End Animation Sequence
    bool ferrari_stopped;
    void init_end_sprites();

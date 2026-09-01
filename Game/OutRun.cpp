@@ -136,7 +136,7 @@ void Outrun::tick(bool tick_frame) {
    }
 // Moved out of vertical interrupt
    if (tick_frame) {
-      uint8_t coin = oinputs.do_credits();
+      Num1 coin = oinputs.do_credits();
       outputs->coin_chute_out(&outputs->chute1, coin == 1);
       outputs->coin_chute_out(&outputs->chute2, coin == 2);
    }
@@ -222,7 +222,7 @@ void Outrun::jump_table() {
 // Motor Code
    if (tick_frame) {
       if (game_state == GS_CALIBRATE_MOTOR) {
-         uint8_t limit = (input.motor_limits[Input::SW_LEFT]? 0: BIT_5) | (input.motor_limits[Input::SW_CENTRE]? 0: BIT_4) | (input.motor_limits[Input::SW_RIGHT]? 0: BIT_3);
+         Num1 limit = (input.motor_limits[Input::SW_LEFT]? 0: BIT_5) | (input.motor_limits[Input::SW_CENTRE]? 0: BIT_4) | (input.motor_limits[Input::SW_RIGHT]? 0: BIT_3);
          if (outputs->calibrate_motor(input.a_motor, limit)) {
             video.enabled = false;
             video.clear_text_ram();
@@ -231,7 +231,7 @@ void Outrun::jump_table() {
          }
          outputs->tick(input.a_motor);
       } else {
-         int16_t motor = (config.smartypi.enabled && config.smartypi.cabinet == Config::CABINET_MOVING)? input.a_motor: oinputs.input_steering;
+         Int2 motor = (config.smartypi.enabled && config.smartypi.cabinet == Config::CABINET_MOVING)? input.a_motor: oinputs.input_steering;
          outputs->tick(motor);
       }
    }
@@ -581,8 +581,8 @@ void Outrun::init_motor_calibration() {
    oroad.horizon_base = ORoad::HORIZON_OFF;
    game_state = GS_CALIBRATE_MOTOR;
 // Write Palette To RAM
-   uint32_t dst = 0x120000;
-   const static uint32_t PAL_SERVICE[] = { 0xFF, 0xFF00FF, 0xFF00FF, 0xFF0000 };
+   Num4 dst = 0x120000;
+   const static Num4 PAL_SERVICE[] = { 0xFF, 0xFF00FF, 0xFF00FF, 0xFF0000 };
    video.write_pal32(&dst, PAL_SERVICE[0]);
    video.write_pal32(&dst, PAL_SERVICE[1]);
    video.write_pal32(&dst, PAL_SERVICE[2]);
@@ -612,7 +612,7 @@ void Outrun::tick_attract() {
 // Enhanced Attract Mode (Switch Between Views)
    if (config.engine.new_attract) {
       if (++attract_counter > 240) {
-         const static uint8_t VIEWS[] = { ORoad::VIEW_ORIGINAL, ORoad::VIEW_ELEVATED, ORoad::VIEW_INCAR };
+         const static Num1 VIEWS[] = { ORoad::VIEW_ORIGINAL, ORoad::VIEW_ELEVATED, ORoad::VIEW_INCAR };
          attract_counter = 0;
          if (++attract_view > 2)
             attract_view = 0;

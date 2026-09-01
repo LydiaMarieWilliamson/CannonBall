@@ -10,18 +10,18 @@ class OLogo {
 public:
    OLogo();
    ~OLogo();
-   void enable(int16_t y);
+   void enable(Int2 y);
    void disable();
    void tick();
    void blit();
 private:
 // Palm Tree Frame Addresses
-   uint32_t palm_frames[8];
+   Num4 palm_frames[8];
 // Background Palette Entries
-   static const uint8_t bg_pal[];
-   uint8_t entry_start;
+   static const Num1 bg_pal[];
+   Num1 entry_start;
 // Y Offset To Draw Logo At
-   int16_t y_off;
+   Int2 y_off;
    void setup_sprite1();
    void setup_sprite2();
    void setup_sprite3();

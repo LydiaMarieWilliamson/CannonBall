@@ -21,7 +21,7 @@ public:
 private:
    CabDiag *cabdiag;
 // Menu state
-   uint8_t state;
+   Num1 state;
    enum {
       STATE_MENU,
       STATE_REDEFINE_KEYS,
@@ -33,25 +33,25 @@ private:
 // Music track for music test menu
    int music_track;
 // Redefine keys/joystick substate
-   uint8_t redef_state;
-   uint32_t frame;
+   Num1 redef_state;
+   Num4 frame;
 // Counter for showing messages
-   int32_t message_counter;
+   Int4 message_counter;
 // Number of seconds to show message for
-   const static int32_t MESSAGE_TIME = 5;
+   const static Int4 MESSAGE_TIME = 5;
 // Message text
    std::string msg;
 // Cursor
-   int16_t cursor;
+   Int2 cursor;
    struct menu_pair {
-      int16_t cursor;
+      Int2 cursor;
       std::vector<std::string> *menu;
    };
    std::vector<menu_pair> menu_stack;
 // Stores whether this is a textual menu (i.e. no options that can be chosen)
    bool is_text_menu;
 // Used to control the horizon pan effect
-   uint16_t horizon_pos;
+   Num2 horizon_pos;
    std::vector<std::string> *menu_selected;
    std::vector<std::string> menu_main;
    std::vector<std::string> menu_gamemodes;

@@ -39,11 +39,11 @@ RomLoader::~RomLoader() {
       delete[]rom;
 }
 
-void RomLoader::init(const uint32_t length) {
+void RomLoader::init(const Num4 length) {
 // Setup pointer to function we want to use (either load_crc32 or load_rom)
    load = config.data.crc32? &RomLoader::load_crc32: &RomLoader::load_rom;
    this->length = length;
-   rom = new uint8_t[length];
+   rom = new Num1[length];
 }
 
 void RomLoader::unload(void) {
@@ -54,7 +54,7 @@ void RomLoader::unload(void) {
 // Filename based ROM loader
 // ─────────────────────────
 // Advantage: Simpler. Does not require <dirent.h>
-int RomLoader::load_rom(const char *filename, const int offset, const int length, const int expected_crc, const uint8_t interleave, const bool verbose) {
+int RomLoader::load_rom(const char *filename, const int offset, const int length, const int expected_crc, const Num1 interleave, const bool verbose) {
    std::string path = config.data.rom_path;
    path += std::string(filename);
 // Open rom file
@@ -123,7 +123,7 @@ int RomLoader::create_map() {
 // Search and load ROM by CRC32 value as opposed to filename.
 // ──────────────────────────────────────────────────────────
 // Advantage: More resilient to renamed romsets.
-int RomLoader::load_crc32(const char *debug, const int offset, const int length, const int expected_crc, const uint8_t interleave, const bool verbose) {
+int RomLoader::load_crc32(const char *debug, const int offset, const int length, const int expected_crc, const Num1 interleave, const bool verbose) {
    if (!map_created)
       create_map();
    if (map.empty())
@@ -169,7 +169,7 @@ int RomLoader::load_binary(const char *filename) {
 // Read file
    char *buffer = new char[length];
    src.read(buffer, length);
-   rom = (uint8_t *)buffer;
+   rom = (Num1 *)buffer;
 // Clean Up
    src.close();
    loaded = true;

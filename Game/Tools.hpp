@@ -11,33 +11,33 @@
 
 class outils {
 public:
-   static const uint8_t DEC_TO_HEX[];
+   static const Num1 DEC_TO_HEX[];
    outils();
    ~outils();
    static void reset_random_seed();
-   static uint32_t random();
-   static int32_t isqrt(int32_t);
-   static uint16_t convert16_dechex(uint16_t);
-   static uint32_t bcd_add(uint32_t, uint32_t);
-   static uint32_t bcd_sub(uint32_t, uint32_t);
+   static Num4 random();
+   static Int4 isqrt(Int4);
+   static Num2 convert16_dechex(Num2);
+   static Num4 bcd_add(Num4, Num4);
+   static Num4 bcd_sub(Num4, Num4);
 // Inline functions
-   inline static void move16(uint32_t src, uint32_t &dst) {
+   inline static void move16(Num4 src, Num4 &dst) {
       dst = (dst&0xFFFF0000) + (src&0xFFFF);
    }
-   inline static void add16(uint32_t src, uint32_t &dst) {
+   inline static void add16(Num4 src, Num4 &dst) {
       dst = (dst&0xFFFF0000) + (((dst&0xFFFF) + (src&0xFFFF))&0xFFFF);
    }
-   inline static void sub16(int32_t src, int32_t &dst) {
+   inline static void sub16(Int4 src, Int4 &dst) {
       dst = (dst&0xFFFF0000) + (((dst&0xFFFF) - (src&0xFFFF))&0xFFFF);
    }
-   inline static void swap32(int32_t &v) {
+   inline static void swap32(Int4 &v) {
       v = ((v&0xFFFF0000) >> 16) + ((v&0xFFFF) << 16);
    }
-   inline static void swap32(uint32_t &v) {
+   inline static void swap32(Num4 &v) {
       v = ((v&0xFFFF0000) >> 16) + ((v&0xFFFF) << 16);
    }
-   static void convert_counter_to_time(uint16_t counter, uint8_t *converted);
+   static void convert_counter_to_time(Num2 counter, Num1 *converted);
 private:
-   static int32_t next(int32_t, int32_t);
-   static int32_t abs(int32_t);
+   static Int4 next(Int4, Int4);
+   static Int4 abs(Int4);
 };

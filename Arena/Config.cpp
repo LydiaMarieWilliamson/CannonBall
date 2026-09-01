@@ -349,7 +349,7 @@ void Config::save_scores(bool original_mode) {
 
 void Config::load_tiletrial_scores() {
 // Counter value that represents 1m 15s 0ms
-   static const uint16_t COUNTER_1M_15 = 0x11D0;
+   static const Num2 COUNTER_1M_15 = 0x11D0;
 // Create empty property tree object
    ptree pt;
    try {

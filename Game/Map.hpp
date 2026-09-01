@@ -24,11 +24,11 @@ public:
    void blit();
    void load_sprites();
    void draw_course_map();
-   void position_ferrari(uint8_t index);
+   void position_ferrari(Num1 index);
 private:
 // Total sprite pieces that comprise course map. 3c
-   const static uint8_t MAP_PIECES = 0x3C;
-   uint8_t map_state;
+   const static Num1 MAP_PIECES = 0x3C;
+   Num1 map_state;
    enum {
       MAP_INIT = 0,
    // Do Route [Note map is displayed from this point on]
@@ -47,24 +47,24 @@ private:
 // Direction to move on mini-map
 //	Bit 0:	0 = Up   (Left Route)
 //		1 = Down (Right Route)
-   uint8_t map_route;
+   Num1 map_route;
 // Minimap Position (Per Segment Basis)
-   int16_t map_pos;
+   Int2 map_pos;
 // Minimap Position (Final Segment)
-   int16_t map_pos_final;
+   Int2 map_pos_final;
 // Map Delay Counter
-   int16_t map_delay;
+   Int2 map_delay;
 // Stage counter for course map screen. [Increments]
-   int16_t map_stage1;
+   Int2 map_stage1;
 // Stage counter for course map screen. [Decrements]
 // Loaded with stage, then counts down as course map logic runs.
-   int16_t map_stage2;
+   Int2 map_stage2;
 // Minicar Movement Enabled (set = enabled)
-   uint8_t minicar_enable;
+   Num1 minicar_enable;
    void draw_horiz_end(oentry *);
    void draw_vert_bottom(oentry *);
    void draw_vert_top(oentry *);
-   void draw_piece(oentry *, uint32_t);
+   void draw_piece(oentry *, Num4);
    void do_route_final();
    void end_route();
    void init_map_delay();

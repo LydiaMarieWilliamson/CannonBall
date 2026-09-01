@@ -25,7 +25,7 @@
 //	D0:	Red bit 1
 
 // Exported as Big Endian, Double Words, 8 Columns
-const static uint32_t PALETTE_EXPANSION[] = {
+const static Num4 PALETTE_EXPANSION[] = {
    0x000009ff, 0x08fd07eb, 0x05c804b5, 0x02920170, 0x00500030, 0x0000056a, 0x03480126, 0x00140000,
    0x00000008, 0x033a055c, 0x066d088d, 0x0aad0ddd, 0x098b0777, 0x0aaa0008, 0x00000888, 0x04440000,
    0x00000008, 0x033a055c, 0x066d088d, 0x0aad0ddd, 0x09ab089a, 0x007d0008, 0x00000888, 0x06660000, // Palette 2: Red Ferrari. No Brake Lamp / Tyre Pattern A
@@ -314,18 +314,18 @@ const static int PAL_LOOKUP_LENGTH = (sizeof(PALETTE_EXPANSION)/sizeof(PALETTE_E
 void generate() {
    int src_offset = 111*8; // source palette to use (111)
    int col_offset = OFerrari::PAL_CYAN*8; // new colours to apply
-   uint32_t c1 = PALETTE_EXPANSION[src_offset++]; // bytes 0  - 3
-   uint32_t c2 = PALETTE_EXPANSION[src_offset++]; // bytes 4  - 7
-   uint32_t c3 = PALETTE_EXPANSION[src_offset++]; // bytes 8  - 11
-   uint32_t c4 = PALETTE_EXPANSION[src_offset++]; // bytes 12 - 15
-   uint32_t c5 = PALETTE_EXPANSION[src_offset++]; // bytes 16 - 19
-   uint32_t c6 = PALETTE_EXPANSION[src_offset++]; // bytes 20 - 23 (0x0fff0aaf)
-   uint32_t c7 = PALETTE_EXPANSION[src_offset++]; // bytes 24 - 27
-   uint32_t c8 = PALETTE_EXPANSION[src_offset++]; // bytes 28 - 31
-   uint32_t o1 = PALETTE_EXPANSION[col_offset++]; // bytes 0  - 3
-   uint32_t o2 = PALETTE_EXPANSION[col_offset++]; // bytes 4  - 7
-   uint32_t o3 = PALETTE_EXPANSION[col_offset++]; // bytes 8  - 11
-   uint32_t o4 = PALETTE_EXPANSION[col_offset++]; // bytes 12  - 15 (0x0daa0ddd)
+   Num4 c1 = PALETTE_EXPANSION[src_offset++]; // bytes 0  - 3
+   Num4 c2 = PALETTE_EXPANSION[src_offset++]; // bytes 4  - 7
+   Num4 c3 = PALETTE_EXPANSION[src_offset++]; // bytes 8  - 11
+   Num4 c4 = PALETTE_EXPANSION[src_offset++]; // bytes 12 - 15
+   Num4 c5 = PALETTE_EXPANSION[src_offset++]; // bytes 16 - 19
+   Num4 c6 = PALETTE_EXPANSION[src_offset++]; // bytes 20 - 23 (0x0fff0aaf)
+   Num4 c7 = PALETTE_EXPANSION[src_offset++]; // bytes 24 - 27
+   Num4 c8 = PALETTE_EXPANSION[src_offset++]; // bytes 28 - 31
+   Num4 o1 = PALETTE_EXPANSION[col_offset++]; // bytes 0  - 3
+   Num4 o2 = PALETTE_EXPANSION[col_offset++]; // bytes 4  - 7
+   Num4 o3 = PALETTE_EXPANSION[col_offset++]; // bytes 8  - 11
+   Num4 o4 = PALETTE_EXPANSION[col_offset++]; // bytes 12  - 15 (0x0daa0ddd)
    c6 = (c6&0xFFFF0000) | ((o4&0xFFFF0000) >> 16); // word 11 = word 6
    c7 = (c7&0x0000FFFF) | ((o3&0x0000FFFF) << 16); // word 12 = word 5
    c7 = (c7&0xFFFF0000) | ((o3&0xFFFF0000) >> 16); // word 13 = word 4

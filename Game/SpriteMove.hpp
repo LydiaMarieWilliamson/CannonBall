@@ -26,17 +26,17 @@ public:
 //		9 = Trophy Shadow
 //		A = After Effects (e.g. smoke cloud on genie animation)
 // +0x1E [Long]	Reference to the CURRENT block of animation data.
-   uint32_t anim_addr_curr;
+   Num4 anim_addr_curr;
 // +0x22 [Long]	Reference to the NEXT block of animation data.
-   uint32_t anim_addr_next;
+   Num4 anim_addr_next;
 // +0x26 [Word]	Animation Frame Number
-   int16_t anim_frame;
+   Int2 anim_frame;
 // +0x28 [Word]	Frame Delay (Before increment to next frame)
-   uint8_t frame_delay;
+   Num1 frame_delay;
 // +0x2A [Word]	Increment End Sequence Position When Set
-   uint16_t anim_props;
+   Num2 anim_props;
 // +0x2C [Word]	Animation State
-   int16_t anim_state;
+   Int2 anim_state;
    void init(oentry *s) {
       sprite = s;
       sprite->function_holder = -1;

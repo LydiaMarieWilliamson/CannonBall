@@ -21,9 +21,9 @@ public:
 //	-1 = Bonus Points Section
 //
 // A good way to quickly see the end sequence is to set this to '4' and play through the first level.
-   int8_t cur_stage;
+   Int1 cur_stage;
 // Score (Outputs Hex values directly)
-   uint32_t score;
+   Num4 score;
 // Store info on the route taken by the player
 //	+10 For each stage.
 //
@@ -35,35 +35,35 @@ public:
 //	Stage 5 = Road doesn't split on this stage
 //
 // So if we reach Stage 2 (left route) we do 10 + 8 = 18
-   uint16_t route_info;
+   Num2 route_info;
 // Stores route_info for each stage. Used by course map screen
 // First entry stores upcoming stage number
-   uint16_t routes[0x8];
+   Num2 routes[0x8];
 // Frame Counter Reset/Load Value.
 // Load frame counter with this value when the counter has decremented and expired.
 // Note: Values stored and used in hex.
-   int16_t frame_counter;
-   const static int16_t frame_reset = 30;
+   Int2 frame_counter;
+   const static Int2 frame_reset = 30;
 // Time Counter (Frames). Counts downwards from 30.
 // Used in correspondence with 0x60860.
 // Note: Values stored and used in hex.
-   int16_t time_counter;
+   Int2 time_counter;
 // Extend Play Timer.
 //
 // Loaded to 0x80 when EXTEND PLAY! banner should flash
-   int16_t extend_play_timer;
+   Int2 extend_play_timer;
 // Time data array
-   static const uint8_t TIME[];
+   static const Num1 TIME[];
 // Counters that increment with each game tick.
 // Each stage has an independent counter (increased to 15 from 5 to support continuous mode)
-   int16_t stage_counters[15];
+   Int2 stage_counters[15];
 // Set when game completed
    bool game_completed;
-   const uint8_t *lap_ms;
+   const Num1 *lap_ms;
 // Number of credits inserted
-   uint8_t credits;
+   Num1 credits;
 // Each stage has an entry for minutes, seconds and MS. (Extended to 15 from 5 to support continuous mode)
-   uint8_t stage_times[15][3];
+   Num1 stage_times[15][3];
    OStats(void);
    ~OStats(void);
    void init(bool);
@@ -71,12 +71,12 @@ public:
    void clear_route_info();
    void do_mini_map();
    void do_timers();
-   void convert_speed_score(uint16_t);
-   void update_score(uint32_t);
+   void convert_speed_score(Num2);
+   void update_score(Num4);
    void init_next_level();
 private:
 // Converted Stage Millisecond Value
-   uint8_t ms_value;
+   Num1 ms_value;
    void inc_lap_timer();
 };
 extern OStats ostats;

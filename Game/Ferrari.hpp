@@ -29,12 +29,12 @@ public:
 // Ferrari Colours
 // ───────────────
 // Palette to use (change Ferrari colours)
-   uint16_t ferrari_pal;
-   const static uint16_t PAL_RED = 2;
-   const static uint16_t PAL_BLUE = 256;
-   const static uint16_t PAL_YELLOW = 261;
-   const static uint16_t PAL_GREEN = 266;
-   const static uint16_t PAL_CYAN = 271;
+   Num2 ferrari_pal;
+   const static Num2 PAL_RED = 2;
+   const static Num2 PAL_BLUE = 256;
+   const static Num2 PAL_YELLOW = 261;
+   const static Num2 PAL_GREEN = 266;
+   const static Num2 PAL_CYAN = 271;
 // Main Switch Variables
 // ─────────────────────
    enum {
@@ -50,16 +50,16 @@ public:
       FERRARI_END_SEQ = 4,
    };
 // Which routine is in use
-   uint8_t state;
+   Num1 state;
 // Unused counter. Implemented on original game so could be useful for debug.
-   uint16_t counter;
-   int16_t steering_old;
+   Num2 counter;
+   Int2 steering_old;
    bool car_ctrl_active;
 // Car State
 //	-1	= Animation Sequence (Crash / Drive In)
 //	0	= Normal
 //	+1	= Smoke from wheels
-   int8_t car_state;
+   Int1 car_state;
    enum { CAR_ANIM_SEQ = -1, CAR_NORMAL = 0, CAR_SMOKE = 1 };
 // Auto breaking for end sequence
    bool auto_brake;
@@ -71,18 +71,18 @@ public:
 // Increments between the values
 //
 // Gets set based on what gear we're in
-   uint8_t torque_index;
-   int16_t torque;
-   int32_t revs;
+   Num1 torque_index;
+   Int2 torque;
+   Int4 revs;
 // Rev Shift Value. Normal = 1.
 // Higher values result in reaching higher revs faster!
-   uint8_t rev_shift;
+   Num1 rev_shift;
 // State of car wheels
 //	0 = On Road
 //	1 = Left Wheel Off-Road
 //	2 = Right Wheel Off-Road
 //	3 = Both Wheels Off-Road
-   uint8_t wheel_state;
+   Num1 wheel_state;
    enum {
       WHEELS_ON = 0,
       WHEELS_LEFT_OFF = 1,
@@ -93,58 +93,58 @@ public:
 //	0 = Both Wheels Have Traction
 //	1 = One Wheel Has Traction
 //	2 = No Wheels Have Traction
-   uint8_t wheel_traction;
+   Num1 wheel_traction;
    enum {
       TRACTION_ON = 0,
       TRACTION_HALF = 1,
       TRACTION_OFF = 2,
    };
 // Ferrari is slipping/skidding either after collision or round bend
-   uint16_t is_slipping;
+   Num2 is_slipping;
 // Slip Command Sent To Sound Hardware
-   uint8_t slip_sound;
+   Num1 slip_sound;
 // Stores previous value of car_increment
-   uint16_t car_inc_old;
+   Num2 car_inc_old;
 // Difference between car_x_pos and car_x_old
-   int16_t car_x_diff;
+   Int2 car_x_diff;
 // Engine Stop Flag
 // ────────────────
 // Flag set when switching back to in-game engine, to be used with revs_post_stop
 // This is used to adjust the rev boost when returning to game
-   int16_t rev_stop_flag;
+   Int2 rev_stop_flag;
 // Rev boost when we switch back to ingame engine and hand user control.
 // Set by user being on revs before initialization.
-   int16_t revs_post_stop;
-   int16_t acc_post_stop;
+   Int2 revs_post_stop;
+   Int2 acc_post_stop;
 // Engine Sounds. Probably needs to be moved
 // ─────────────────────────────────────────
 // Sound: Adjusted rev value (to be used to set pitch sound fx)
-   uint16_t rev_pitch1;
-   uint16_t rev_pitch2;
+   Num2 rev_pitch1;
+   Num2 rev_pitch2;
 // Ferrari Specific Values
 // ───────────────────────
 // *22 [Word] AI Curve Counter. Increments During Curve. Resets On Straight.
-   int16_t sprite_ai_counter;
+   Int2 sprite_ai_counter;
 // *24 [Word] AI Curve Value. 0x96 - curve_next.
-   int16_t sprite_ai_curve;
+   Int2 sprite_ai_curve;
 // *26 [Word] AI X Position Adjustment
-   int16_t sprite_ai_x;
+   Int2 sprite_ai_x;
 // *28 [Word] AI Steering Adjustment
-   int16_t sprite_ai_steer;
+   Int2 sprite_ai_steer;
 // *2A [Word] Car X Position Backup
-   int16_t sprite_car_x_bak;
+   Int2 sprite_car_x_bak;
 // *2C [Word] Wheel State
-   int16_t sprite_wheel_state;
+   Int2 sprite_wheel_state;
 // *2E [Word] Ferrari Slipping (Copy of slip counter)
-   int16_t sprite_slip_copy;
+   Int2 sprite_slip_copy;
 // *39 [Byte] Wheel Palette Offset
-   int8_t wheel_pal;
+   Int1 wheel_pal;
 // *3A [Word] Passenger Y Offset
-   int16_t sprite_pass_y;
+   Int2 sprite_pass_y;
 // *3C [Word] Wheel Frame Counter Reset
-   int16_t wheel_frame_reset;
+   Int2 wheel_frame_reset;
 // *3E [Word] Wheel Frame Counter Reset
-   int16_t wheel_counter;
+   Int2 wheel_counter;
    OFerrari(void);
    ~OFerrari(void);
    void init(oentry *, oentry *, oentry *, oentry *);
@@ -162,68 +162,68 @@ public:
    void do_skid();
 private:
 // Max speed of car
-   const static uint32_t MAX_SPEED = 0x1260000;
+   const static Num4 MAX_SPEED = 0x1260000;
 // Car Base Increment, For Movement
-   const static uint32_t CAR_BASE_INC = 0x12F;
+   const static Num4 CAR_BASE_INC = 0x12F;
 // Maximum distance to allow car to stray from road
-   const static uint16_t OFFROAD_BOUNDS = 0x1F4;
+   const static Num2 OFFROAD_BOUNDS = 0x1F4;
 // Used by set_car_x
-   int16_t road_width_old;
+   Int2 road_width_old;
 // Controls
 // ────────
-   int16_t accel_value;
-   int16_t accel_value_bak;
-   int16_t brake_value;
+   Int2 accel_value;
+   Int2 accel_value_bak;
+   Int2 brake_value;
    bool gear_value;
    bool gear_bak;
 // Trickle down adjusted acceleration values
-   int16_t acc_adjust1;
-   int16_t acc_adjust2;
-   int16_t acc_adjust3;
+   Int2 acc_adjust1;
+   Int2 acc_adjust2;
+   Int2 acc_adjust3;
 // Trickle down brake values
-   int16_t brake_adjust1;
-   int16_t brake_adjust2;
-   int16_t brake_adjust3;
+   Int2 brake_adjust1;
+   Int2 brake_adjust2;
+   Int2 brake_adjust3;
 // Calculated brake value to subtract from acc_burst.
-   int32_t brake_subtract;
+   Int4 brake_subtract;
 // Counter. When enabled, acceleration disabled
-   int8_t gear_counter;
+   Int1 gear_counter;
 // Previous rev adjustment (stored)
-   int32_t rev_adjust;
+   Int4 rev_adjust;
 // Smoke
 // ─────
 // Counter for smoke after changing gear. Values over 0 result in smoke
-   int16_t gear_smoke;
+   Int2 gear_smoke;
 // Similar to above
-   int16_t gfx_smoke;
+   Int2 gfx_smoke;
 // Set to -1 when car sharply corners and player is steering into direction of corner
-   int8_t cornering;
-   int8_t cornering_old;
-   static uint16_t torque_lookup[];
-   static const uint8_t rev_inc_lookup[];
+   Int1 cornering;
+   Int1 cornering_old;
+   static Num2 torque_lookup[];
+   static const Num1 rev_inc_lookup[];
    void logic();
    void ferrari_normal();
    void setup_ferrari_sprite();
    void setup_ferrari_bonus_sprite();
    void init_end_seq();
    void do_end_seq();
-   void tick_engine_disabled(int32_t &);
+   void tick_engine_disabled(Int4 &);
    void set_ferrari_palette();
    void set_passenger_sprite(oentry *);
    void set_passenger_frame(oentry *);
    void car_acc_brake();
-   void do_gear_torque(int16_t &);
-   void do_gear_low(int16_t &);
-   void do_gear_high(int16_t &);
-   int32_t tick_gear_change(int16_t);
-   int32_t get_speed_inc_value(uint16_t, uint32_t);
-   int32_t get_speed_dec_value(uint16_t);
+   void do_gear_torque(Int2 &);
+   void do_gear_low(Int2 &);
+   void do_gear_high(Int2 &);
+   Int4 tick_gear_change(Int2);
+   Int4 get_speed_inc_value(Num2, Num4);
+   Int4 get_speed_dec_value(Num2);
    void set_brake_subtract();
-   void finalise_revs(int32_t &, int32_t);
-   void convert_revs_speed(int32_t, int32_t &);
+   void finalise_revs(Int4 &, Int4);
+   void convert_revs_speed(Int4, Int4 &);
    void update_road_pos();
-   int32_t tick_smoke();
-   void set_wheels(uint8_t);
+   Int4 tick_smoke();
+   void set_wheels(Num1);
    inline void draw_sprite(oentry *);
 };
 extern OFerrari oferrari;

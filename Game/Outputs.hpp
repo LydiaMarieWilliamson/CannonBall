@@ -14,9 +14,9 @@
 
 struct CoinChute {
 // Coin Chute Counters
-   uint8_t counter[3];
+   Num1 counter[3];
 // Output bit
-   uint8_t output_bit;
+   Num1 output_bit;
 };
 
 class OOutputs {
@@ -30,7 +30,7 @@ public:
 //	5 = Left
 //	8 = Centre
 //	B = Right
-   uint8_t hw_motor_control, hw_motor_control_old;
+   Num1 hw_motor_control, hw_motor_control_old;
 // Digital Outputs
    enum {
       D_EXT_MUTE = 0x01, // bit 0 = External Amplifier Mute Control
@@ -47,87 +47,87 @@ public:
    ~OOutputs(void);
    void init();
    void set_mode(int);
-   bool diag_motor(int16_t input_motor, uint8_t hw_motor_limit);
-   bool calibrate_motor(int16_t input_motor, uint8_t hw_motor_limit);
-   void tick(int16_t input_motor = 0);
+   bool diag_motor(Int2 input_motor, Num1 hw_motor_limit);
+   bool calibrate_motor(Int2 input_motor, Num1 hw_motor_limit);
+   void tick(Int2 input_motor = 0);
    void writeDigitalToConsole();
-   void set_digital(uint8_t);
-   void clear_digital(uint8_t);
-   int is_set(uint8_t);
+   void set_digital(Num1);
+   void clear_digital(Num1);
+   int is_set(Num1);
    void coin_chute_out(CoinChute *chute, bool insert);
 private:
    int mode;
-   uint8_t dig_out, dig_out_old;
-   const static uint16_t STATE_INIT = 0;
-   const static uint16_t STATE_DELAY = 1;
-   const static uint16_t STATE_LEFT = 2;
-   const static uint16_t STATE_RIGHT = 3;
-   const static uint16_t STATE_CENTRE = 4;
-   const static uint16_t STATE_DONE = 5;
-   const static uint16_t STATE_EXIT = 6;
+   Num1 dig_out, dig_out_old;
+   const static Num2 STATE_INIT = 0;
+   const static Num2 STATE_DELAY = 1;
+   const static Num2 STATE_LEFT = 2;
+   const static Num2 STATE_RIGHT = 3;
+   const static Num2 STATE_CENTRE = 4;
+   const static Num2 STATE_DONE = 5;
+   const static Num2 STATE_EXIT = 6;
 // Calibration Counter
    const static int COUNTER_RESET = 300;
-   const static uint8_t MOTOR_OFF = 0;
-   const static uint8_t MOTOR_RIGHT = 0x5;
-   const static uint8_t MOTOR_CENTRE = 0x8;
-   const static uint8_t MOTOR_LEFT = 0xB;
+   const static Num1 MOTOR_OFF = 0;
+   const static Num1 MOTOR_RIGHT = 0x5;
+   const static Num1 MOTOR_CENTRE = 0x8;
+   const static Num1 MOTOR_LEFT = 0xB;
 // These are calculated during startup in the original game.
 // Here we just hardcode them, as the motor init code isn't ported.
-   const static uint8_t CENTRE_POS = 0x80;
-   const static uint8_t LEFT_LIMIT = 0xC1;
-   const static uint8_t RIGHT_LIMIT = 0x3C;
+   const static Num1 CENTRE_POS = 0x80;
+   const static Num1 LEFT_LIMIT = 0xC1;
+   const static Num1 RIGHT_LIMIT = 0x3C;
 // Motor Limit Values. Calibrated during startup.
-   int16_t limit_left;
-   int16_t limit_right;
+   Int2 limit_left;
+   Int2 limit_right;
 // Motor Centre Position. (We Fudge this for Force Feedback wheel mode.)
-   int16_t motor_centre_pos;
+   Int2 motor_centre_pos;
 // Difference between input_motor and input_motor_old
-   int16_t motor_x_change;
-   uint16_t motor_state;
+   Int2 motor_x_change;
+   Num2 motor_state;
    bool motor_enabled;
 // 0x11: Motor Control Value
-   int8_t motor_control;
+   Int1 motor_control;
 // 0x12: Movement (1 = Left, -1 = Right, 0 = None)
-   int8_t motor_movement;
+   Int1 motor_movement;
 // 0x14: Is Motor Centered
    bool is_centered;
 // 0x16: Motor X Change Latch
-   int16_t motor_change_latch;
+   Int2 motor_change_latch;
 // 0x18: Speed
-   int16_t speed;
+   Int2 speed;
 // 0x1A: Road Curve
-   int16_t curve;
+   Int2 curve;
 // 0x1E: Increment counter to index motor table for off-road/crash
-   int16_t vibrate_counter;
+   Int2 vibrate_counter;
 // 0x20: Last Motor X_Change > 8. No need to adjust further.
    bool was_small_change;
 // 0x22: Adjusted movement value based on steering 1
-   int16_t movement_adjust1;
+   Int2 movement_adjust1;
 // 0x24: Adjusted movement value based on steering 2
-   int16_t movement_adjust2;
+   Int2 movement_adjust2;
 // 0x26: Adjusted movement value based on steering 3
-   int16_t movement_adjust3;
+   Int2 movement_adjust3;
 // Counter control for motor tests
-   int16_t counter;
+   Int2 counter;
 // Columns for output
-   uint16_t col1, col2;
-   void diag_left(int16_t input_motor, uint8_t hw_motor_limit);
-   void diag_right(int16_t input_motor, uint8_t hw_motor_limit);
-   void diag_centre(int16_t input_motor, uint8_t hw_motor_limit);
+   Num2 col1, col2;
+   void diag_left(Int2 input_motor, Num1 hw_motor_limit);
+   void diag_right(Int2 input_motor, Num1 hw_motor_limit);
+   void diag_centre(Int2 input_motor, Num1 hw_motor_limit);
    void diag_done();
-   void calibrate_left(int16_t input_motor, uint8_t hw_motor_limit);
-   void calibrate_right(int16_t input_motor, uint8_t hw_motor_limit);
-   void calibrate_centre(int16_t input_motor, uint8_t hw_motor_limit);
+   void calibrate_left(Int2 input_motor, Num1 hw_motor_limit);
+   void calibrate_right(Int2 input_motor, Num1 hw_motor_limit);
+   void calibrate_centre(Int2 input_motor, Num1 hw_motor_limit);
    void calibrate_done();
-   void do_motors(const int MODE, int16_t input_motor);
+   void do_motors(const int MODE, Int2 input_motor);
    void car_moving(const int MODE);
    void car_stationary();
    void adjust_motor();
    void do_motor_crash();
    void do_motor_offroad();
-   void set_value(const uint8_t *, uint8_t);
+   void set_value(const Num1 *, Num1);
    void done();
-   void motor_output(uint8_t cmd);
+   void motor_output(Num1 cmd);
    void do_vibrate_upright();
    void do_vibrate_mini();
 };

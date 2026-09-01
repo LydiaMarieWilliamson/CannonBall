@@ -52,9 +52,9 @@ void OBonus::do_bonus_text() {
 // At: 9a9c
 void OBonus::init_bonus_text() {
    bonus_state = BONUS_TEXT_SECONDS;
-   int16_t time_counter_bak = ostats.time_counter << 8;
+   Int2 time_counter_bak = ostats.time_counter << 8;
    ostats.time_counter = 0x30;
-   uint16_t total_time = 0;
+   Num2 total_time = 0;
    if (outrun.cannonball_mode == Outrun::MODE_ORIGINAL) {
    // Add milliseconds remaining from previous stage times
       for (int i = 0; i < 5; i++) {
@@ -68,9 +68,9 @@ void OBonus::init_bonus_text() {
    }
 // So 60 seconds remaining on the clock and 3 from lap_seconds would be 0x0603
 // Extract individual 3 digits
-   uint16_t digit_mid = (time_counter_bak >> 8&0x0F)*10;
-   uint16_t digit_top = (time_counter_bak >> 12&0x0F)*100;
-   uint16_t digit_bot = (time_counter_bak&0x0F);
+   Num2 digit_mid = (time_counter_bak >> 8&0x0F)*10;
+   Num2 digit_top = (time_counter_bak >> 12&0x0F)*100;
+   Num2 digit_bot = (time_counter_bak&0x0F);
 // Write them back to final bonus seconds value
    bonus_secs = digit_bot + digit_mid + digit_top;
 // Write to text layer
@@ -80,10 +80,10 @@ void OBonus::init_bonus_text() {
    ohud.blit_text1(TEXT1_BONUS_X); // Print 'X' symbol after SEC
    ohud.blit_text1(TEXT1_BONUS_PTS); // Print "PTS"
 // Blit big 100K number
-   uint32_t src_addr = TEXT1_BONUS_100K;
-   uint32_t dst_addr = 0x11065A;
-   int8_t count = roms.rom0.read8(&src_addr);
-   for (int8_t i = 0; i <= count; i++)
+   Num4 src_addr = TEXT1_BONUS_100K;
+   Num4 dst_addr = 0x11065A;
+   Int1 count = roms.rom0.read8(&src_addr);
+   for (Int1 i = 0; i <= count; i++)
       ohud.blit_large_digit(&dst_addr, (roms.rom0.read8(&src_addr) - 0x30) << 1);
    blit_bonus_secs();
 }
@@ -112,13 +112,13 @@ void OBonus::decrement_bonus_secs() {
 // Blit large yellow second remaining value e.g.: 23.3
 // At: 9b7c
 void OBonus::blit_bonus_secs() {
-   const uint8_t COL2 = 0x80;
-   const uint16_t TILE_DOT = 0x8C2E;
-   const uint16_t TILE_ZERO = 0x8420;
-   uint32_t d1 = (bonus_secs/100) << 8;
-   uint32_t d4 = (bonus_secs/100)*100;
-   uint32_t d2 = (bonus_secs - d4)/10;
-   uint32_t d3 = bonus_secs - d4;
+   const Num1 COL2 = 0x80;
+   const Num2 TILE_DOT = 0x8C2E;
+   const Num2 TILE_ZERO = 0x8420;
+   Num4 d1 = (bonus_secs/100) << 8;
+   Num4 d4 = (bonus_secs/100)*100;
+   Num4 d2 = (bonus_secs - d4)/10;
+   Num4 d3 = bonus_secs - d4;
    d4 = d2;
    d2 <<= 4;
    d4 *= 10;
@@ -128,7 +128,7 @@ void OBonus::blit_bonus_secs() {
    d3 = (d1&0xF) << 1;
    d2 = (d1&0xF0) >> 3;
    d1 = (d1&0xF00) >> 7;
-   uint32_t text_addr = 0x110644;
+   Num4 text_addr = 0x110644;
 // Blit Digit 1
    if (d1) {
       ohud.blit_large_digit(&text_addr, d1);

@@ -19,7 +19,7 @@ public:
    void disable();
    bool start_frame();
    bool finalize_frame();
-   void draw_frame(uint16_t *pixels);
+   void draw_frame(Num2 *pixels);
 private:
 // SDL2 window
    SDL_Window *window;

@@ -17,10 +17,10 @@
 #ifdef COMPILE_SOUND_CODE
 
 struct wav_t {
-   uint8_t loaded;
-   int16_t *data;
-   uint32_t pos;
-   uint32_t length;
+   Num1 loaded;
+   Int2 *data;
+   Num4 pos;
+   Num4 length;
 };
 
 class Audio {
@@ -38,18 +38,18 @@ private:
 // Enable/Disable Sound
    bool sound_enabled;
 // Stereo. Could be changed, requires some recoding.
-   static const uint32_t CHANNELS = 2;
+   static const Num4 CHANNELS = 2;
 // 16-Bit Audio Output. Could be changed, requires some recoding.
-   static const uint32_t BITS = 16;
+   static const Num4 BITS = 16;
 // Low value  = Responsiveness, chance of drop out.
 // High value = Laggy, less chance of drop out.
-   static const uint32_t SAMPLES = 1024;
+   static const Num4 SAMPLES = 1024;
 // Latency (in ms) and thus target buffer size
    const static int SND_DELAY = 20;
 // allowed "spread" between too many and too few samples in the buffer (ms)
    const static int SND_SPREAD = 7;
 // Buffer used to mix PCM and YM channels together
-   uint16_t *mix_buffer;
+   Num2 *mix_buffer;
    wav_t wavfile;
 // Estimated gap
    int gap_est;

@@ -11,7 +11,7 @@
 
 OLogo ologo;
 
-const uint8_t OLogo::bg_pal[] = { 0x9A, 0x9B, 0x9C, 0x9D, 0x9E, 0x9A, 0x9B, 0x9C };
+const Num1 OLogo::bg_pal[] = { 0x9A, 0x9B, 0x9C, 0x9D, 0x9E, 0x9A, 0x9B, 0x9C };
 
 OLogo::OLogo() {
 }
@@ -19,7 +19,7 @@ OLogo::OLogo() {
 OLogo::~OLogo() {
 }
 
-void OLogo::enable(int16_t y) {
+void OLogo::enable(Int2 y) {
    y_off = -y;
    entry_start = OSprites::SPRITE_ENTRIES - 0x10;
 // Enable block of sprites
@@ -158,8 +158,8 @@ void OLogo::setup_sprite7() {
 void OLogo::sprite_logo_bg() {
    oentry *e = &osprites.jump_table[entry_start + 0];
    e->reload++;
-   uint16_t d0 = e->reload;
-   uint16_t d1 = d0 - 1;
+   Num2 d0 = e->reload;
+   Num2 d1 = d0 - 1;
    d1 ^= d0;
 // Map new palette
    if (d1&BIT_3) {
@@ -182,19 +182,19 @@ void OLogo::sprite_logo_bird1() {
    oentry *e = &osprites.jump_table[entry_start + 2];
    e->counter++;
 // Set Bird X Value
-   uint16_t index = (e->counter << 1)&0xFF;
-   int8_t bird_x = roms.rom0.read8(DATA_MOVEMENT + index); // Note we sign the value here
-   int8_t zoom = bird_x >> 3;
+   Num2 index = (e->counter << 1)&0xFF;
+   Int1 bird_x = roms.rom0.read8(DATA_MOVEMENT + index); // Note we sign the value here
+   Int1 zoom = bird_x >> 3;
    e->x = (bird_x >> 3) + 8;
 // Set Zoom Lookup
    e->zoom = zoom + 0x70;
 // Set Bird Y Value
    index = (index << 1)&0xFF;
-   int8_t bird_y = roms.rom0.read8(DATA_MOVEMENT + index); // Note we sign the value here
+   Int1 bird_y = roms.rom0.read8(DATA_MOVEMENT + index); // Note we sign the value here
    e->y = (bird_y >> 5) + 0x4E - y_off;
 // Set Frame
    e->reload++;
-   uint16_t frame = (e->reload&4) >> 2;
+   Num2 frame = (e->reload&4) >> 2;
    e->addr = frame? outrun.adr.sprite_logo_bird2: outrun.adr.sprite_logo_bird1;
    osprites.do_spr_order_shadows(e);
 }
@@ -203,19 +203,19 @@ void OLogo::sprite_logo_bird2() {
    oentry *e = &osprites.jump_table[entry_start + 3];
    e->counter++;
 // Set Bird X Value
-   uint16_t index = (e->counter << 1)&0xFF;
-   int8_t bird_x = roms.rom0.read8(DATA_MOVEMENT + index); // Note we sign the value here
-   int8_t zoom = bird_x >> 3;
+   Num2 index = (e->counter << 1)&0xFF;
+   Int1 bird_x = roms.rom0.read8(DATA_MOVEMENT + index); // Note we sign the value here
+   Int1 zoom = bird_x >> 3;
    e->x = (bird_x >> 3) - 2; // Different from sprite_logo_bird1
 // Set Zoom Lookup
    e->zoom = zoom + 0x70;
 // Set Bird Y Value
    index = (index << 1)&0xFF;
-   int8_t bird_y = roms.rom0.read8(DATA_MOVEMENT + index); // Note we sign the value here
+   Int1 bird_y = roms.rom0.read8(DATA_MOVEMENT + index); // Note we sign the value here
    e->y = (bird_y >> 5) + 0x52 - y_off; // Different from sprite_logo_bird1
 // Set Frame
    e->reload++;
-   uint16_t frame = (e->reload&4) >> 2;
+   Num2 frame = (e->reload&4) >> 2;
    e->addr = frame? outrun.adr.sprite_logo_bird2: outrun.adr.sprite_logo_bird1;
    osprites.do_spr_order_shadows(e);
 }

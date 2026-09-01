@@ -40,7 +40,7 @@ public:
    void check_road_bonus();
    void set_steering_bonus();
 private:
-   int8_t last_stage;
+   Int1 last_stage;
    void check_road();
    void set_steering();
 };

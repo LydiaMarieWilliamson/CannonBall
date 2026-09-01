@@ -48,16 +48,16 @@ hwsprites::hwsprites() {
 hwsprites::~hwsprites() {
 }
 
-void hwsprites::init(const uint8_t *src_sprites) {
+void hwsprites::init(const Num1 *src_sprites) {
    reset();
    if (src_sprites) {
    // Convert S16 tiles to a more useable format
-      const uint8_t *spr = src_sprites;
-      for (uint32_t i = 0; i < SPRITES_LENGTH; i++) {
-         uint8_t d3 = *spr++;
-         uint8_t d2 = *spr++;
-         uint8_t d1 = *spr++;
-         uint8_t d0 = *spr++;
+      const Num1 *spr = src_sprites;
+      for (Num4 i = 0; i < SPRITES_LENGTH; i++) {
+         Num1 d3 = *spr++;
+         Num1 d2 = *spr++;
+         Num1 d1 = *spr++;
+         Num1 d0 = *spr++;
          sprites[i] = (d0 << 24) | (d1 << 16) | (d2 << 8) | d3;
       }
    }
@@ -65,7 +65,7 @@ void hwsprites::init(const uint8_t *src_sprites) {
 
 void hwsprites::reset() {
 // Clear Sprite RAM buffers
-   for (uint16_t i = 0; i < SPRITE_RAM_SIZE; i++) {
+   for (Num2 i = 0; i < SPRITE_RAM_SIZE; i++) {
       ram[i] = 0;
       ramBuff[i] = 0;
    }
@@ -89,25 +89,25 @@ void hwsprites::set_x_clip(bool on) {
    }
 }
 
-uint8_t hwsprites::read(const uint16_t adr) {
-   uint16_t a = adr >> 1;
+Num1 hwsprites::read(const Num2 adr) {
+   Num2 a = adr >> 1;
    if ((adr&1) == 1)
       return ram[a]&0xff;
    else
       return ram[a] >> 8;
 }
 
-void hwsprites::write(const uint16_t adr, const uint16_t data) {
+void hwsprites::write(const Num2 adr, const Num2 data) {
    ram[adr >> 1] = data;
 }
 
 // Copy back buffer to main ram, ready for blit
 void hwsprites::swap() {
-   uint16_t *src = (uint16_t *)ram;
-   uint16_t *dst = (uint16_t *)ramBuff;
+   Num2 *src = (Num2 *)ram;
+   Num2 *dst = (Num2 *)ramBuff;
 // swap the halves of the road RAM
-   for (uint16_t i = 0; i < SPRITE_RAM_SIZE; i++) {
-      uint16_t temp = *src;
+   for (Num2 i = 0; i < SPRITE_RAM_SIZE; i++) {
+      Num2 temp = *src;
       *src++ = *dst;
       *dst++ = temp;
    }
@@ -145,30 +145,30 @@ void hwsprites::swap() {
 }
 #endif
 
-void hwsprites::render(const uint8_t priority) {
-   const uint32_t numbanks = SPRITES_LENGTH/0x10000;
-   for (uint16_t data = 0; data < SPRITE_RAM_SIZE; data += 8) {
+void hwsprites::render(const Num1 priority) {
+   const Num4 numbanks = SPRITES_LENGTH/0x10000;
+   for (Num2 data = 0; data < SPRITE_RAM_SIZE; data += 8) {
    // stop when we hit the end of sprite list
       if ((ramBuff[data + 0]&0x8000) != 0) break;
-      uint32_t sprpri = 1 << ((ramBuff[data + 3] >> 12)&3);
+      Num4 sprpri = 1 << ((ramBuff[data + 3] >> 12)&3);
       if (sprpri != priority) continue;
    // if hidden, or top greater than/equal to bottom, or invalid bank, punt
-      int16_t hide = (ramBuff[data + 0]&0x5000);
-      int32_t height = (ramBuff[data + 5] >> 8) + 1;
+      Int2 hide = (ramBuff[data + 0]&0x5000);
+      Int4 height = (ramBuff[data + 5] >> 8) + 1;
       if (hide != 0 || height == 0) continue;
-      int16_t bank = (ramBuff[data + 0] >> 9)&7;
-      int32_t top = (ramBuff[data + 0]&0x1ff) - 0x100;
-      uint32_t addr = ramBuff[data + 1];
-      int32_t pitch = ((ramBuff[data + 2] >> 1) | ((ramBuff[data + 4]&0x1000) << 3)) >> 8;
-      int32_t xpos = ramBuff[data + 6]; // moved from original structure to accomodate widescreen
-      uint8_t shadow = (ramBuff[data + 3] >> 14)&1;
-      int32_t vzoom = ramBuff[data + 3]&0x7ff;
-      int32_t ydelta = ((ramBuff[data + 4]&0x8000) != 0)? 1: -1;
-      int32_t flip = (~ramBuff[data + 4] >> 14)&1;
-      int32_t xdelta = ((ramBuff[data + 4]&0x2000) != 0)? 1: -1;
-      int32_t hzoom = ramBuff[data + 4]&0x7ff;
-      int32_t color = COLOR_BASE + ((ramBuff[data + 5]&0x7f) << 4);
-      int32_t x, y, ytarget, yacc = 0, pix;
+      Int2 bank = (ramBuff[data + 0] >> 9)&7;
+      Int4 top = (ramBuff[data + 0]&0x1ff) - 0x100;
+      Num4 addr = ramBuff[data + 1];
+      Int4 pitch = ((ramBuff[data + 2] >> 1) | ((ramBuff[data + 4]&0x1000) << 3)) >> 8;
+      Int4 xpos = ramBuff[data + 6]; // moved from original structure to accomodate widescreen
+      Num1 shadow = (ramBuff[data + 3] >> 14)&1;
+      Int4 vzoom = ramBuff[data + 3]&0x7ff;
+      Int4 ydelta = ((ramBuff[data + 4]&0x8000) != 0)? 1: -1;
+      Int4 flip = (~ramBuff[data + 4] >> 14)&1;
+      Int4 xdelta = ((ramBuff[data + 4]&0x2000) != 0)? 1: -1;
+      Int4 hzoom = ramBuff[data + 4]&0x7ff;
+      Int4 color = COLOR_BASE + ((ramBuff[data + 5]&0x7f) << 4);
+      Int4 x, y, ytarget, yacc = 0, pix;
    // adjust X coordinate
    // note: the threshhold below is a guess. If it is too high, rachero will draw garbage
    // If it is too low, smgp won't draw the bottom part of the road
@@ -180,7 +180,7 @@ void hwsprites::render(const uint8_t priority) {
    // clamp to within the memory region size
       if (numbanks)
          bank %= numbanks;
-      const uint32_t *spritedata = sprites + 0x10000*bank;
+      const Num4 *spritedata = sprites + 0x10000*bank;
    // clamp to a maximum of 8x (not 100% confirmed)
       if (vzoom < 0x40) vzoom = 0x40;
       if (hzoom < 0x40) hzoom = 0x40;
@@ -199,14 +199,14 @@ void hwsprites::render(const uint8_t priority) {
       for (y = top; y != ytarget; y += ydelta) {
       // skip drawing if not within the cliprect
          if (y >= 0 && y < config.s16_height) {
-            uint16_t *pPixel = &video.pixels[y*config.s16_width];
-            int32_t xacc = 0;
+            Num2 *pPixel = &video.pixels[y*config.s16_width];
+            Int4 xacc = 0;
          // non-flipped case
             if (flip == 0) {
             // start at the word before because we preincrement below
                ramBuff[data + 7] = (addr - 1);
                for (x = xpos; (xdelta > 0 && x < config.s16_width) || (xdelta < 0 && x >= 0); ) {
-                  uint32_t pixels = spritedata[++ramBuff[data + 7]]; // Add to base sprite data the vzoom value
+                  Num4 pixels = spritedata[++ramBuff[data + 7]]; // Add to base sprite data the vzoom value
                // draw four pixels
                   pix = (pixels >> 28)&0xf;
                   while (xacc < 0x200) {
@@ -274,7 +274,7 @@ void hwsprites::render(const uint8_t priority) {
             // start at the word after because we predecrement below
                ramBuff[data + 7] = (addr + 1);
                for (x = xpos; (xdelta > 0 && x < config.s16_width) || (xdelta < 0 && x >= 0); ) {
-                  uint32_t pixels = spritedata[--ramBuff[data + 7]];
+                  Num4 pixels = spritedata[--ramBuff[data + 7]];
                // draw four pixels
                   pix = (pixels >> 0)&0xf;
                   while (xacc < 0x200) {

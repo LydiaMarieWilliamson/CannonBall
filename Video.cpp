@@ -42,7 +42,7 @@ int Video::init(Roms *roms, video_settings_t *settings) {
       return 0;
 // Internal pixel array. The size of this is always constant
    if (pixels) delete[]pixels;
-   pixels = new uint16_t[config.s16_width*config.s16_height];
+   pixels = new Num2[config.s16_width*config.s16_height];
 // Convert S16 tiles to a more useable format
    tile_layer->init(roms->tiles.rom, config.video.hires != 0);
    clear_tile_ram();
@@ -150,26 +150,26 @@ bool Video::supports_vsync() {
 // Text Handling Code
 // ──────────────────
 void Video::clear_text_ram() {
-   for (uint32_t i = 0; i <= 0xFFF; i++)
+   for (Num4 i = 0; i <= 0xFFF; i++)
       tile_layer->text_ram[i] = 0;
 }
 
-void Video::write_text8(uint32_t addr, const uint8_t data) {
+void Video::write_text8(Num4 addr, const Num1 data) {
    tile_layer->text_ram[addr&0xFFF] = data;
 }
 
-void Video::write_text16(uint32_t *addr, const uint16_t data) {
+void Video::write_text16(Num4 *addr, const Num2 data) {
    tile_layer->text_ram[*addr&0xFFF] = (data >> 8)&0xFF;
    tile_layer->text_ram[(*addr + 1)&0xFFF] = data&0xFF;
    *addr += 2;
 }
 
-void Video::write_text16(uint32_t addr, const uint16_t data) {
+void Video::write_text16(Num4 addr, const Num2 data) {
    tile_layer->text_ram[addr&0xFFF] = (data >> 8)&0xFF;
    tile_layer->text_ram[(addr + 1)&0xFFF] = data&0xFF;
 }
 
-void Video::write_text32(uint32_t *addr, const uint32_t data) {
+void Video::write_text32(Num4 *addr, const Num4 data) {
    tile_layer->text_ram[*addr&0xFFF] = (data >> 24)&0xFF;
    tile_layer->text_ram[(*addr + 1)&0xFFF] = (data >> 16)&0xFF;
    tile_layer->text_ram[(*addr + 2)&0xFFF] = (data >> 8)&0xFF;
@@ -177,40 +177,40 @@ void Video::write_text32(uint32_t *addr, const uint32_t data) {
    *addr += 4;
 }
 
-void Video::write_text32(uint32_t addr, const uint32_t data) {
+void Video::write_text32(Num4 addr, const Num4 data) {
    tile_layer->text_ram[addr&0xFFF] = (data >> 24)&0xFF;
    tile_layer->text_ram[(addr + 1)&0xFFF] = (data >> 16)&0xFF;
    tile_layer->text_ram[(addr + 2)&0xFFF] = (data >> 8)&0xFF;
    tile_layer->text_ram[(addr + 3)&0xFFF] = data&0xFF;
 }
 
-uint8_t Video::read_text8(uint32_t addr) {
+Num1 Video::read_text8(Num4 addr) {
    return tile_layer->text_ram[addr&0xFFF];
 }
 
 // Tile Handling Code
 // ──────────────────
 void Video::clear_tile_ram() {
-   for (uint32_t i = 0; i <= 0xFFFF; i++)
+   for (Num4 i = 0; i <= 0xFFFF; i++)
       tile_layer->tile_ram[i] = 0;
 }
 
-void Video::write_tile8(uint32_t addr, const uint8_t data) {
+void Video::write_tile8(Num4 addr, const Num1 data) {
    tile_layer->tile_ram[addr&0xFFFF] = data;
 }
 
-void Video::write_tile16(uint32_t *addr, const uint16_t data) {
+void Video::write_tile16(Num4 *addr, const Num2 data) {
    tile_layer->tile_ram[*addr&0xFFFF] = (data >> 8)&0xFF;
    tile_layer->tile_ram[(*addr + 1)&0xFFFF] = data&0xFF;
    *addr += 2;
 }
 
-void Video::write_tile16(uint32_t addr, const uint16_t data) {
+void Video::write_tile16(Num4 addr, const Num2 data) {
    tile_layer->tile_ram[addr&0xFFFF] = (data >> 8)&0xFF;
    tile_layer->tile_ram[(addr + 1)&0xFFFF] = data&0xFF;
 }
 
-void Video::write_tile32(uint32_t *addr, const uint32_t data) {
+void Video::write_tile32(Num4 *addr, const Num4 data) {
    tile_layer->tile_ram[*addr&0xFFFF] = (data >> 24)&0xFF;
    tile_layer->tile_ram[(*addr + 1)&0xFFFF] = (data >> 16)&0xFF;
    tile_layer->tile_ram[(*addr + 2)&0xFFFF] = (data >> 8)&0xFF;
@@ -218,42 +218,42 @@ void Video::write_tile32(uint32_t *addr, const uint32_t data) {
    *addr += 4;
 }
 
-void Video::write_tile32(uint32_t addr, const uint32_t data) {
+void Video::write_tile32(Num4 addr, const Num4 data) {
    tile_layer->tile_ram[addr&0xFFFF] = (data >> 24)&0xFF;
    tile_layer->tile_ram[(addr + 1)&0xFFFF] = (data >> 16)&0xFF;
    tile_layer->tile_ram[(addr + 2)&0xFFFF] = (data >> 8)&0xFF;
    tile_layer->tile_ram[(addr + 3)&0xFFFF] = data&0xFF;
 }
 
-uint8_t Video::read_tile8(uint32_t addr) {
+Num1 Video::read_tile8(Num4 addr) {
    return tile_layer->tile_ram[addr&0xFFFF];
 }
 
 // Sprite Handling Code
 // ────────────────────
-void Video::write_sprite16(uint32_t *addr, const uint16_t data) {
+void Video::write_sprite16(Num4 *addr, const Num2 data) {
    sprite_layer->write(*addr&0xfff, data);
    *addr += 2;
 }
 
 // Palette Handling Code
 // ─────────────────────
-void Video::write_pal8(uint32_t *palAddr, const uint8_t data) {
+void Video::write_pal8(Num4 *palAddr, const Num1 data) {
    palette[*palAddr&0x1fff] = data;
    refresh_palette(*palAddr&0x1fff);
    *palAddr += 1;
 }
 
-void Video::write_pal16(uint32_t *palAddr, const uint16_t data) {
-   uint32_t adr = *palAddr&0x1fff;
+void Video::write_pal16(Num4 *palAddr, const Num2 data) {
+   Num4 adr = *palAddr&0x1fff;
    palette[adr] = (data >> 8)&0xFF;
    palette[adr + 1] = data&0xFF;
    refresh_palette(adr);
    *palAddr += 2;
 }
 
-void Video::write_pal32(uint32_t *palAddr, const uint32_t data) {
-   uint32_t adr = *palAddr&0x1fff;
+void Video::write_pal32(Num4 *palAddr, const Num4 data) {
+   Num4 adr = *palAddr&0x1fff;
    palette[adr] = (data >> 24)&0xFF;
    palette[adr + 1] = (data >> 16)&0xFF;
    palette[adr + 2] = (data >> 8)&0xFF;
@@ -263,7 +263,7 @@ void Video::write_pal32(uint32_t *palAddr, const uint32_t data) {
    *palAddr += 4;
 }
 
-void Video::write_pal32(uint32_t adr, const uint32_t data) {
+void Video::write_pal32(Num4 adr, const Num4 data) {
    adr &= 0x1fff;
    palette[adr] = (data >> 24)&0xFF;
    palette[adr + 1] = (data >> 16)&0xFF;
@@ -273,34 +273,34 @@ void Video::write_pal32(uint32_t adr, const uint32_t data) {
    refresh_palette(adr + 2);
 }
 
-uint8_t Video::read_pal8(uint32_t palAddr) {
+Num1 Video::read_pal8(Num4 palAddr) {
    return palette[palAddr&0x1fff];
 }
 
-uint16_t Video::read_pal16(uint32_t palAddr) {
-   uint32_t adr = palAddr&0x1fff;
+Num2 Video::read_pal16(Num4 palAddr) {
+   Num4 adr = palAddr&0x1fff;
    return (palette[adr] << 8) | palette[adr + 1];
 }
 
-uint16_t Video::read_pal16(uint32_t *palAddr) {
-   uint32_t adr = *palAddr&0x1fff;
+Num2 Video::read_pal16(Num4 *palAddr) {
+   Num4 adr = *palAddr&0x1fff;
    *palAddr += 2;
    return (palette[adr] << 8) | palette[adr + 1];
 }
 
-uint32_t Video::read_pal32(uint32_t *palAddr) {
-   uint32_t adr = *palAddr&0x1fff;
+Num4 Video::read_pal32(Num4 *palAddr) {
+   Num4 adr = *palAddr&0x1fff;
    *palAddr += 4;
    return (palette[adr] << 24) | (palette[adr + 1] << 16) | (palette[adr + 2] << 8) | palette[adr + 3];
 }
 
 // Convert internal System 16 RRRR GGGG BBBB format palette to renderer output format
-void Video::refresh_palette(uint32_t palAddr) {
+void Video::refresh_palette(Num4 palAddr) {
    palAddr &= ~1;
-   uint32_t a = (palette[palAddr] << 8) | palette[palAddr + 1];
-   uint32_t r = (a&0x000f) << 1; // r rrr0
-   uint32_t g = (a&0x00f0) >> 3; // g ggg0
-   uint32_t b = (a&0x0f00) >> 7; // b bbb0
+   Num4 a = (palette[palAddr] << 8) | palette[palAddr + 1];
+   Num4 r = (a&0x000f) << 1; // r rrr0
+   Num4 g = (a&0x00f0) >> 3; // g ggg0
+   Num4 b = (a&0x0f00) >> 7; // b bbb0
    if ((a&0x1000) != 0)
       r |= 1; // r rrrr
    if ((a&0x2000) != 0)

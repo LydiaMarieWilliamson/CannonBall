@@ -59,7 +59,7 @@ void OAttractAI::tick_ai_enhanced() {
    }
 // Steering
 // ────────
-   int16_t future_x;
+   Int2 future_x;
 // Select road at road split
    if (oinitengine.rd_split_state > 0 && oinitengine.rd_split_state < 8)
       future_x = oferrari.sprite_ai_x? oroad.road0_h[0x40]: oroad.road1_h[0x40];
@@ -79,13 +79,13 @@ void OAttractAI::tick_ai_enhanced() {
 // ─────────────────────────────────────────────────────────────
    oinputs.brake_adjust = 0;
    if (oinitengine.car_increment >> 16 >= 0x80) {
-      int16_t x = oinitengine.car_x_pos;
-      uint16_t road_width = oroad.road_width >> 16;
+      Int2 x = oinitengine.car_x_pos;
+      Num2 road_width = oroad.road_width >> 16;
    // Single Road
       if (oroad.road_ctrl == ORoad::ROAD_R0 || oroad.road_ctrl == ORoad::ROAD_R1) {
          x += road_width;
-         static int16_t NEAR = 0xD4 - 0x4A;
-         static int16_t FAR = 0x104 - 0x4A;
+         static Int2 NEAR = 0xD4 - 0x4A;
+         static Int2 FAR = 0x104 - 0x4A;
       // Don't break
          if (x > -NEAR && x <= NEAR) oinputs.brake_adjust = 0;
       // Both Wheels Off
@@ -99,7 +99,7 @@ void OAttractAI::tick_ai_enhanced() {
       else if (oroad.road_ctrl == ORoad::ROAD_BOTH_P0 || oroad.road_ctrl == ORoad::ROAD_BOTH_P1) {
       // Roads are Joined
          if (road_width <= 0xFF) {
-            static int16_t FAR = 0x104 - 0x4A;
+            static Int2 FAR = 0x104 - 0x4A;
             road_width += FAR;
             if (x < 0) x = -x;
             if (x > road_width)
@@ -160,7 +160,7 @@ void OAttractAI::tick_ai() {
       if (++oferrari.sprite_ai_counter == 1) {
       // Set road curve value based on hard coded road data.
       // High value = Sharper Bend
-         int16_t sprite_ai_curve = 0x96 - oinitengine.road_curve_next;
+         Int2 sprite_ai_curve = 0x96 - oinitengine.road_curve_next;
          if (sprite_ai_curve >= 0)
             oferrari.sprite_ai_curve = sprite_ai_curve;
       }
@@ -182,7 +182,7 @@ void OAttractAI::tick_ai() {
 void OAttractAI::check_road() {
 // Process Upcoming Curve
 // ──────────────────────
-   const int16_t STEER = 0xb4;
+   const Int2 STEER = 0xb4;
 // Upcoming Road: Straight or No Change
    if (oinitengine.road_type_next <= OInitEngine::ROAD_STRAIGHT) {
       if (oinitengine.road_type_next == OInitEngine::ROAD_STRAIGHT) {
@@ -206,7 +206,7 @@ void OAttractAI::check_road() {
    if (oinitengine.rd_split_state > 0 && oinitengine.rd_split_state < 4) {
    // Route information for stages
    // 0 = Turn Left, 1 = Turn Right
-      const uint8_t ROUTE_INFO[] = { 0, 1, 1, 0, 0 };
+      const Num1 ROUTE_INFO[] = { 0, 1, 1, 0, 0 };
       if (ROUTE_INFO[ostats.cur_stage])
          oferrari.sprite_ai_x = -oferrari.sprite_ai_x;
    }
@@ -216,11 +216,11 @@ void OAttractAI::check_road() {
 //
 // At: a3c2
 void OAttractAI::set_steering() {
-   int16_t steering = 0; // d0
-   int16_t car_x_diff = 0; // d1
-   int16_t x_change = 0; // d2
-   int16_t x = 0; // d3
-   int16_t car_x = 0; // d4
+   Int2 steering = 0; // d0
+   Int2 car_x_diff = 0; // d1
+   Int2 x_change = 0; // d2
+   Int2 x = 0; // d3
+   Int2 car_x = 0; // d4
 // Mid Road Split
    if (oinitengine.rd_split_state >= 4) {
       x_change = oroad.road_width >> 16; // d2
@@ -324,10 +324,10 @@ void OAttractAI::check_road_bonus() {
 //
 // At: a510
 void OAttractAI::set_steering_bonus() {
-   int16_t steering = oinitengine.car_x_pos; // d4
+   Int2 steering = oinitengine.car_x_pos; // d4
 // Road Split During Bonus Mode
    if (oinitengine.rd_split_state >= 0x14) {
-      int16_t road_width = oroad.road_width >> 16; // d2
+      Int2 road_width = oroad.road_width >> 16; // d2
    // Right Route Selected
       if (oinitengine.route_selected == 0)
          steering += road_width;

@@ -17,7 +17,7 @@ SoundChip::~SoundChip() {
    delete[]buffer;
 }
 
-void SoundChip::init(uint8_t channels, int32_t sample_freq, int32_t fps) {
+void SoundChip::init(Num1 channels, Int4 sample_freq, Int4 fps) {
    this->fps = fps;
    this->sample_freq = sample_freq;
    this->channels = channels;
@@ -25,34 +25,34 @@ void SoundChip::init(uint8_t channels, int32_t sample_freq, int32_t fps) {
    buffer_size = frame_size*channels;
    if (initalized)
       delete[]buffer;
-   buffer = new int16_t[buffer_size];
+   buffer = new Int2[buffer_size];
    initalized = true;
 }
 
 // Set soundchip volume (0 = Off, 10 = Loudest)
-void SoundChip::set_volume(uint8_t v) {
+void SoundChip::set_volume(Num1 v) {
    if (v > 10)
       return;
    volume = (float)(v/10.0);
 }
 
 void SoundChip::clear_buffer() {
-   for (uint32_t i = 0; i < buffer_size; i++)
+   for (Num4 i = 0; i < buffer_size; i++)
       buffer[i] = 0;
 }
 
-void SoundChip::write_buffer(const uint8_t channel, uint32_t address, int16_t value) {
+void SoundChip::write_buffer(const Num1 channel, Num4 address, Int2 value) {
 #if 0
-   buffer[channel + (address*channels)] = (int16_t)(value*volume); // Unused for now
+   buffer[channel + (address*channels)] = (Int2)(value*volume); // Unused for now
 #else
    buffer[channel + (address*channels)] = value;
 #endif
 }
 
-int16_t SoundChip::read_buffer(const uint8_t channel, uint32_t address) {
+Int2 SoundChip::read_buffer(const Num1 channel, Num4 address) {
    return buffer[channel + (address*channels)];
 }
 
-int16_t *SoundChip::get_buffer() {
+Int2 *SoundChip::get_buffer() {
    return buffer;
 }

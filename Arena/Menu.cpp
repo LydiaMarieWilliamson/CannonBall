@@ -21,14 +21,14 @@
 #include "Arena/Laps.hpp"
 
 // Logo Y Position
-const static int16_t LOGO_Y = -60;
+const static Int2 LOGO_Y = -60;
 
 // Columns and rows available
-const static uint16_t COLS = 40;
-const static uint16_t ROWS = 28;
+const static Num2 COLS = 40;
+const static Num2 ROWS = 28;
 
 // Horizon Destination Position
-const static uint16_t HORIZON_DEST = 0x3A0;
+const static Num2 HORIZON_DEST = 0x3A0;
 
 Menu::Menu() {
    cabdiag = new CabDiag();
@@ -287,12 +287,12 @@ void Menu::tick_ui() {
    }
 // Advance road
    else {
-      uint32_t scroll_speed = (config.fps == 60)? config.menu.road_scroll_speed: config.menu.road_scroll_speed << 1;
+      Num4 scroll_speed = (config.fps == 60)? config.menu.road_scroll_speed: config.menu.road_scroll_speed << 1;
       if (oinitengine.car_increment < scroll_speed << 16)
          oinitengine.car_increment += (1 << 14);
       if (oinitengine.car_increment > scroll_speed << 16)
          oinitengine.car_increment = scroll_speed << 16;
-      uint32_t result = 0x12F*(oinitengine.car_increment >> 16);
+      Num4 result = 0x12F*(oinitengine.car_increment >> 16);
       oroad.road_pos_change = result;
       oroad.road_pos += result;
       if (oroad.road_pos >> 16 > ROAD_END) // loop to beginning of track data
@@ -316,9 +316,9 @@ void Menu::tick_ui() {
 }
 
 void Menu::draw_menu_options() {
-   int8_t x = 0;
+   Int1 x = 0;
 // Find central column in screen.
-   int8_t y = 13 + ((ROWS - 13) >> 1) - (((int)menu_selected->size()*2) >> 1);
+   Int1 y = 13 + ((ROWS - 13) >> 1) - (((int)menu_selected->size()*2) >> 1);
    for (int i = 0; i < (int)menu_selected->size(); i++) {
       std::string s = menu_selected->at(i);
    // Centre the menu option
@@ -339,9 +339,9 @@ void Menu::draw_menu_options() {
 // Draw a single line of text
 void Menu::draw_text(std::string s) {
 // Centre text
-   int8_t x = 20 - ((int)s.length() >> 1);
+   Int1 x = 20 - ((int)s.length() >> 1);
 // Find central column in screen.
-   int8_t y = 13 + ((ROWS - 13) >> 1) - 1;
+   Int1 y = 13 + ((ROWS - 13) >> 1) - 1;
    ohud.blit_text_new(x, y, s.c_str(), ohud.GREEN);
 }
 
@@ -351,7 +351,7 @@ void Menu::tick_menu() {
 // Tick Controls
    if (input.has_pressed(Input::DOWN) || oinputs.is_analog_l()) {
       osoundint.queue_sound(sound::BEEP1);
-      if (++cursor >= (int16_t)menu_selected->size())
+      if (++cursor >= (Int2)menu_selected->size())
          cursor = 0;
    } else if (input.has_pressed(Input::UP) || oinputs.is_analog_r()) {
       osoundint.queue_sound(sound::BEEP1);
@@ -662,7 +662,7 @@ void Menu::menu_back() {
 // Refresh menu options with latest config data
 // ────────────────────────────────────────────
 void Menu::refresh_menu() {
-   int16_t cursor_backup = cursor;
+   Int2 cursor_backup = cursor;
    for (cursor = 0; cursor < (int)menu_selected->size(); cursor++) {
    // Get option that was selected
       const char *OPTION = menu_selected->at(cursor).c_str();

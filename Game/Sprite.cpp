@@ -46,70 +46,70 @@ void osprite::init() {
 
 // X is now stored separately (not in the original data structure)
 // This is to support wide-screen mode
-uint16_t osprite::get_x() {
+Num2 osprite::get_x() {
    return data[0x6];
 }
 
 // returning y uses whole value
-uint16_t osprite::get_y() {
+Num2 osprite::get_y() {
    return data[0x0];
 }
 
-void osprite::set_x(uint16_t x) {
+void osprite::set_x(Num2 x) {
    data[0x6] = x;
 }
 
-void osprite::set_pitch(uint8_t p) {
+void osprite::set_pitch(Num1 p) {
    data[0x02] = (data[0x2]&0x1FF) | ((p&0xFE) << 8);
 }
 
-void osprite::inc_x(uint16_t v) {
+void osprite::inc_x(Num2 v) {
    data[0x6] += v;
 }
 
 // setting y wipes entire value
-void osprite::set_y(uint16_t y) {
+void osprite::set_y(Num2 y) {
    data[0x0] = y;
 }
 
-void osprite::set_vzoom(uint16_t z) {
+void osprite::set_vzoom(Num2 z) {
    data[0x03] = z;
 }
 
-void osprite::set_hzoom(uint16_t z) {
+void osprite::set_hzoom(Num2 z) {
    data[0x4] = z;
 }
 
-void osprite::set_priority(uint8_t p) {
+void osprite::set_priority(Num1 p) {
    data[0x03] |= (p << 8);
 }
 
-void osprite::set_offset(uint16_t o) {
+void osprite::set_offset(Num2 o) {
    data[0x1] = o;
 }
 
-void osprite::inc_offset(uint16_t o) {
+void osprite::inc_offset(Num2 o) {
    data[0x1] += o;
 }
 
-void osprite::set_render(uint8_t bits) {
+void osprite::set_render(Num1 bits) {
    data[0x4] |= ((bits&0xE0) << 8);
 }
 
-void osprite::set_pal(uint8_t pal) {
+void osprite::set_pal(Num1 pal) {
    data[0x5] = (data[0x5]&0xFF00) + pal;
 }
 
-void osprite::set_height(uint8_t h) {
+void osprite::set_height(Num1 h) {
    data[0x5] = (data[0x5]&0xFF) + (h << 8);
 }
 
-void osprite::sub_height(uint8_t h) {
-   uint8_t height = ((data[0x05] >> 8) - h)&0xFF;
+void osprite::sub_height(Num1 h) {
+   Num1 height = ((data[0x05] >> 8) - h)&0xFF;
    data[0x5] = (data[0x5]&0xFF) + (height << 8);
 }
 
-void osprite::set_bank(uint8_t bank) {
+void osprite::set_bank(Num1 bank) {
    data[0x0] |= (bank << 8);
 }
 

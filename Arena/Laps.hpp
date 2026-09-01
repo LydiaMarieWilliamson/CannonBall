@@ -10,29 +10,29 @@
 class TTrial {
 public:
 // Maximum number of laps to allow the player to race
-   static const uint8_t MAX_LAPS = 5;
+   static const Num1 MAX_LAPS = 5;
 // Maximum number of cars to spawn
-   static const uint8_t MAX_TRAFFIC = 8;
+   static const Num1 MAX_TRAFFIC = 8;
    enum {
       BACK_TO_MENU = -1,
       CONTINUE = 0,
       INIT_GAME = 1,
    };
-   uint8_t state;
-   int8_t level_selected;
+   Num1 state;
+   Int1 level_selected;
    enum {
       INIT_COURSEMAP,
       TICK_COURSEMAP,
       TICK_GAME_ENGINE,
    };
-   TTrial(uint16_t *best_times);
+   TTrial(Num2 *best_times);
    ~TTrial(void);
    void init();
    int tick();
    void update_best_time();
 private:
 // Best lap times for all 15 tracks.
-   uint16_t *best_times;
+   Num2 *best_times;
 // Counter converted to actual laptime
-   uint8_t best_converted[3];
+   Num1 best_converted[3];
 };

@@ -17,32 +17,32 @@ const bool FORCE_AI = false;
 // General useful stuff
 // ────────────────────
 // Internal Sega OutRun Screen Properties
-const uint16_t S16_WIDTH = 320;
-const uint16_t S16_HEIGHT = 224;
+const Num2 S16_WIDTH = 320;
+const Num2 S16_HEIGHT = 224;
 
 // Internal Widescreen Width
-const uint16_t S16_WIDTH_WIDE = 398;
+const Num2 S16_WIDTH_WIDE = 398;
 
 // Palette Address in Memory
-const uint32_t S16_PALETTE_BASE = 0x120000;
+const Num4 S16_PALETTE_BASE = 0x120000;
 
 // Number of Palette Entries
-const uint16_t S16_PALETTE_ENTRIES = 0x1000;
+const Num2 S16_PALETTE_ENTRIES = 0x1000;
 
 // Number of stages
-const uint16_t STAGES = 15;
+const Num2 STAGES = 15;
 
 // Hard Coded End Point of every level
-const static uint16_t ROAD_END = 0x79C;
+const static Num2 ROAD_END = 0x79C;
 
 // End Point of level for CPU1, including horizon
-const static uint16_t ROAD_END_CPU1 = 0x904;
+const static Num2 ROAD_END_CPU1 = 0x904;
 
 // Default timer used for hi-score entry
-const static uint8_t HIGHSCORE_TIMER = 0x30;
+const static Num1 HIGHSCORE_TIMER = 0x30;
 
 // Default timer used for music selection (was 15 seconds on original/old romset)
-const static uint8_t MUSIC_TIMER = 0x30;
+const static Num1 MUSIC_TIMER = 0x30;
 
 enum {
    BIT_0 = 0x01,

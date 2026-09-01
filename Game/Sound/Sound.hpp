@@ -34,52 +34,52 @@ enum {
 // Internal Channel Offsets in RAM
 namespace channel {
 // Channels 0-7: YM Channels
-const static uint16_t YM1 = 0x020; // f820
-const static uint16_t YM2 = 0x040;
-const static uint16_t YM3 = 0x060;
-const static uint16_t YM4 = 0x080;
-const static uint16_t YM5 = 0x0A0;
-const static uint16_t YM6 = 0x0C0;
-const static uint16_t YM7 = 0x0E0;
-const static uint16_t YM8 = 0x100; // f900
+const static Num2 YM1 = 0x020; // f820
+const static Num2 YM2 = 0x040;
+const static Num2 YM3 = 0x060;
+const static Num2 YM4 = 0x080;
+const static Num2 YM5 = 0x0A0;
+const static Num2 YM6 = 0x0C0;
+const static Num2 YM7 = 0x0E0;
+const static Num2 YM8 = 0x100; // f900
 
 // Channels 8-13: PCM Drum Channels for music
-const static uint16_t PCM_DRUM1 = 0x120;
-const static uint16_t PCM_DRUM2 = 0x140;
-const static uint16_t PCM_DRUM3 = 0x160;
-const static uint16_t PCM_DRUM4 = 0x180;
-const static uint16_t PCM_DRUM5 = 0x1A0;
-const static uint16_t PCM_DRUM6 = 0x1C0;
+const static Num2 PCM_DRUM1 = 0x120;
+const static Num2 PCM_DRUM2 = 0x140;
+const static Num2 PCM_DRUM3 = 0x160;
+const static Num2 PCM_DRUM4 = 0x180;
+const static Num2 PCM_DRUM5 = 0x1A0;
+const static Num2 PCM_DRUM6 = 0x1C0;
 
 // Channels 14-21: PCM Sound Effects
-const static uint16_t PCM_FX1 = 0x1E0; // f9e0: Crowd, Cheers, Wave
-const static uint16_t PCM_FX2 = 0x200;
-const static uint16_t PCM_FX3 = 0x220; // fa20: Slip, Safety Zone
-const static uint16_t PCM_FX4 = 0x240;
-const static uint16_t PCM_FX5 = 0x260; // fa60: Crash 1, Rebound, Crash2
-const static uint16_t PCM_FX6 = 0x280;
-const static uint16_t PCM_FX7 = 0x2A0; // faa0: Voices
-const static uint16_t PCM_FX8 = 0x2C0;
+const static Num2 PCM_FX1 = 0x1E0; // f9e0: Crowd, Cheers, Wave
+const static Num2 PCM_FX2 = 0x200;
+const static Num2 PCM_FX3 = 0x220; // fa20: Slip, Safety Zone
+const static Num2 PCM_FX4 = 0x240;
+const static Num2 PCM_FX5 = 0x260; // fa60: Crash 1, Rebound, Crash2
+const static Num2 PCM_FX6 = 0x280;
+const static Num2 PCM_FX7 = 0x2A0; // faa0: Voices
+const static Num2 PCM_FX8 = 0x2C0;
 
 // Channel Mapping Info. Used to play sound effects and music at the same time.
-const static uint16_t MAP1 = 0x2E0;
-const static uint16_t MAP2 = 0x300;
-const static uint16_t MAP3 = 0x320;
-const static uint16_t MAP4 = 0x340;
-const static uint16_t MAP5 = 0x360;
-const static uint16_t MAP6 = 0x380;
-const static uint16_t MAP7 = 0x3A0;
+const static Num2 MAP1 = 0x2E0;
+const static Num2 MAP2 = 0x300;
+const static Num2 MAP3 = 0x320;
+const static Num2 MAP4 = 0x340;
+const static Num2 MAP5 = 0x360;
+const static Num2 MAP6 = 0x380;
+const static Num2 MAP7 = 0x3A0;
 
 // Channels 22-23: YM Sound Effects
-const static uint16_t YM_FX1 = 0x3C0; // fbc0: Signal 1, Signal 2
-const static uint16_t YM_FX2 = 0x3E0;
+const static Num2 YM_FX1 = 0x3C0; // fbc0: Signal 1, Signal 2
+const static Num2 YM_FX2 = 0x3E0;
 
 // Engine Commands in RAM
-const static int16_t ENGINE_CH1 = 0x400; // 0xFC00: Engine Channel - Player's Car
-const static int16_t ENGINE_CH2 = 0x420; // 0xFC20: Engine Channel - Traffic 1
-const static int16_t ENGINE_CH3 = 0x440; // 0xFC40: Engine Channel - Traffic 2
-const static int16_t ENGINE_CH4 = 0x460; // 0xFC60: Engine Channel - Traffic 3
-const static int16_t ENGINE_CH5 = 0x480; // 0xFC80: Engine Channel - Traffic 4
+const static Int2 ENGINE_CH1 = 0x400; // 0xFC00: Engine Channel - Player's Car
+const static Int2 ENGINE_CH2 = 0x420; // 0xFC20: Engine Channel - Traffic 1
+const static Int2 ENGINE_CH3 = 0x440; // 0xFC40: Engine Channel - Traffic 2
+const static Int2 ENGINE_CH4 = 0x460; // 0xFC60: Engine Channel - Traffic 3
+const static Int2 ENGINE_CH5 = 0x480; // 0xFC80: Engine Channel - Traffic 4
 } // namespace channel
 
 // Internal Format of Sound Data in RAM before sending to hardware
@@ -221,7 +221,7 @@ enum {
 class OSound {
 public:
 // Command to process
-   uint8_t command_input;
+   Num1 command_input;
 // [+0] Unused
 // [+1] Engine pitch high
 // [+2] Engine pitch low
@@ -230,19 +230,19 @@ public:
 // [+5] Traffic data #2
 // [+6] Traffic data #3
 // [+7] Traffic data #4
-   uint8_t engine_data[8];
+   Num1 engine_data[8];
    OSound();
    ~OSound();
-   void init(YM2151 *ym, uint8_t *pcm_ram);
+   void init(YM2151 *ym, Num1 *pcm_ram);
    void init_fm_chip();
    void tick();
 private:
-   const static uint16_t PCM_RAM_SIZE = 0x100;
-   const static uint16_t CHAN_RAM_SIZE = 0x800;
+   const static Num2 PCM_RAM_SIZE = 0x100;
+   const static Num2 CHAN_RAM_SIZE = 0x800;
 // Internal channel format
-   uint8_t chan_ram[CHAN_RAM_SIZE];
+   Num1 chan_ram[CHAN_RAM_SIZE];
 // Size of each internal channel entry
-   const static uint8_t CHAN_SIZE = 0x20;
+   const static Num1 CHAN_SIZE = 0x20;
 // Format of Data in PCM RAM
 // ─────────────────────────
 // RAM DESCRIPTION
@@ -297,99 +297,99 @@ private:
 //	│      │          │        l = loop   (0 = enabled, 1 = disabled)
 //	└──────┴──────────┴─────────────────────────────────
 // Reference to 0xFF bytes of PCM Chip RAM
-   uint8_t *pcm_ram;
+   Num1 *pcm_ram;
 // SoundChip: Yamaha YM2151
    YM2151 *ym;
 // Bit 0: Set denotes car stationary do rev sample when revs high enough
 // Bit 1: Set to denote PCM sound effect triggered.
-   uint8_t sound_props;
+   Num1 sound_props;
 // Stored Command
-   uint8_t command_index;
+   Num1 command_index;
 // F810 - F813
-   uint8_t counter1, counter2, counter3, counter4;
+   Num1 counter1, counter2, counter3, counter4;
 // Position in sequence [de]
-   uint16_t pos;
+   Num2 pos;
 // Store last command to assist program flow
-   uint8_t cmd_prev;
+   Num1 cmd_prev;
 // Store last chan ID
-   uint16_t chanid_prev;
+   Num2 chanid_prev;
 // PCM Channel Commands in RAM to send
-   const static uint16_t CH09_CMDS1 = 0x570; // 0xFD70;
-   const static uint16_t CH09_CMDS2 = 0x578;
-   const static uint16_t CH11_CMDS1 = 0x580; // 0xFD80;
-   const static uint16_t CH11_CMDS2 = 0x588;
+   const static Num2 CH09_CMDS1 = 0x570; // 0xFD70;
+   const static Num2 CH09_CMDS2 = 0x578;
+   const static Num2 CH11_CMDS1 = 0x580; // 0xFD80;
+   const static Num2 CH11_CMDS2 = 0x588;
 // Panning flags
-   const static uint8_t PAN_LEFT = 0x40;
-   const static uint8_t PAN_RIGHT = 0x80;
-   const static uint8_t PAN_CENTRE = PAN_LEFT | PAN_RIGHT;
+   const static Num1 PAN_LEFT = 0x40;
+   const static Num1 PAN_RIGHT = 0x80;
+   const static Num1 PAN_CENTRE = PAN_LEFT | PAN_RIGHT;
 // ENGINE TONE CODE
 // ────────────────
 // Used to skip the engine code 1/2 times
-   uint8_t engine_counter;
+   Num1 engine_counter;
 // Engine Channel: Selects Channel at offset 0xF800 for engine tones
-   uint8_t engine_channel;
-   inline uint8_t pcm_r(uint16_t adr);
-   inline void pcm_w(uint16_t adr, uint8_t v);
-   inline uint16_t r16(uint8_t *adr);
-   inline void w16(uint8_t *adr, uint16_t v);
+   Num1 engine_channel;
+   inline Num1 pcm_r(Num2 adr);
+   inline void pcm_w(Num2 adr, Num1 v);
+   inline Num2 r16(Num1 *adr);
+   inline void w16(Num1 *adr, Num2 v);
    void process_command();
    void pcm_backup();
    void check_fm_mapping();
    void process_channels();
-   void process_channel(uint16_t chan_id);
-   void process_section(uint8_t *chan);
-   void calc_end_marker(uint8_t *chan);
-   void next_mml_cmd(uint8_t *chan, uint8_t cmd);
+   void process_channel(Num2 chan_id);
+   void process_section(Num1 *chan);
+   void calc_end_marker(Num1 *chan);
+   void next_mml_cmd(Num1 *chan, Num1 cmd);
    void new_command();
-   void play_pcm_index(uint8_t *chan, uint8_t cmd);
-   void setvol(uint8_t *chan);
-   inline void pcm_setpitch(uint8_t *chan);
+   void play_pcm_index(Num1 *chan, Num1 cmd);
+   void setvol(Num1 *chan);
+   inline void pcm_setpitch(Num1 *chan);
    inline void set_loop_adr();
-   void do_loop(uint8_t *chan);
-   void pcm_finalize(uint8_t *chan);
+   void do_loop(Num1 *chan);
+   void pcm_finalize(Num1 *chan);
 #if 0
-   void pcm_send_cmds(uint16_t src, uint16_t pcm_adr);
+   void pcm_send_cmds(Num2 src, Num2 pcm_adr);
 #endif
-   void init_sound(uint8_t cmd, uint16_t src, uint16_t dst);
-   void process_pcm(uint8_t *chan);
-   void pcm_send_cmds(uint8_t *chan, uint16_t pcm_adr, uint8_t channel_pair);
+   void init_sound(Num1 cmd, Num2 src, Num2 dst);
+   void process_pcm(Num1 *chan);
+   void pcm_send_cmds(Num1 *chan, Num2 pcm_adr, Num1 channel_pair);
    void fm_dotimera();
    void fm_reset();
-   void fm_write_reg_c(uint8_t ix0, uint8_t reg, uint8_t value);
-   void fm_write_reg(uint8_t reg, uint8_t value);
-   void fm_write_block(uint8_t ix0, uint16_t adr, uint8_t chan);
+   void fm_write_reg_c(Num1 ix0, Num1 reg, Num1 value);
+   void fm_write_reg(Num1 reg, Num1 value);
+   void fm_write_block(Num1 ix0, Num2 adr, Num1 chan);
    void ym_set_levels();
-   void ym_load_patch(uint8_t *chan);
-   uint16_t ym_lookup_data(uint8_t cmd, uint8_t offset, uint8_t block);
-   void ym_set_connect(uint8_t *chan, uint8_t pan);
-   void ym_end_track(uint8_t *chan);
-   void read_mod_table(uint8_t *chan);
-   void call_adr(uint8_t *chan);
+   void ym_load_patch(Num1 *chan);
+   Num2 ym_lookup_data(Num1 cmd, Num1 offset, Num1 block);
+   void ym_set_connect(Num1 *chan, Num1 pan);
+   void ym_end_track(Num1 *chan);
+   void read_mod_table(Num1 *chan);
+   void call_adr(Num1 *chan);
 // ENGINE TONE FUNCTIONS
 // ─────────────────────
    void engine_process();
-   void engine_process_chan(uint8_t *chan, uint8_t *pcm);
-   void vol_thicken(uint16_t &pos, uint8_t *chan, uint8_t *pcm);
-   uint8_t get_adjusted_vol(uint16_t &pos, uint8_t *chan);
-   void engine_set_pitch(uint16_t &pos, uint8_t *pcm);
-   void engine_mute_channel(uint8_t *chan, uint8_t *pcm, bool do_check = true);
-   void unk78c7(uint8_t *chan, uint8_t *pcm);
-   void ferrari_vol_pan(uint8_t *chan, uint8_t *pcm);
-   uint16_t engine_get_table_adr(uint8_t *chan, uint8_t *pcm);
-   void engine_adjust_volume(uint8_t *chan);
-   uint16_t engine_set_adr(uint16_t &pos, uint8_t *chan, uint8_t *pcm);
-   void engine_set_adr_end(uint16_t &pos, uint16_t loop_adr, uint8_t *chan, uint8_t *pcm);
-   void engine_set_pan(uint16_t &pos, uint8_t *chan, uint8_t *pcm);
-   void engine_read_data(uint8_t *chan, uint8_t *pcm);
+   void engine_process_chan(Num1 *chan, Num1 *pcm);
+   void vol_thicken(Num2 &pos, Num1 *chan, Num1 *pcm);
+   Num1 get_adjusted_vol(Num2 &pos, Num1 *chan);
+   void engine_set_pitch(Num2 &pos, Num1 *pcm);
+   void engine_mute_channel(Num1 *chan, Num1 *pcm, bool do_check = true);
+   void unk78c7(Num1 *chan, Num1 *pcm);
+   void ferrari_vol_pan(Num1 *chan, Num1 *pcm);
+   Num2 engine_get_table_adr(Num1 *chan, Num1 *pcm);
+   void engine_adjust_volume(Num1 *chan);
+   Num2 engine_set_adr(Num2 &pos, Num1 *chan, Num1 *pcm);
+   void engine_set_adr_end(Num2 &pos, Num2 loop_adr, Num1 *chan, Num1 *pcm);
+   void engine_set_pan(Num2 &pos, Num1 *chan, Num1 *pcm);
+   void engine_read_data(Num1 *chan, Num1 *pcm);
 // PASSING TRAFFIC FX
 // ──────────────────
    void traffic_process();
-   void traffic_process_chan(uint8_t *pcm);
-   void traffic_process_entry(uint8_t *pcm);
-   void traffic_disable(uint8_t *pcm);
-   void traffic_set_vol(uint8_t *pcm);
-   void traffic_set_pan(uint8_t *pcm);
-   uint8_t traffic_get_vol(uint16_t pos, uint8_t *pcm);
-   void traffic_note_changes(uint8_t new_vol, uint8_t *pcm);
-   void traffic_read_data(uint8_t *pcm);
+   void traffic_process_chan(Num1 *pcm);
+   void traffic_process_entry(Num1 *pcm);
+   void traffic_disable(Num1 *pcm);
+   void traffic_set_vol(Num1 *pcm);
+   void traffic_set_pan(Num1 *pcm);
+   Num1 traffic_get_vol(Num2 pos, Num1 *pcm);
+   void traffic_note_changes(Num1 new_vol, Num1 *pcm);
+   void traffic_read_data(Num1 *pcm);
 };

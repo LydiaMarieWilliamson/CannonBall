@@ -101,7 +101,7 @@ void OAnimSeq::flag_seq() {
       if (outrun.game_state < GS_INGAME && anim_flag.anim_state != outrun.game_state) {
          anim_flag.anim_state = outrun.game_state;
       // Index of animation sequences
-         uint32_t index = outrun.adr.anim_seq_flag + ((outrun.game_state - 9) << 3);
+         Num4 index = outrun.adr.anim_seq_flag + ((outrun.game_state - 9) << 3);
          anim_flag.anim_addr_curr = roms.rom0p->read32(&index);
          anim_flag.anim_addr_next = roms.rom0p->read32(&index);
          anim_flag.frame_delay = roms.rom0p->read8(7 + anim_flag.anim_addr_curr)&0x3F;
@@ -109,13 +109,13 @@ void OAnimSeq::flag_seq() {
       }
    // Wave Flag
       if (outrun.game_state <= GS_INGAME) {
-         uint32_t index = anim_flag.anim_addr_curr + (anim_flag.anim_frame << 3);
+         Num4 index = anim_flag.anim_addr_curr + (anim_flag.anim_frame << 3);
          anim_flag.sprite->addr = roms.rom0p->read32(index)&0xFFFFF;
          anim_flag.sprite->pal_src = roms.rom0p->read8(index);
-         uint32_t addr = SPRITE_ZOOM_LOOKUP + (((anim_flag.sprite->z >> 16) << 2) | osprites.sprite_scroll_speed);
-         uint32_t value = roms.rom0p->read32(addr);
+         Num4 addr = SPRITE_ZOOM_LOOKUP + (((anim_flag.sprite->z >> 16) << 2) | osprites.sprite_scroll_speed);
+         Num4 value = roms.rom0p->read32(addr);
          anim_flag.sprite->z += value;
-         uint16_t z16 = anim_flag.sprite->z >> 16;
+         Num2 z16 = anim_flag.sprite->z >> 16;
          if (z16 >= 0x200) {
             anim_flag.sprite->control &= ~OSprites::ENABLE;
             return;
@@ -123,15 +123,15 @@ void OAnimSeq::flag_seq() {
          anim_flag.sprite->priority = z16;
          anim_flag.sprite->zoom = z16 >> 2;
       // Set X Position
-         int16_t sprite_x = (int8_t)roms.rom0p->read8(4 + index);
+         Int2 sprite_x = (Int1)roms.rom0p->read8(4 + index);
          sprite_x -= oroad.road0_h[z16];
-         int32_t final_x = (sprite_x*z16) >> 9;
+         Int4 final_x = (sprite_x*z16) >> 9;
          if (roms.rom0p->read8(1 + index)&BIT_7)
             final_x = -final_x;
          anim_flag.sprite->x = final_x;
       // Set Y Position
-         int16_t sprite_y = (int8_t)roms.rom0p->read8(5 + index);
-         int16_t final_y = (sprite_y*z16) >> 9;
+         Int2 sprite_y = (Int1)roms.rom0p->read8(5 + index);
+         Int2 final_y = (sprite_y*z16) >> 9;
          anim_flag.sprite->y = oroad.get_road_y(z16) - final_y;
       // Set H-Flip
          if (roms.rom0p->read8(7 + index)&BIT_6)
@@ -191,20 +191,20 @@ void OAnimSeq::anim_seq_intro(oanimsprite *anim) {
    if (outrun.tick_frame) {
       if (anim->anim_frame >= 1)
          oferrari.car_state = OFerrari::CAR_ANIM_SEQ;
-      uint32_t index = anim->anim_addr_curr + (anim->anim_frame << 3);
+      Num4 index = anim->anim_addr_curr + (anim->anim_frame << 3);
       anim->sprite->addr = roms.rom0p->read32(index)&0xFFFFF;
       anim->sprite->pal_src = anim == &anim_ferrari? oferrari.ferrari_pal: roms.rom0p->read8(index);
       anim->sprite->zoom = 0x7F;
       anim->sprite->road_priority = 0x1FE;
       anim->sprite->priority = 0x1FE - ((roms.rom0p->read16(index)&0x70) >> 4);
    // Set X
-      int16_t sprite_x = (int8_t)roms.rom0p->read8(4 + index);
-      int32_t final_x = (sprite_x*anim->sprite->priority) >> 9;
+      Int2 sprite_x = (Int1)roms.rom0p->read8(4 + index);
+      Int4 final_x = (sprite_x*anim->sprite->priority) >> 9;
       if (roms.rom0p->read8(1 + index)&BIT_7)
          final_x = -final_x;
       anim->sprite->x = final_x;
    // Set Y
-      anim->sprite->y = 221 - ((int8_t)roms.rom0p->read8(5 + index));
+      anim->sprite->y = 221 - ((Int1)roms.rom0p->read8(5 + index));
    // Set H-Flip
       if (roms.rom0p->read8(7 + index)&BIT_6)
          anim->sprite->control |= OSprites::HFLIP;
@@ -295,7 +295,7 @@ void OAnimSeq::tick_end_seq() {
 // At: 588a
 void OAnimSeq::init_end_sprites() {
 // Ferrari Object [0x5B12 entry point]
-   uint32_t addr = outrun.adr.anim_endseq_obj1 + (end_seq << 3);
+   Num4 addr = outrun.adr.anim_endseq_obj1 + (end_seq << 3);
    anim_ferrari.anim_addr_curr = roms.rom0p->read32(&addr);
    anim_ferrari.anim_addr_next = roms.rom0p->read32(&addr);
    ferrari_stopped = false;
@@ -431,7 +431,7 @@ void OAnimSeq::anim_seq_outro(oanimsprite *anim, int pal_override) {
    if (!read_anim_data(anim))
       return;
 // Process Animation Data
-   uint32_t index = anim->anim_addr_curr + (anim->anim_frame << 3);
+   Num4 index = anim->anim_addr_curr + (anim->anim_frame << 3);
    anim->sprite->addr = roms.rom0p->read32(index)&0xFFFFF;
 // Override palette to overcome bugs / recolour Ferrari
    anim->sprite->pal_src = pal_override != -1? pal_override: roms.rom0p->read8(index);
@@ -443,8 +443,8 @@ void OAnimSeq::anim_seq_outro(oanimsprite *anim, int pal_override) {
       anim->sprite->x = -anim->sprite->x;
 // set_sprite_xy: (similar to flag code again)
 // Set Y Position
-   int16_t sprite_y = (int8_t)roms.rom0p->read8(5 + index);
-   int16_t final_y = (sprite_y*anim->sprite->priority) >> 9;
+   Int2 sprite_y = (Int1)roms.rom0p->read8(5 + index);
+   Int2 final_y = (sprite_y*anim->sprite->priority) >> 9;
    anim->sprite->y = oroad.get_road_y(anim->sprite->priority) - final_y;
 // Set H-Flip
    if (roms.rom0p->read8(7 + index)&BIT_6)
@@ -479,7 +479,7 @@ void OAnimSeq::anim_seq_shadow(oanimsprite *parent, oanimsprite *anim) {
    if (!read_anim_data(anim))
       return;
    if (outrun.tick_frame) {
-      uint8_t zoom_shift = 3;
+      Num1 zoom_shift = 3;
    // Car Shadow
       if (anim->sprite->id == 3) {
          zoom_shift = 1;
@@ -488,7 +488,7 @@ void OAnimSeq::anim_seq_shadow(oanimsprite *parent, oanimsprite *anim) {
       }
    // 5C88 set_sprite_xy:
       anim->sprite->x = parent->sprite->x;
-      uint16_t priority = parent->sprite->road_priority >> zoom_shift;
+      Num2 priority = parent->sprite->road_priority >> zoom_shift;
       anim->sprite->zoom = priority - (priority >> 2);
       anim->sprite->y = oroad.get_road_y(parent->sprite->road_priority);
    // Chris - The following extra line seems necessary due to the way I set the sprites up.
@@ -502,18 +502,18 @@ void OAnimSeq::anim_seq_shadow(oanimsprite *parent, oanimsprite *anim) {
 // Read Animation Data for End Sequence
 // At: 5cc4
 bool OAnimSeq::read_anim_data(oanimsprite *anim) {
-   uint32_t addr = outrun.adr.anim_end_table + (end_seq << 2) + (anim->sprite->id << 2) + (anim->sprite->id << 4); // a0 + d1
+   Num4 addr = outrun.adr.anim_end_table + (end_seq << 2) + (anim->sprite->id << 2) + (anim->sprite->id << 4); // a0 + d1
 // Read start & end position in animation timeline for this object
-   int16_t start_pos = roms.rom0p->read16(addr); // d0
-   int16_t end_pos = roms.rom0p->read16(2 + addr); // d3
-   int16_t pos = seq_pos; // d1
+   Int2 start_pos = roms.rom0p->read16(addr); // d0
+   Int2 end_pos = roms.rom0p->read16(2 + addr); // d3
+   Int2 pos = seq_pos; // d1
 // Global Sequence Position: Advance to next position
 // Not particularly clean embedding this here obviously!
    if (outrun.tick_frame && anim->anim_props&0xFF00)
       seq_pos++;
 // Test Whether Animation Sequence Is Over & Initalize Course Map
    if (obonus.bonus_control != OBonus::BONUS_DISABLE) {
-      const static uint16_t END_SEQ_LENGTHS[] = { 0x244, 0x244, 0x244, 0x190, 0x258 };
+      const static Num2 END_SEQ_LENGTHS[] = { 0x244, 0x244, 0x244, 0x190, 0x258 };
       if (seq_pos == END_SEQ_LENGTHS[end_seq]) {
          obonus.bonus_control = OBonus::BONUS_DISABLE;
       // we're missing all the code here to disable the animsprites, but probably not necessary?

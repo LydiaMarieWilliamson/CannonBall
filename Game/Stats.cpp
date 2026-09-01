@@ -16,7 +16,7 @@ OStats ostats;
 
 // Original buggy millisecond lookup table (Used when 64 frames = 1 second)
 // Conversion table from 0 to 64 → Millisecond value
-const static uint8_t LAP_MS_64[] = {
+const static Num1 LAP_MS_64[] = {
    0x00, 0x01, 0x03, 0x04, 0x06, 0x07, 0x09, 0x10, 0x12, 0x14, 0x15, 0x17, 0x18, 0x20, 0x21, 0x23,
    0x25, 0x26, 0x28, 0x29, 0x31, 0x32, 0x34, 0x35, 0x37, 0x39, 0x40, 0x42, 0x43, 0x45, 0x46, 0x48,
    0x50, 0x51, 0x53, 0x54, 0x56, 0x57, 0x59, 0x60, 0x62, 0x64, 0x65, 0x67, 0x68, 0x70, 0x71, 0x73,
@@ -25,7 +25,7 @@ const static uint8_t LAP_MS_64[] = {
 
 // Bug fixed millisecond lookup table  (Used when 60 frames = 1 second)
 // Conversion table from 0 to 60 → Millisecond value
-const static uint8_t LAP_MS_60[] = {
+const static Num1 LAP_MS_60[] = {
    0x00, 0x01, 0x03, 0x05, 0x06, 0x08, 0x10, 0x11, 0x13, 0x15, 0x16, 0x18, 0x20, 0x21, 0x23, 0x25,
    0x26, 0x28, 0x30, 0x31, 0x33, 0x35, 0x36, 0x38, 0x40, 0x41, 0x43, 0x45, 0x46, 0x48,
    0x50, 0x51, 0x53, 0x55, 0x56, 0x58, 0x60, 0x61, 0x63, 0x65, 0x66, 0x68, 0x70, 0x71, 0x73, 0x75,
@@ -95,21 +95,21 @@ void OStats::inc_lap_timer() {
 }
 
 // At: be4e
-void OStats::convert_speed_score(uint16_t speed) {
+void OStats::convert_speed_score(Num2 speed) {
 // 0x960 is the last value in this table to be actively used
-   static const uint16_t CONVERT[] = {
+   static const Num2 CONVERT[] = {
       0x0, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x80, 0x110, 0x150,
       0x200, 0x260, 0x330, 0x410, 0x500, 0x600, 0x710, 0x830, 0x960, 0x1100,
       0x1250,
    };
-   uint16_t score = CONVERT[(speed >> 4)];
+   Num2 score = CONVERT[(speed >> 4)];
    update_score(score);
 }
 
 // Update In-Game Score. Adds Value To Overall Score.
 //
 // At: 7340
-void OStats::update_score(uint32_t value) {
+void OStats::update_score(Num4 value) {
    if (outrun.cannonball_mode == Outrun::MODE_TTRIAL)
       return;
    score = outils::bcd_add(value, score);
@@ -138,7 +138,7 @@ void OStats::init_next_level() {
       }
    // Extend Play: Flash Text
       else {
-         int16_t do_blit = ((extend_play_timer - 1) ^ extend_play_timer)&BIT_3;
+         Int2 do_blit = ((extend_play_timer - 1) ^ extend_play_timer)&BIT_3;
          if (do_blit) {
             if (extend_play_timer&BIT_3) {
                if (outrun.cannonball_mode == Outrun::MODE_TTRIAL)
@@ -157,7 +157,7 @@ void OStats::init_next_level() {
       oinitengine.checkpoint_marker = 0;
       extend_play_timer = 0x80;
    // Calculate Time To Add
-      uint16_t time_lookup = (config.engine.dip_time*40) + oroad.stage_lookup_off;
+      Num2 time_lookup = (config.engine.dip_time*40) + oroad.stage_lookup_off;
       if (!outrun.freeze_timer) {
          if (outrun.cannonball_mode == outrun.MODE_ORIGINAL)
             time_counter = outils::bcd_add(time_counter, TIME[time_lookup]);
@@ -207,7 +207,7 @@ void OStats::init_next_level() {
 //	Stage 5d	│  58     56     54     54  │
 //	Stage 5e	│  56     56     56     56  │
 //			└───────────────────────────┘
-const uint8_t OStats::TIME[] = {
+const Num1 OStats::TIME[] = {
 // Easy
    0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
    0x65, 0x62, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,

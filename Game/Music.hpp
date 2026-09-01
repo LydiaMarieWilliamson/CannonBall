@@ -30,15 +30,15 @@ private:
 // Next track to play
    music_t *next_track;
 // Music Track Selected By Player
-   uint8_t music_selected;
+   Num1 music_selected;
 // Total tracks to include in music select (> 3 means user has added extra ones)
    int total_tracks;
 // Enahcned: Current Cursor Position
    int cursor_pos;
-   uint16_t entry_start;
+   Num2 entry_start;
 // Used to preview music track
-   int16_t last_music_selected;
-   int8_t preview_counter;
+   Int2 last_music_selected;
+   Int1 preview_counter;
    const static short HAND_LEFT = 0, HAND_CENTRE = 1, HAND_RIGHT = 2;
    void setup_sprite1();
    void setup_sprite2();

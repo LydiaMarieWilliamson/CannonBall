@@ -19,7 +19,7 @@
 #include "../Game/Display.hpp"
 #include "../Game/Tiles.hpp"
 
-const static uint32_t PAL_CRT[] = {
+const static Num4 PAL_CRT[] = {
    0xF, 0xF000FF, 0xF000F0F, 0xFF00FFF, 0xFFF, 0xEEE0DDD, 0xCCC0BBB,
    0xAAA0999, 0x888, 0x0, 0x0, 0x0, 0x777, 0x6660555, 0x4440333, 0x2220111
 };
@@ -39,15 +39,15 @@ void CabDiag::reset() {
    oroad.horizon_set = 1;
    oroad.horizon_base = ORoad::HORIZON_OFF;
 // Write Palette To RAM
-   uint32_t dst = 0x120000;
-   const static uint32_t PAL_SERVICE[] = { 0xFF, 0xFF00FF, 0xFF00FF, 0xFF0000 };
+   Num4 dst = 0x120000;
+   const static Num4 PAL_SERVICE[] = { 0xFF, 0xFF00FF, 0xFF00FF, 0xFF0000 };
    video.write_pal32(&dst, PAL_SERVICE[0]);
    video.write_pal32(&dst, PAL_SERVICE[1]);
    video.write_pal32(&dst, PAL_SERVICE[2]);
    video.write_pal32(&dst, PAL_SERVICE[3]);
 }
 
-void CabDiag::set(uint8_t state) {
+void CabDiag::set(Num1 state) {
    this->state = state;
    init = false;
 }
@@ -99,7 +99,7 @@ bool CabDiag::tick() {
          if (config.smartypi.cabinet != Config::CABINET_MOVING)
             tick_motor();
          else {
-            uint8_t limit = (input.motor_limits[Input::SW_LEFT]? 0: BIT_5) | (input.motor_limits[Input::SW_CENTRE]? 0: BIT_4) | (input.motor_limits[Input::SW_RIGHT]? 0: BIT_3);
+            Num1 limit = (input.motor_limits[Input::SW_LEFT]? 0: BIT_5) | (input.motor_limits[Input::SW_CENTRE]? 0: BIT_4) | (input.motor_limits[Input::SW_RIGHT]? 0: BIT_3);
             press_start_to_exit = outrun.outputs->diag_motor(input.a_motor, limit);
             outrun.outputs->writeDigitalToConsole();
          }
@@ -197,8 +197,8 @@ void CabDiag::init_crt() {
    ohud.blit_text_new(11, 26, "C.R.T.POSITION CHECK", 0x84);
    blit_box();
 // Initalize Palette
-   uint32_t dst = 0x120040;
-   for (uint8_t i = 0; i < 16; i++)
+   Num4 dst = 0x120040;
+   for (Num1 i = 0; i < 16; i++)
       video.write_pal32(&dst, PAL_CRT[i]);
    dst = 0x110438;
    blit1_block(dst, 0x8CF78CF7);
@@ -214,36 +214,36 @@ void CabDiag::init_crt() {
 
 void CabDiag::blit_box() {
 // Draw Top Border
-   uint32_t dst = 0x110030;
+   Num4 dst = 0x110030;
    video.write_text16(&dst, 0x8001);
-   for (uint8_t i = 0; i < 38; i++)
+   for (Num1 i = 0; i < 38; i++)
       video.write_text16(&dst, 0x8002);
    video.write_text16(&dst, 0x8003);
 // Draw Bottom Border
    dst = 0x110DB0;
    video.write_text16(&dst, 0x8006);
-   for (uint8_t i = 0; i < 38; i++)
+   for (Num1 i = 0; i < 38; i++)
       video.write_text16(&dst, 0x8007);
    video.write_text16(&dst, 0x8008);
 // Draw Left & Right Border
    dst = 0x1100B0;
-   for (uint8_t i = 0; i < 26; i++) {
+   for (Num1 i = 0; i < 26; i++) {
       video.write_text16(dst, 0x8004);
       video.write_text16(dst + 0x4E, 0x8005);
       dst += 0x80;
    }
 }
 
-void CabDiag::blit1_block(uint32_t adr, uint32_t data) {
-   for (uint8_t i = 0; i < 4; i++) {
+void CabDiag::blit1_block(Num4 adr, Num4 data) {
+   for (Num1 i = 0; i < 4; i++) {
       video.write_text32(adr + 0, data);
       video.write_text32(adr + 4, data);
       adr += 0x80;
    }
 }
 
-void CabDiag::blit7_block(uint32_t *adr, uint32_t data) {
-   for (uint8_t i = 0; i < 7; i++) {
+void CabDiag::blit7_block(Num4 *adr, Num4 data) {
+   for (Num1 i = 0; i < 7; i++) {
       blit1_block(*adr, data);
       *adr += 8;
       data += 0x10001;

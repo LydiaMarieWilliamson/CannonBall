@@ -41,8 +41,8 @@ void OHiScore::init() {
 // This is the shaded red background for the hi-score entry
 // At: 360c
 void OHiScore::setup_pal_best() {
-   uint32_t src = PAL_BESTOR;
-   uint32_t dst = 0x120F00;
+   Num4 src = PAL_BESTOR;
+   Num4 dst = 0x120F00;
    for (int i = 0; i <= 0x1F; i++)
       video.write_pal32(&dst, roms.rom0.read32(&src));
 }
@@ -51,7 +51,7 @@ void OHiScore::setup_pal_best() {
 // This is a pure black road for the hi-score entry
 // At: 3624
 void OHiScore::setup_road_best() {
-   uint32_t dst = 0x120800;
+   Num4 dst = 0x120800;
    for (int i = 0; i <= 0x1F; i++)
       video.write_pal32(&dst, 0);
 }
@@ -59,12 +59,12 @@ void OHiScore::setup_road_best() {
 // Initalize Default Score Table
 // At: d17a
 void OHiScore::init_def_scores() {
-   uint32_t adr = DEFAULT_SCORES;
+   Num4 adr = DEFAULT_SCORES;
    for (int i = 0; i < NO_SCORES; i++) {
    // Read default score
       scores[i].score = roms.rom0.read32(&adr);
    // Read initials
-      uint32_t initials = roms.rom0.read32(&adr);
+      Num4 initials = roms.rom0.read32(&adr);
       scores[i].initial1 = (initials >> 24)&0xFF;
       scores[i].initial2 = (initials >> 16)&0xFF;
       scores[i].initial3 = (initials >> 8)&0xFF;
@@ -152,7 +152,7 @@ void OHiScore::insert_score() {
    scores[score_pos].initial3 = 0x20;
 // Calculate total time if game completed. Store result in $20
    if (ostats.game_completed) {
-      const uint8_t entries = outrun.cannonball_mode == Outrun::MODE_ORIGINAL? 5: 15;
+      const Num1 entries = outrun.cannonball_mode == Outrun::MODE_ORIGINAL? 5: 15;
       scores[score_pos].time = 0;
       for (int i = 0; i < entries; i++)
          scores[score_pos].time += ostats.stage_counters[i];
@@ -193,13 +193,13 @@ void OHiScore::check_name_entry() {
       state = STATE_DONE;
    } else {
    // Get text ram address of score to blit
-      uint32_t score_adr = get_score_adr();
+      Num4 score_adr = get_score_adr();
    // Blit Alphabet. Highlight selected letter red.
       blit_alphabet();
    // Flash current initial that is being entered
       flash_entry(score_adr);
    // Draw big red countdown timer
-      const uint16_t BIG_RED_FONT = 0x8080;
+      const Num2 BIG_RED_FONT = 0x8080;
       ohud.draw_timer2(ostats.time_counter, 0x1101EC, BIG_RED_FONT);
    // Input from controls
       do_input(score_adr);
@@ -211,7 +211,7 @@ void OHiScore::check_name_entry() {
 
 // Get Address in text ram at which to output score
 // At: d542
-uint32_t OHiScore::get_score_adr() {
+Num4 OHiScore::get_score_adr() {
    if (score_pos < 3)
       return 0x110452 + (score_pos << 8); // top 3 positions
    if (score_pos >= 17)
@@ -225,7 +225,7 @@ void OHiScore::blit_alphabet() {
 // Print Text: "ABCDEFGHIJK..."
    ohud.blit_text2(TEXT2_ALPHABET);
 // Address in text ram for characters
-   uint32_t adr = 0x110BF0;
+   Num4 adr = 0x110BF0;
    video.write_text16(&adr, 0x8D00); // Full Stop
    video.write_text16(adr + 0x7E, 0x8D01);
    video.write_text16(&adr, 0x8D04); // Arrow
@@ -233,7 +233,7 @@ void OHiScore::blit_alphabet() {
    video.write_text16(&adr, 0x8D02); // ED
    video.write_text16(adr + 0x7E, 0x8D03);
 // Colour selected tile red
-   const uint16_t RED = 0x80;
+   const Num2 RED = 0x80;
    adr = 0x110BBC + (letter_selected << 1);
    video.write_text8(adr, (video.read_text8(adr)&1) | RED);
    video.write_text8(adr + 0x80, (video.read_text8(adr + 0x80)&1) | RED);
@@ -244,8 +244,8 @@ void OHiScore::blit_alphabet() {
 // Takes address of score entry as input
 //
 // At: d42c
-void OHiScore::flash_entry(uint32_t adr) {
-   uint16_t tile = 0x20; // Default blank tile
+void OHiScore::flash_entry(Num4 adr) {
+   Num2 tile = 0x20; // Default blank tile
    flash++; // Increment flashing counter
    if (flash&BIT_3) {
       tile = (roms.rom0.read8(letter_selected + TILES_ALPHABET)&0xFF) | 0x8600;
@@ -256,11 +256,11 @@ void OHiScore::flash_entry(uint32_t adr) {
 // High Score Input
 //
 // At: d33a
-void OHiScore::do_input(uint32_t adr) {
+void OHiScore::do_input(Num4 adr) {
 // Read Steering Left / Right & Denote Letter To Be Highlighted
-   const static uint8_t ENTRIES = 28; // 28 Possible entries we can select from
-   const static uint8_t DELETE = ENTRIES - 1;
-   int16_t position = read_controls() + letter_selected;
+   const static Num1 ENTRIES = 28; // 28 Possible entries we can select from
+   const static Num1 DELETE = ENTRIES - 1;
+   Int2 position = read_controls() + letter_selected;
    if (position > ENTRIES)
       letter_selected = position = 0;
    else if (position < (initial_selected == 3? DELETE: 0))
@@ -290,7 +290,7 @@ void OHiScore::do_input(uint32_t adr) {
    }
 // Normal character selected
    else {
-      uint8_t tile = roms.rom0.read8(TILES_ALPHABET + letter_selected);
+      Num1 tile = roms.rom0.read8(TILES_ALPHABET + letter_selected);
    // Store initial to score structure
       if (initial_selected == 0)
          scores[score_pos].initial1 = tile;
@@ -320,7 +320,7 @@ void OHiScore::do_input(uint32_t adr) {
 //	+1 = Right
 //
 // At: d4da
-int8_t OHiScore::read_controls() {
+Int1 OHiScore::read_controls() {
 // Determine when accelerator has been pressed then depressed
    if (oinputs.input_acc < 0x30) {
       acc_prev = acc_curr;
@@ -332,8 +332,8 @@ int8_t OHiScore::read_controls() {
       acc_curr = -1;
    }
 // Check Steering Wheel
-   int8_t movement = 1; // default to right
-   int16_t steering = (oinputs.input_steering&0xFF) - 0x80;
+   Int1 movement = 1; // default to right
+   Int2 steering = (oinputs.input_steering&0xFF) - 0x80;
    if (steering < 0) {
       steering = -steering;
       movement = -1; // left
@@ -394,9 +394,9 @@ void OHiScore::setup_minicars() {
 // At: cf0e
 void OHiScore::tick_minicars() {
 // Destination in text ram
-   uint32_t dst = 0x11047C;
+   Num4 dst = 0x11047C;
 // Source tile data
-   uint32_t tiles_adr = TILES_MINICARS1;
+   Num4 tiles_adr = TILES_MINICARS1;
 // There are seven lines / entries to blit
    for (int i = 0; i < NO_MINICARS; i++) {
       minicar_entry *minicar = &minicars[i];
@@ -413,11 +413,11 @@ void OHiScore::tick_minicars() {
          minicar->pos += minicar->speed;
          setup_minicars_pal(minicar);
       // Masked off the lower bit
-         int16_t pos = (minicar->pos >> 8)&0xFFFE;
+         Int2 pos = (minicar->pos >> 8)&0xFFFE;
       // Get final address in text ram for minicar based on position
-         uint32_t textram_adr = dst - pos;
+         Num4 textram_adr = dst - pos;
       // Address for following smoke tiles
-         uint32_t tiles_smoke_adr = TILES_MINICARS2;
+         Num4 tiles_smoke_adr = TILES_MINICARS2;
       // The minicar is two tiles wide.
       // Two versions of routine, one that only blits the car in two tiles
          if ((minicar->pos >> 8)&BIT_0) {
@@ -436,7 +436,7 @@ void OHiScore::tick_minicars() {
       // Erase Minicar tiles (0xCFB2)
       // Reveal info from tile ram by copying to text ram
       // Bottom Line
-         uint16_t tile_bits = video.read_tile8(textram_adr - 0x2000 + 1) | minicar->tile_props;
+         Num2 tile_bits = video.read_tile8(textram_adr - 0x2000 + 1) | minicar->tile_props;
          video.write_text16(textram_adr, tile_bits);
       // Top Line
          tile_bits = video.read_tile8(textram_adr - 0x2000 - 0x7F) | minicar->tile_props;
@@ -451,7 +451,7 @@ void OHiScore::tick_minicars() {
 // The palette & priority used for the text depends on the position.
 // At: cfcc
 void OHiScore::setup_minicars_pal(minicar_entry *minicar) {
-   uint8_t pos = minicar->pos >> 8;
+   Num1 pos = minicar->pos >> 8;
 // Lap Time Tile Properties
    minicar->tile_props = 0x8400;
    if (pos <= 0x20) return; // Was 0x1F in original: Changed to handle longer times
@@ -474,7 +474,7 @@ void OHiScore::setup_minicars_pal(minicar_entry *minicar) {
 // At: d00c
 void OHiScore::blit_score_table() {
 // Clear tile table ready for High Score Display
-   uint32_t tile_addr = 0x10E000; // Tile Table 15
+   Num4 tile_addr = 0x10E000; // Tile Table 15
    for (int i = 0; i <= 0x3FF; i++)
       video.write_tile32(&tile_addr, 0x200020);
    ohud.blit_text2(TEXT2_BEST_OR); // Print "BEST OUTRUNNERS"
@@ -491,12 +491,12 @@ void OHiScore::blit_score_table() {
 // At: d03a
 void OHiScore::blit_digit() {
 // Destination in tile ram for digit
-   uint32_t dst = 0x10E438;
+   Num4 dst = 0x10E438;
 // Starting display position
-   int16_t pos = score_display_pos + 1;
+   Int2 pos = score_display_pos + 1;
 // Display numbers 1 to 7
    for (int i = 0; i < 7; i++) {
-      int32_t tile = (pos/10) | ((pos%10) << 16);
+      Int4 tile = (pos/10) | ((pos%10) << 16);
    // Draw blank
       if (!(tile&0xFFFF)) {
          tile = (tile&0xFFFF0000) | 0x20;
@@ -520,9 +520,9 @@ void OHiScore::blit_digit() {
 // At: d078
 void OHiScore::blit_scores() {
 // Destination in tile ram for digit
-   uint32_t dst = 0x10E43E;
+   Num4 dst = 0x10E43E;
 // Starting display position
-   int16_t pos = score_display_pos;
+   Int2 pos = score_display_pos;
 // Display scores 1 to 7
    for (int i = 0; i < 7; i++) {
       ohud.draw_score_tile(dst, scores[pos++].score, 0);
@@ -535,9 +535,9 @@ void OHiScore::blit_scores() {
 // At: d0a4
 void OHiScore::blit_initials() {
 // Destination in tile ram for digit
-   uint32_t dst = 0x10E452;
+   Num4 dst = 0x10E452;
 // Starting display position
-   int16_t pos = score_display_pos;
+   Int2 pos = score_display_pos;
 // Write 3 initials for entries 1 to 7
    for (int i = 0; i < 7; i++) {
       video.write_tile8(dst + 1, scores[pos].initial1);
@@ -553,12 +553,12 @@ void OHiScore::blit_initials() {
 // At: d0d8
 void OHiScore::blit_route_map() {
 // Destination in tile ram for digit
-   uint32_t dst = 0x10E45E;
+   Num4 dst = 0x10E45E;
 // Starting display position
-   int16_t pos = score_display_pos;
+   Int2 pos = score_display_pos;
 // Write 7 map entries
    for (int i = 0; i < 7; i++) {
-      uint32_t tiles = scores[pos++].maptiles;
+      Num4 tiles = scores[pos++].maptiles;
    // e.g. e5 c8 c2 d1 (4 tile indexes of route map)
       video.write_tile8(dst - 0x7F, (tiles >> 24)&0xFF);
       video.write_tile8(dst - 0x7D, (tiles >> 16)&0xFF);
@@ -573,12 +573,12 @@ void OHiScore::blit_route_map() {
 // At: d112
 void OHiScore::blit_lap_time() {
 // Destination in tile ram for digit
-   uint32_t dst = 0x10E46A;
+   Num4 dst = 0x10E46A;
 // Starting display position
-   int16_t pos = score_display_pos;
+   Int2 pos = score_display_pos;
 // Write 7 lap entries
    for (int i = 0; i < 7; i++) {
-      uint16_t time = scores[pos++].time;
+      Num2 time = scores[pos++].time;
       if (time) {
          convert_lap_time(time);
       // Write laptime
@@ -601,10 +601,10 @@ void OHiScore::blit_lap_time() {
 // Enhanced routine to handle minutes > 9
 //
 // At: 806c
-void OHiScore::convert_lap_time(uint16_t time) {
-   const uint16_t MINUTE = 3600;
-   int32_t src_time = time; // laptime copy [d0]
-   int16_t minutes = -1; // Store number of minutes
+void OHiScore::convert_lap_time(Num2 time) {
+   const Num2 MINUTE = 3600;
+   Int4 src_time = time; // laptime copy [d0]
+   Int2 minutes = -1; // Store number of minutes
 // Calculate Minutes
    do {
       src_time -= MINUTE;
@@ -613,15 +613,15 @@ void OHiScore::convert_lap_time(uint16_t time) {
    src_time += MINUTE;
    minutes = outils::convert16_dechex(minutes);
 // Store Millisecond Lookup
-   uint16_t ms_lookup = src_time&0x3F;
+   Num2 ms_lookup = src_time&0x3F;
 // Calculate Seconds
-   uint16_t seconds = src_time >> 6; // Store Seconds
-   uint16_t s1 = seconds&0xF; // First digit [d1]
-   uint16_t s2 = seconds >> 4; // Second digit [d2]
+   Num2 seconds = src_time >> 6; // Store Seconds
+   Num2 s1 = seconds&0xF; // First digit [d1]
+   Num2 s2 = seconds >> 4; // Second digit [d2]
    if (s1 > 9)
       seconds += 6;
    s2 = outils::bcd_add(s2, s2);
-   int16_t d3 = s2;
+   Int2 d3 = s2;
    s2 = outils::bcd_add(s2, s2);
    s2 = outils::bcd_add(s2, d3);
    seconds = outils::bcd_add(s2, seconds);

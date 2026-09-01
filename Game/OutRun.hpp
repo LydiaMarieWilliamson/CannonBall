@@ -48,113 +48,113 @@ enum {
 
 struct time_trial_t {
    bool enabled; // Time Trial Mode Enabled
-   uint8_t level; // Time Trial Level
-   uint8_t traffic; // Max Traffic Level
-   uint8_t laps; // Total laps (maximum of 5 laps total allowed)
-   uint8_t current_lap; // Which lap are we currently on
-   uint16_t overtakes; // Number of overtakes
-   uint16_t vehicle_cols; // Number of vehicle collisions
-   uint16_t crashes; // Number of crashes
-   uint8_t laptimes[5][3]; // Stored lap times
-   int16_t best_lap_counter; // Counter representing best laptime
-   uint8_t best_lap[3]; // Stored best lap time
+   Num1 level; // Time Trial Level
+   Num1 traffic; // Max Traffic Level
+   Num1 laps; // Total laps (maximum of 5 laps total allowed)
+   Num1 current_lap; // Which lap are we currently on
+   Num2 overtakes; // Number of overtakes
+   Num2 vehicle_cols; // Number of vehicle collisions
+   Num2 crashes; // Number of crashes
+   Num1 laptimes[5][3]; // Stored lap times
+   Int2 best_lap_counter; // Counter representing best laptime
+   Num1 best_lap[3]; // Stored best lap time
    bool new_high_score; // Has player achieved a new high score?
 };
 
 // Addresses (Used to swap between original and Japanese roms)
 struct adr_t {
 // CPU 0
-   uint32_t tiles_def_lookup;
-   uint32_t tiles_table;
-   uint32_t sprite_master_table;
-   uint32_t sprite_type_table;
-   uint32_t sprite_def_props1;
-   uint32_t sprite_def_props2;
-   uint32_t sprite_cloud;
-   uint32_t sprite_minitree;
-   uint32_t sprite_grass;
-   uint32_t sprite_sand;
-   uint32_t sprite_stone;
-   uint32_t sprite_water;
-   uint32_t sprite_ferrari_frames;
-   uint32_t sprite_skid_frames;
-   uint32_t sprite_pass_frames;
-   uint32_t sprite_pass1_skidl;
-   uint32_t sprite_pass1_skidr;
-   uint32_t sprite_pass2_skidl;
-   uint32_t sprite_pass2_skidr;
-   uint32_t sprite_crash_spin1;
-   uint32_t sprite_crash_spin2;
-   uint32_t sprite_bump_data1;
-   uint32_t sprite_bump_data2;
-   uint32_t sprite_crash_man1;
-   uint32_t sprite_crash_girl1;
-   uint32_t sprite_crash_flip;
-   uint32_t sprite_crash_flip_m1;
-   uint32_t sprite_crash_flip_g1;
-   uint32_t sprite_crash_flip_m2;
-   uint32_t sprite_crash_flip_g2;
-   uint32_t sprite_crash_man2;
-   uint32_t sprite_crash_girl2;
-   uint32_t smoke_data;
-   uint32_t spray_data;
-   uint32_t shadow_data;
-   uint32_t shadow_frames;
-   uint32_t sprite_shadow_small;
-   uint32_t sprite_logo_bg;
-   uint32_t sprite_logo_car;
-   uint32_t sprite_logo_bird1;
-   uint32_t sprite_logo_bird2;
-   uint32_t sprite_logo_base;
-   uint32_t sprite_logo_text;
-   uint32_t sprite_logo_palm1;
-   uint32_t sprite_logo_palm2;
-   uint32_t sprite_logo_palm3;
-   uint32_t sprite_fm_left;
-   uint32_t sprite_fm_centre;
-   uint32_t sprite_fm_right;
-   uint32_t sprite_dial_left;
-   uint32_t sprite_dial_centre;
-   uint32_t sprite_dial_right;
-   uint32_t sprite_eq;
-   uint32_t sprite_radio;
-   uint32_t sprite_hand_left;
-   uint32_t sprite_hand_centre;
-   uint32_t sprite_hand_right;
-   uint32_t sprite_coursemap_top;
-   uint32_t sprite_coursemap_bot;
-   uint32_t sprite_coursemap_end;
-   uint32_t sprite_minicar_right;
-   uint32_t sprite_minicar_up;
-   uint32_t sprite_minicar_down;
-   uint32_t anim_seq_flag;
-   uint32_t anim_ferrari_curr;
-   uint32_t anim_ferrari_next;
-   uint32_t anim_pass1_curr;
-   uint32_t anim_pass1_next;
-   uint32_t anim_pass2_curr;
-   uint32_t anim_pass2_next;
-   uint32_t anim_ferrari_frames;
-   uint32_t anim_endseq_obj1;
-   uint32_t anim_endseq_obj2;
-   uint32_t anim_endseq_obj3;
-   uint32_t anim_endseq_obj4;
-   uint32_t anim_endseq_obj5;
-   uint32_t anim_endseq_obj6;
-   uint32_t anim_endseq_obj7;
-   uint32_t anim_endseq_obj8;
-   uint32_t anim_endseq_objA;
-   uint32_t anim_endseq_objB;
-   uint32_t anim_end_table;
-   uint32_t traffic_props;
-   uint32_t traffic_data;
-   uint32_t sprite_porsche;
-   uint32_t sprite_coursemap;
-   uint32_t road_seg_table;
-   uint32_t road_seg_end;
-   uint32_t road_seg_split;
+   Num4 tiles_def_lookup;
+   Num4 tiles_table;
+   Num4 sprite_master_table;
+   Num4 sprite_type_table;
+   Num4 sprite_def_props1;
+   Num4 sprite_def_props2;
+   Num4 sprite_cloud;
+   Num4 sprite_minitree;
+   Num4 sprite_grass;
+   Num4 sprite_sand;
+   Num4 sprite_stone;
+   Num4 sprite_water;
+   Num4 sprite_ferrari_frames;
+   Num4 sprite_skid_frames;
+   Num4 sprite_pass_frames;
+   Num4 sprite_pass1_skidl;
+   Num4 sprite_pass1_skidr;
+   Num4 sprite_pass2_skidl;
+   Num4 sprite_pass2_skidr;
+   Num4 sprite_crash_spin1;
+   Num4 sprite_crash_spin2;
+   Num4 sprite_bump_data1;
+   Num4 sprite_bump_data2;
+   Num4 sprite_crash_man1;
+   Num4 sprite_crash_girl1;
+   Num4 sprite_crash_flip;
+   Num4 sprite_crash_flip_m1;
+   Num4 sprite_crash_flip_g1;
+   Num4 sprite_crash_flip_m2;
+   Num4 sprite_crash_flip_g2;
+   Num4 sprite_crash_man2;
+   Num4 sprite_crash_girl2;
+   Num4 smoke_data;
+   Num4 spray_data;
+   Num4 shadow_data;
+   Num4 shadow_frames;
+   Num4 sprite_shadow_small;
+   Num4 sprite_logo_bg;
+   Num4 sprite_logo_car;
+   Num4 sprite_logo_bird1;
+   Num4 sprite_logo_bird2;
+   Num4 sprite_logo_base;
+   Num4 sprite_logo_text;
+   Num4 sprite_logo_palm1;
+   Num4 sprite_logo_palm2;
+   Num4 sprite_logo_palm3;
+   Num4 sprite_fm_left;
+   Num4 sprite_fm_centre;
+   Num4 sprite_fm_right;
+   Num4 sprite_dial_left;
+   Num4 sprite_dial_centre;
+   Num4 sprite_dial_right;
+   Num4 sprite_eq;
+   Num4 sprite_radio;
+   Num4 sprite_hand_left;
+   Num4 sprite_hand_centre;
+   Num4 sprite_hand_right;
+   Num4 sprite_coursemap_top;
+   Num4 sprite_coursemap_bot;
+   Num4 sprite_coursemap_end;
+   Num4 sprite_minicar_right;
+   Num4 sprite_minicar_up;
+   Num4 sprite_minicar_down;
+   Num4 anim_seq_flag;
+   Num4 anim_ferrari_curr;
+   Num4 anim_ferrari_next;
+   Num4 anim_pass1_curr;
+   Num4 anim_pass1_next;
+   Num4 anim_pass2_curr;
+   Num4 anim_pass2_next;
+   Num4 anim_ferrari_frames;
+   Num4 anim_endseq_obj1;
+   Num4 anim_endseq_obj2;
+   Num4 anim_endseq_obj3;
+   Num4 anim_endseq_obj4;
+   Num4 anim_endseq_obj5;
+   Num4 anim_endseq_obj6;
+   Num4 anim_endseq_obj7;
+   Num4 anim_endseq_obj8;
+   Num4 anim_endseq_objA;
+   Num4 anim_endseq_objB;
+   Num4 anim_end_table;
+   Num4 traffic_props;
+   Num4 traffic_data;
+   Num4 sprite_porsche;
+   Num4 sprite_coursemap;
+   Num4 road_seg_table;
+   Num4 road_seg_end;
+   Num4 road_seg_split;
 // CPU 1
-   uint32_t road_height_lookup;
+   Num4 road_height_lookup;
 };
 
 class OOutputs;
@@ -164,12 +164,12 @@ public:
    OOutputs *outputs;
    bool freeze_timer;
 // CannonBall Game Mode
-   uint8_t cannonball_mode;
-   const static uint8_t MODE_ORIGINAL = 0; // Original OutRun Mode
-   const static uint8_t MODE_TTRIAL = 1; // Enhanced Time Trial Mode
-   const static uint8_t MODE_CONT = 2; // Enhanced Continuous Mode
+   Num1 cannonball_mode;
+   const static Num1 MODE_ORIGINAL = 0; // Original OutRun Mode
+   const static Num1 MODE_TTRIAL = 1; // Enhanced Time Trial Mode
+   const static Num1 MODE_CONT = 2; // Enhanced Continuous Mode
 // Max traffic level for custom modes
-   uint8_t custom_traffic;
+   Num1 custom_traffic;
 // Time trial data
    time_trial_t ttrial;
 // Service Mode Toggle: Not implemented yet.
@@ -177,9 +177,9 @@ public:
 // Tick Logic. Used when running at non-standard > 30 fps
    bool tick_frame;
 // Tick Counter (always syncd to 30 fps to flash text and other stuff)
-   uint32_t tick_counter;
+   Num4 tick_counter;
 // Main game state
-   int8_t game_state;
+   Int1 game_state;
 // Address structures
    adr_t adr;
    Outrun();
@@ -191,12 +191,12 @@ public:
    void init_best_outrunners();
    void select_course(const bool jap, const bool prototype);
 private:
-   uint8_t attract_view;
-   int16_t attract_counter;
+   Num1 attract_view;
+   Int2 attract_counter;
 // Car Increment Backup for attract mode
-   uint32_t car_inc_bak;
+   Num4 car_inc_bak;
 // Debug to denote when fork has been chosen
-   int8_t fork_chosen;
+   Int1 fork_chosen;
    void jump_table();
    void init_jump_table();
    void main_switch();

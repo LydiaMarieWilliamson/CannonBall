@@ -147,13 +147,13 @@ void OInputs::adjust_inputs() {
    else if (input_steering > STEERING_MAX) input_steering = STEERING_MAX;
    if (crash_input) {
       crash_input--;
-      int16_t d0 = ((input_steering - 0x80)*0x100)/0x70;
+      Int2 d0 = ((input_steering - 0x80)*0x100)/0x70;
       if (d0 > 0x7F) d0 = 0x7F;
       else if (d0 < -0x7F) d0 = -0x7F;
       steering_adjust = ocrash.crash_counter? 0: d0;
    } else {
    // no_crash1:
-      int16_t d0 = input_steering - steering_old;
+      Int2 d0 = input_steering - steering_old;
       steering_old = input_steering;
       steering_change += d0;
       d0 = steering_change < 0? -steering_change: steering_change;
@@ -170,12 +170,12 @@ void OInputs::adjust_inputs() {
       }
    }
 // Cap & Adjust Acceleration Value
-   int16_t acc = input_acc;
+   Int2 acc = input_acc;
    if (acc > PEDAL_MAX) acc = PEDAL_MAX;
    else if (acc < PEDAL_MIN) acc = PEDAL_MIN;
    acc_adjust = ((acc - 0x30)*0x100)/0x61;
 // Cap & Adjust Brake Value
-   int16_t brake = input_brake;
+   Int2 brake = input_brake;
    if (brake > PEDAL_MAX) brake = PEDAL_MAX;
    else if (brake < PEDAL_MIN) brake = PEDAL_MIN;
    brake_adjust = ((brake - 0x30)*0x100)/0x61;
@@ -191,7 +191,7 @@ void OInputs::adjust_inputs() {
 //	3 (Key Pressed / Service Button)
 //
 // At: 6de0
-uint8_t OInputs::do_credits() {
+Num1 OInputs::do_credits() {
    if (input.has_pressed(Input::COIN)) {
       if (!config.engine.freeplay && ostats.credits < 9) {
          ostats.credits++;

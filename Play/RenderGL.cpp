@@ -12,7 +12,7 @@
 #include "RenderGL.hpp"
 #include "Arena/Config.hpp"
 
-const static uint32_t SCANLINE_TEXTURE[] = { 0x00000000, 0xff000000 }; // BGRA 8-8-8-8-REV
+const static Num4 SCANLINE_TEXTURE[] = { 0x00000000, 0xff000000 }; // BGRA 8-8-8-8-REV
 
 Render::Render() {
 }
@@ -29,8 +29,8 @@ bool Render::init(int src_width, int src_height, int scale, int video_mode, int 
 // Full Screen Mode
    if (video_mode == video_settings_t::MODE_FULL) {
    // Calculate how much to scale screen from its original resolution
-      uint32_t w = (scn_width << 16)/src_width;
-      uint32_t h = (scn_height << 16)/src_height;
+      Num4 w = (scn_width << 16)/src_width;
+      Num4 h = (scn_height << 16)/src_height;
       dst_width = (src_width*std::min(w, h)) >> 16;
       dst_height = (src_height*std::min(w, h)) >> 16;
       flags |= SDL_WINDOW_FULLSCREEN_DESKTOP; // Set SDL flag
@@ -93,7 +93,7 @@ bool Render::init(int src_width, int src_height, int scale, int video_mode, int 
    }
    if (screen_pixels)
       delete[]screen_pixels;
-   screen_pixels = new uint32_t[src_width*src_height];
+   screen_pixels = new Num4[src_width*src_height];
 // SDL Pixel Format Information
    Rshift = surface->format->Rshift;
    Gshift = surface->format->Gshift;
@@ -210,8 +210,8 @@ bool Render::finalize_frame() {
    return true;
 }
 
-void Render::draw_frame(uint16_t *pixels) {
-   uint32_t *spix = screen_pixels;
+void Render::draw_frame(Num2 *pixels) {
+   Num4 *spix = screen_pixels;
 // Lookup real RGB value from rgb array for backbuffer
    for (int i = 0; i < (src_width*src_height); i++)
       *(spix++) = rgb[*(pixels++)];

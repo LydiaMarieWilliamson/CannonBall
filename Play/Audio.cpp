@@ -20,7 +20,7 @@
 // SDL Sound Implementation & Callback Function
 // ────────────────────────────────────────────
 // Note that these variables are accessed by two separate threads.
-uint8_t *dsp_buffer;
+Num1 *dsp_buffer;
 static int dsp_buffer_bytes;
 static int dsp_write_pos;
 static int dsp_read_pos;
@@ -89,10 +89,10 @@ void Audio::start_audio() {
       int specified_delay_samps = (config.sound.rate*SND_DELAY)/1000;
       int dsp_buffer_samps = SAMPLES*DSP_BUFFER_FRAGS + specified_delay_samps;
       dsp_buffer_bytes = CHANNELS*dsp_buffer_samps*(BITS/8);
-      dsp_buffer = new uint8_t[dsp_buffer_bytes];
+      dsp_buffer = new Num1[dsp_buffer_bytes];
    // Create Buffer For Mixing
-      uint16_t buffer_size = (config.sound.rate/config.fps)*CHANNELS;
-      mix_buffer = new uint16_t[buffer_size];
+      Num2 buffer_size = (config.sound.rate/config.fps)*CHANNELS;
+      mix_buffer = new Num2[buffer_size];
       clear_buffers();
       clear_wav();
       SDL_PauseAudioDevice(dev, 0);
@@ -107,7 +107,7 @@ void Audio::clear_buffers() {
    gap_est = 0;
    for (int i = 0; i < dsp_buffer_bytes; i++)
       dsp_buffer[i] = 0;
-   uint16_t buffer_size = (config.sound.rate/config.fps)*CHANNELS;
+   Num2 buffer_size = (config.sound.rate/config.fps)*CHANNELS;
    for (int i = 0; i < buffer_size; i++)
       mix_buffer[i] = 0;
    callbacktick = 0;
@@ -146,13 +146,13 @@ void Audio::tick() {
    osoundint.pcm->stream_update();
    osoundint.ym->stream_update();
 // Get the audio buffers we've just output
-   int16_t *pcm_buffer = osoundint.pcm->get_buffer();
-   int16_t *ym_buffer = osoundint.ym->get_buffer();
-   int16_t *wav_buffer = wavfile.data;
+   Int2 *pcm_buffer = osoundint.pcm->get_buffer();
+   Int2 *ym_buffer = osoundint.ym->get_buffer();
+   Int2 *wav_buffer = wavfile.data;
    int samples_written = osoundint.pcm->buffer_size;
 // And mix them into the mix_buffer
    for (int i = 0; i < samples_written; i++) {
-      int32_t mix_data = wav_buffer[wavfile.pos] + pcm_buffer[i] + ym_buffer[i];
+      Int4 mix_data = wav_buffer[wavfile.pos] + pcm_buffer[i] + ym_buffer[i];
    // Clip mix data
       if (mix_data > INT16_MAX) mix_data = INT16_MAX;
       else if (mix_data < INT16_MIN) mix_data = INT16_MIN;
@@ -162,7 +162,7 @@ void Audio::tick() {
          wavfile.pos = 0;
    }
 // Cast mix_buffer to a byte array, to align it with internal SDL format
-   uint8_t *mbuf8 = (uint8_t *)mix_buffer;
+   Num1 *mbuf8 = (Num1 *)mix_buffer;
 // produce samples from the sound emulation
    bytes_per_ms = (bytes_per_sample)*(config.sound.rate/1000.0);
    bytes_written = (BITS == 8? samples_written: samples_written*2);
@@ -235,15 +235,15 @@ double Audio::adjust_speed() {
 }
 
 // Empty Wav Buffer
-static int16_t EMPTY_BUFFER[] = { 0, 0, 0, 0 };
+static Int2 EMPTY_BUFFER[] = { 0, 0, 0, 0 };
 
 void Audio::load_wav(const char *filename) {
    if (sound_enabled) {
       clear_wav();
    // Load Wav File
       SDL_AudioSpec wave;
-      uint8_t *data;
-      uint32_t length;
+      Num1 *data;
+      Num4 length;
       pause_audio();
       if (SDL_LoadWAV(filename, &wave, &data, &length) == NULL) {
          wavfile.loaded = 0;
@@ -253,19 +253,19 @@ void Audio::load_wav(const char *filename) {
       }
       SDL_LockAudio();
    // Halve Volume Of Wav File
-      uint8_t *data_vol = new uint8_t[length];
+      Num1 *data_vol = new Num1[length];
       SDL_MixAudioFormat(data_vol, data, wave.format, length, SDL_MIX_MAXVOLUME/2);
    // WAV File Needs Conversion To Target Format
       if (wave.format != AUDIO_S16 || wave.channels != 2 || wave.freq != config.sound.rate) {
          SDL_AudioCVT cvt;
          SDL_BuildAudioCVT(&cvt, wave.format, wave.channels, wave.freq, AUDIO_S16, CHANNELS, config.sound.rate);
-         cvt.buf = (uint8_t *)malloc(length*cvt.len_mult);
+         cvt.buf = (Num1 *)malloc(length*cvt.len_mult);
          memcpy(cvt.buf, data_vol, length);
          cvt.len = length;
          SDL_ConvertAudio(&cvt);
          SDL_FreeWAV(data);
          delete[]data_vol;
-         wavfile.data = (int16_t *)cvt.buf;
+         wavfile.data = (Int2 *)cvt.buf;
          wavfile.length = cvt.len_cvt/2;
          wavfile.pos = 0;
          wavfile.loaded = 1;
@@ -273,7 +273,7 @@ void Audio::load_wav(const char *filename) {
    // No Conversion Needed
       else {
          SDL_FreeWAV(data);
-         wavfile.data = (int16_t *)data_vol;
+         wavfile.data = (Int2 *)data_vol;
          wavfile.length = length/2;
          wavfile.pos = 0;
          wavfile.loaded = 2;

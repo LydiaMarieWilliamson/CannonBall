@@ -68,7 +68,7 @@ void OOutputs::set_mode(int m) {
    mode = m;
 }
 
-void OOutputs::tick(int16_t input_motor) {
+void OOutputs::tick(Int2 input_motor) {
    switch (mode) {
       case MODE_DISABLED:
       break;
@@ -112,22 +112,22 @@ void OOutputs::writeDigitalToConsole() {
 
 // Digital Outputs
 // ───────────────
-void OOutputs::set_digital(uint8_t output) {
+void OOutputs::set_digital(Num1 output) {
    dig_out |= output;
 }
 
-void OOutputs::clear_digital(uint8_t output) {
+void OOutputs::clear_digital(Num1 output) {
    dig_out &= ~output;
 }
 
-int OOutputs::is_set(uint8_t output) {
+int OOutputs::is_set(Num1 output) {
    return (dig_out&output)? 1: 0;
 }
 
 // Motor Diagnostics
 // ─────────────────
 // At: 1885e
-bool OOutputs::diag_motor(int16_t input_motor, uint8_t hw_motor_limit) {
+bool OOutputs::diag_motor(Int2 input_motor, Num1 hw_motor_limit) {
    switch (motor_state) {
    // Initalize
       case STATE_INIT:
@@ -167,7 +167,7 @@ bool OOutputs::diag_motor(int16_t input_motor, uint8_t hw_motor_limit) {
    return motor_state == STATE_DONE;
 }
 
-void OOutputs::diag_left(int16_t input_motor, uint8_t hw_motor_limit) {
+void OOutputs::diag_left(Int2 input_motor, Num1 hw_motor_limit) {
 // If Right Limit Reached, Move Left
    if (hw_motor_limit&BIT_5) {
       if (--counter >= 0) {
@@ -188,7 +188,7 @@ void OOutputs::diag_left(int16_t input_motor, uint8_t hw_motor_limit) {
    motor_state = STATE_RIGHT;
 }
 
-void OOutputs::diag_right(int16_t input_motor, uint8_t hw_motor_limit) {
+void OOutputs::diag_right(Int2 input_motor, Num1 hw_motor_limit) {
    if (motor_centre_pos == 0 && (hw_motor_limit&BIT_4) == 0)
       motor_centre_pos = input_motor;
 // If Left Limit Set, Move Right
@@ -215,7 +215,7 @@ void OOutputs::diag_right(int16_t input_motor, uint8_t hw_motor_limit) {
    counter = COUNTER_RESET;
 }
 
-void OOutputs::diag_centre(int16_t input_motor, uint8_t hw_motor_limit) {
+void OOutputs::diag_centre(Int2 input_motor, Num1 hw_motor_limit) {
    if (hw_motor_limit&BIT_4) {
       if (--counter >= 0) {
          hw_motor_control = (counter <= COUNTER_RESET/2)? MOTOR_RIGHT: MOTOR_LEFT; // Move Right
@@ -241,7 +241,7 @@ void OOutputs::diag_done() {
 
 // Calibrate Motors
 // ────────────────
-bool OOutputs::calibrate_motor(int16_t input_motor, uint8_t hw_motor_limit) {
+bool OOutputs::calibrate_motor(Int2 input_motor, Num1 hw_motor_limit) {
    switch (motor_state) {
    // Initalize
       case STATE_INIT:
@@ -285,7 +285,7 @@ bool OOutputs::calibrate_motor(int16_t input_motor, uint8_t hw_motor_limit) {
    return false;
 }
 
-void OOutputs::calibrate_left(int16_t input_motor, uint8_t hw_motor_limit) {
+void OOutputs::calibrate_left(Int2 input_motor, Num1 hw_motor_limit) {
 // If Right Limit Set, Move Left
    if (hw_motor_limit&BIT_5) {
       if (--counter >= 0) {
@@ -319,7 +319,7 @@ void OOutputs::calibrate_left(int16_t input_motor, uint8_t hw_motor_limit) {
    }
 }
 
-void OOutputs::calibrate_right(int16_t input_motor, uint8_t hw_motor_limit) {
+void OOutputs::calibrate_right(Int2 input_motor, Num1 hw_motor_limit) {
    if (motor_centre_pos == 0 && ((hw_motor_limit&BIT_4) == 0)) {
       motor_centre_pos = input_motor;
    }
@@ -351,7 +351,7 @@ void OOutputs::calibrate_right(int16_t input_motor, uint8_t hw_motor_limit) {
    }
 }
 
-void OOutputs::calibrate_centre(int16_t input_motor, uint8_t hw_motor_limit) {
+void OOutputs::calibrate_centre(Int2 input_motor, Num1 hw_motor_limit) {
    bool fail = false;
    if (hw_motor_limit&BIT_4) {
       if (--counter >= 0) {
@@ -365,8 +365,8 @@ void OOutputs::calibrate_centre(int16_t input_motor, uint8_t hw_motor_limit) {
    }
 // 0xEEB6:
    motor_centre_pos = (input_motor + motor_centre_pos) >> 1;
-   int16_t d0 = limit_right - motor_centre_pos;
-   int16_t d1 = motor_centre_pos - limit_left;
+   Int2 d0 = limit_right - motor_centre_pos;
+   Int2 d1 = motor_centre_pos - limit_left;
 // set both to left limit
    if (d0 > d1)
       d1 = d0;
@@ -395,31 +395,31 @@ void OOutputs::calibrate_done() {
 // Moving Cabinet Code
 // ───────────────────
 
-const static uint8_t MOTOR_VALUES[] = {
+const static Num1 MOTOR_VALUES[] = {
    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3,
    2, 2, 3, 3, 4, 4, 5, 5, 2, 3, 4, 5, 6, 7, 7, 7
 };
 
-const static uint8_t MOTOR_VALUES_STATIONARY[] = {
+const static Num1 MOTOR_VALUES_STATIONARY[] = {
    2, 2, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4
 };
 
-const static uint8_t MOTOR_VALUES_OFFROAD1[] = {
+const static Num1 MOTOR_VALUES_OFFROAD1[] = {
    0x8, 0x8, 0x5, 0x5, 0x8, 0x8, 0xB, 0xB, 0x8, 0x8, 0x4, 0x4, 0x8, 0x8, 0xC, 0xC,
    0x8, 0x8, 0x3, 0x3, 0x8, 0x8, 0xD, 0xD, 0x8, 0x8, 0x2, 0x2, 0x8, 0x8, 0xE, 0xE,
 };
 
-const static uint8_t MOTOR_VALUES_OFFROAD2[] = {
+const static Num1 MOTOR_VALUES_OFFROAD2[] = {
    0x8, 0x5, 0x8, 0xB, 0x8, 0x5, 0x8, 0xB, 0x8, 0x4, 0x8, 0xC, 0x8, 0x4, 0x8, 0xC,
    0x8, 0x3, 0x8, 0xD, 0x8, 0x3, 0x8, 0xD, 0x8, 0x2, 0x8, 0xE, 0x8, 0x2, 0x8, 0xE,
 };
 
-const static uint8_t MOTOR_VALUES_OFFROAD3[] = {
+const static Num1 MOTOR_VALUES_OFFROAD3[] = {
    0x8, 0x5, 0x5, 0x8, 0xB, 0x8, 0x0, 0x8, 0x8, 0x4, 0x4, 0x8, 0xC, 0x8, 0x0, 0x8,
    0x8, 0x3, 0x3, 0x8, 0xD, 0x8, 0x0, 0x8, 0x8, 0x2, 0x2, 0x8, 0xE, 0x8, 0x0, 0x8,
 };
 
-const static uint8_t MOTOR_VALUES_OFFROAD4[] = {
+const static Num1 MOTOR_VALUES_OFFROAD4[] = {
    0x8, 0xB, 0xB, 0x8, 0x5, 0x8, 0x0, 0x8, 0x8, 0xC, 0xC, 0x8, 0x4, 0x8, 0x0, 0x8,
    0x8, 0xD, 0xD, 0x8, 0x3, 0x8, 0x0, 0x8, 0x8, 0xE, 0xE, 0x8, 0x2, 0x8, 0x0, 0x8,
 };
@@ -427,7 +427,7 @@ const static uint8_t MOTOR_VALUES_OFFROAD4[] = {
 // Process Motor Code.
 // Note, that only the Deluxe Moving Motor Code is ported for now.
 // At: e644
-void OOutputs::do_motors(int MODE, int16_t input_motor) {
+void OOutputs::do_motors(int MODE, Int2 input_motor) {
    motor_x_change = -(input_motor - (MODE == MODE_FFEEDBACK? CENTRE_POS: motor_centre_pos));
    if (!motor_enabled) {
       done();
@@ -471,7 +471,7 @@ void OOutputs::car_moving(const int MODE) {
       do_motor_offroad();
       return;
    }
-   const uint16_t car_inc = oinitengine.car_increment >> 16;
+   const Num2 car_inc = oinitengine.car_increment >> 16;
    if (car_inc <= 0x64) speed = 0;
    else if (car_inc <= 0xA0) speed = 1 << 3;
    else if (car_inc <= 0xDC) speed = 2 << 3;
@@ -480,7 +480,7 @@ void OOutputs::car_moving(const int MODE) {
    else if (oinitengine.road_curve <= 0x3C) curve = 2; // sharp curve
    else if (oinitengine.road_curve <= 0x5A) curve = 1; // gentle curve
    else curve = 0;
-   int16_t steering = oinputs.steering_adjust;
+   Int2 steering = oinputs.steering_adjust;
    steering += (movement_adjust1 + movement_adjust2 + movement_adjust3);
    steering >>= 2;
    movement_adjust3 = movement_adjust2; // Trickle down values
@@ -495,11 +495,11 @@ void OOutputs::car_moving(const int MODE) {
       }
       if (steering > 0)
          steering--;
-      uint8_t motor_value = MOTOR_VALUES[speed + curve];
+      Num1 motor_value = MOTOR_VALUES[speed + curve];
       if (MODE == MODE_FFEEDBACK) {
          hw_motor_control = motor_value + 8;
       } else {
-         int16_t change = motor_x_change + (motor_value << 1);
+         Int2 change = motor_x_change + (motor_value << 1);
       // Latch left movement
          if (change >= limit_left) {
             hw_motor_control = MOTOR_CENTRE;
@@ -522,11 +522,11 @@ void OOutputs::car_moving(const int MODE) {
       }
       if (steering > 0)
          steering--;
-      uint8_t motor_value = MOTOR_VALUES[speed + curve];
+      Num1 motor_value = MOTOR_VALUES[speed + curve];
       if (MODE == MODE_FFEEDBACK) {
          hw_motor_control = -motor_value + 8;
       } else {
-         int16_t change = motor_x_change - (motor_value << 1);
+         Int2 change = motor_x_change - (motor_value << 1);
       // Latch right movement
          if (change <= limit_right) {
             hw_motor_control = MOTOR_CENTRE;
@@ -543,7 +543,7 @@ void OOutputs::car_moving(const int MODE) {
 
 // At: e822
 void OOutputs::car_stationary() {
-   int16_t change = std::abs(motor_x_change);
+   Int2 change = std::abs(motor_x_change);
    if (change <= 8) {
       if (!is_centered) {
          hw_motor_control = MOTOR_CENTRE;
@@ -554,7 +554,7 @@ void OOutputs::car_stationary() {
          done();
       }
    } else {
-      int8_t motor_value = MOTOR_VALUES_STATIONARY[change >> 3];
+      Int1 motor_value = MOTOR_VALUES_STATIONARY[change >> 3];
       if (motor_x_change >= 0)
          motor_value = -motor_value;
       hw_motor_control = motor_value + 8;
@@ -564,7 +564,7 @@ void OOutputs::car_stationary() {
 
 // At: e8da
 void OOutputs::adjust_motor() {
-   int16_t change = motor_change_latch; // d1
+   Int2 change = motor_change_latch; // d1
    motor_change_latch = motor_x_change;
    change -= motor_x_change;
    if (change < 0)
@@ -601,9 +601,9 @@ void OOutputs::do_motor_crash() {
 // Adjust motor when wheels are off-road
 // At: e9be
 void OOutputs::do_motor_offroad() {
-   const uint8_t *table = (oferrari.wheel_state != OFerrari::WHEELS_OFF)? MOTOR_VALUES_OFFROAD2: MOTOR_VALUES_OFFROAD1;
-   const uint16_t car_inc = oinitengine.car_increment >> 16;
-   uint8_t index;
+   const Num1 *table = (oferrari.wheel_state != OFerrari::WHEELS_OFF)? MOTOR_VALUES_OFFROAD2: MOTOR_VALUES_OFFROAD1;
+   const Num2 car_inc = oinitengine.car_increment >> 16;
+   Num1 index;
    if (car_inc <= 0x32) index = 0;
    else if (car_inc <= 0x50) index = 1;
    else if (car_inc <= 0x6E) index = 2;
@@ -611,7 +611,7 @@ void OOutputs::do_motor_offroad() {
    set_value(table, index);
 }
 
-void OOutputs::set_value(const uint8_t *table, uint8_t index) {
+void OOutputs::set_value(const Num1 *table, Num1 index) {
    hw_motor_control = table[(index << 3) + (counter&7)];
    counter++;
    done();
@@ -629,10 +629,10 @@ void OOutputs::done() {
 
 // Send output commands to motor hardware
 // This is the equivalent to writing to register 0x140003
-void OOutputs::motor_output(uint8_t cmd) {
+void OOutputs::motor_output(Num1 cmd) {
    if (cmd == MOTOR_OFF || cmd == MOTOR_CENTRE)
       return;
-   int8_t force = 0;
+   Int1 force = 0;
    if (cmd < MOTOR_CENTRE) // left
       force = cmd - 1;
    else if (cmd > MOTOR_CENTRE) // right
@@ -644,7 +644,7 @@ void OOutputs::motor_output(uint8_t cmd) {
 // ───────────────────────────────────────
 
 // Deluxe Upright: Vibration Enable Table. 4 Groups of vibration values.
-const static uint8_t VIBRATE_LOOKUP[] = {
+const static Num1 VIBRATE_LOOKUP[] = {
 // SLOW SPEED ────────	// MEDIUM SPEED ──────
    1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0,
 // FAST SPEED ────────	// VERY FAST SPEED ───
@@ -657,8 +657,8 @@ void OOutputs::do_vibrate_upright() {
       clear_digital(D_MOTOR);
       return;
    }
-   const uint16_t speed = oinitengine.car_increment >> 16;
-   uint16_t index = 0;
+   const Num2 speed = oinitengine.car_increment >> 16;
+   Num2 index = 0;
 // Car Crashing: Diable Motor once speed below 10
    if (ocrash.crash_counter) {
       if (speed <= 10) {
@@ -710,8 +710,8 @@ void OOutputs::do_vibrate_mini() {
       clear_digital(D_MOTOR);
       return;
    }
-   const uint16_t speed = oinitengine.car_increment >> 16;
-   uint16_t index = 0;
+   const Num2 speed = oinitengine.car_increment >> 16;
+   Num2 index = 0;
 // Car Crashing: Disable Motor once speed below 10
    if (ocrash.crash_counter) {
       if (speed <= 10) {

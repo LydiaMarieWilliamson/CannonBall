@@ -9,27 +9,27 @@
 
 class osprite {
 public:
-   uint16_t data[0x7];
-   uint32_t scratch;
+   Num2 data[0x7];
+   Num4 scratch;
    osprite(void);
    ~osprite(void);
    void init();
-   uint16_t get_x();
-   uint16_t get_y();
-   void set_x(uint16_t);
-   void inc_x(uint16_t);
-   void set_y(uint16_t);
-   void set_pitch(uint8_t);
-   void set_vzoom(uint16_t);
-   void set_hzoom(uint16_t);
-   void set_priority(uint8_t);
-   void set_offset(uint16_t o);
-   void inc_offset(uint16_t o);
-   void set_render(uint8_t b);
-   void set_pal(uint8_t);
-   void set_height(uint8_t);
-   void sub_height(uint8_t);
-   void set_bank(uint8_t);
+   Num2 get_x();
+   Num2 get_y();
+   void set_x(Num2);
+   void inc_x(Num2);
+   void set_y(Num2);
+   void set_pitch(Num1);
+   void set_vzoom(Num2);
+   void set_hzoom(Num2);
+   void set_priority(Num1);
+   void set_offset(Num2 o);
+   void inc_offset(Num2 o);
+   void set_render(Num1 b);
+   void set_pal(Num1);
+   void set_height(Num1);
+   void sub_height(Num1);
+   void set_bank(Num1);
    void hide();
 private:
 };

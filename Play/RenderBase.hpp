@@ -12,8 +12,8 @@ public:
    virtual void disable() = 0;
    virtual bool start_frame() = 0;
    virtual bool finalize_frame() = 0;
-   virtual void draw_frame(uint16_t *pixels) = 0;
-   void convert_palette(uint32_t adr, uint32_t r1, uint32_t g1, uint32_t b1);
+   virtual void draw_frame(Num2 *pixels) = 0;
+   void convert_palette(Num4 adr, Num4 r1, Num4 g1, Num4 b1);
    void set_shadow_intensity(float f);
    virtual bool supports_window() {
       return true;
@@ -24,10 +24,10 @@ public:
 protected:
    SDL_Surface *surface;
 // Palette Lookup
-   uint32_t rgb[S16_PALETTE_ENTRIES*2]; // Extended to hold shadow colours
-   uint32_t *screen_pixels;
+   Num4 rgb[S16_PALETTE_ENTRIES*2]; // Extended to hold shadow colours
+   Num4 *screen_pixels;
 // Original Screen Width & Height
-   uint16_t orig_width, orig_height;
+   Num2 orig_width, orig_height;
 // Screen setup properties.
 // ────────────────────────
 // Example below:
@@ -51,10 +51,10 @@ protected:
 // Screen Scale
    int scale;
 // Offsets (for full-screen mode, where x/y resolution isn't a multiple of the original height)
-   uint32_t screen_xoff, screen_yoff;
+   Num4 screen_xoff, screen_yoff;
 // SDL Pixel Format Codes. These differ between platforms.
-   uint8_t Rshift, Gshift, Bshift;
-   uint32_t Rmask, Gmask, Bmask;
+   Num1 Rshift, Gshift, Bshift;
+   Num4 Rmask, Gmask, Bmask;
 // Shadow intensity multiplier
    int shadow_multi;
    bool sdl_screen_size();

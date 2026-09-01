@@ -138,11 +138,11 @@ void OCrash::do_crash() {
    }
 // cont1: Adjust steering
 // ──────────────────────
-   int16_t steering_adjust = oinputs.steering_adjust;
+   Int2 steering_adjust = oinputs.steering_adjust;
    oinputs.steering_adjust = 0;
    if (!oferrari.car_ctrl_active) {
       if (spin_control1 == 0) {
-         uint16_t inc = ((oinitengine.car_increment >> 16)*31) >> 5;
+         Num2 inc = ((oinitengine.car_increment >> 16)*31) >> 5;
          oinitengine.car_increment = (oinitengine.car_increment&0xFFFF) | (inc << 16);
          oferrari.car_inc_old = inc;
       } else {
@@ -151,7 +151,7 @@ void OCrash::do_crash() {
    }
 // Determine whether to init spin or crash code
 // ────────────────────────────────────────────
-   int16_t spin2_copy = spin_control2;
+   Int2 spin2_copy = spin_control2;
 // dec_spin2:
    if (spin2_copy != 0) {
       spin2_copy -= 2;
@@ -161,7 +161,7 @@ void OCrash::do_crash() {
          spin_switch(spin2_copy);
    }
 // dec_spin1:
-   int16_t spin1_copy = spin_control1;
+   Int2 spin1_copy = spin_control1;
    if (spin1_copy != 0) {
       spin1_copy -= 2;
       if (spin1_copy < 0)
@@ -175,7 +175,7 @@ void OCrash::do_crash() {
 }
 
 // At: 1224
-void OCrash::spin_switch(const uint16_t ctrl) {
+void OCrash::spin_switch(const Num2 ctrl) {
    crash_counter++;
    crash_z = 0;
    switch (ctrl&3) {
@@ -261,7 +261,7 @@ void OCrash::init_collision() {
 // Crash into scenery
    else {
       skid_counter = 0;
-      uint16_t car_inc = oinitengine.car_increment >> 16;
+      Num2 car_inc = oinitengine.car_increment >> 16;
       if (car_inc < 0x64)
          collide_slow();
       else if (car_inc < 0xC8)
@@ -300,7 +300,7 @@ void OCrash::do_collision() {
       }
    }
 // At 13f8
-   uint32_t property_table = addr + (frame << 3);
+   Num4 property_table = addr + (frame << 3);
    crash_z = spr_ferrari->counter;
    spr_ferrari->zoom = 0x80;
    spr_ferrari->priority = 0x1FD;
@@ -315,7 +315,7 @@ void OCrash::do_collision() {
 #else
    spr_ferrari->pal_src = oferrari.ferrari_pal;
 #endif
-   spin_pass_frame = (int8_t)roms.rom0p->read8(6 + property_table);
+   spin_pass_frame = (Int1)roms.rom0p->read8(6 + property_table);
    if (--spinflipcount2 > 0) {
       done(spr_ferrari);
       return;
@@ -413,11 +413,11 @@ void OCrash::do_bump() {
    oferrari.car_ctrl_active = false; // Disable user control of car
    spr_ferrari->zoom = 0x80; // Set Entry Number For Zoom Lookup Table
    spr_ferrari->priority = 0x1FD;
-   int16_t new_position = (int8_t)roms.rom0.read8(DATA_MOVEMENT + (lookup_index << 3));
+   Int2 new_position = (Int1)roms.rom0.read8(DATA_MOVEMENT + (lookup_index << 3));
    if (new_position)
       crash_z = spr_ferrari->counter;
    spr_ferrari->y = 221 - (new_position >> shift);
-   uint32_t frames = addr + (frame << 3);
+   Num4 frames = addr + (frame << 3);
    spr_ferrari->addr = roms.rom0p->read32(frames);
    if (roms.rom0p->read8(frames + 4))
       spr_ferrari->control |= OSprites::HFLIP;
@@ -428,11 +428,11 @@ void OCrash::do_bump() {
 #else
    spr_ferrari->pal_src = oferrari.ferrari_pal;
 #endif
-   spin_pass_frame = (int8_t)roms.rom0p->read8(frames + 6);
+   spin_pass_frame = (Int1)roms.rom0p->read8(frames + 6);
    if (++lookup_index >= 0x10) {
       addr += (frame_restore << 3);
       spr_ferrari->addr = roms.rom0p->read32(addr);
-      spin_pass_frame = (int8_t)roms.rom0p->read8(addr + 6);
+      spin_pass_frame = (Int1)roms.rom0p->read8(addr + 6);
       crash_state = 4; // Trigger smoke cloud
       crash_spin_count = 1; // Denote Crash
    }
@@ -443,7 +443,7 @@ void OCrash::do_bump() {
 void OCrash::do_car_flip() {
 // Do this if during the flip, the car has recollided with a new sprite + slow crash (similar to spin_collide)
    if (olevelobjs.collision_sprite && crash_speed == 1) {
-      uint16_t car_inc16 = oinitengine.car_increment >> 16;
+      Num2 car_inc16 = oinitengine.car_increment >> 16;
    // Road generator 1
       if (oinitengine.car_x_pos - (oroad.road_width >> 16) >= 0) {
       // swap_slide_dir2
@@ -452,8 +452,8 @@ void OCrash::do_car_flip() {
             oinitengine.car_increment = ((car_inc16 >> 1) << 16) | (oinitengine.car_increment&0xFFFF);
             osoundint.queue_sound(sound::CRASH2);
             if (oinitengine.car_increment >> 16 > 0x14) {
-               int16_t z = spr_ferrari->counter > 0x1FD? 0x1FD: spr_ferrari->counter; // d3
-               int16_t x_adjust = (0x50*z) >> 9; // d1
+               Int2 z = spr_ferrari->counter > 0x1FD? 0x1FD: spr_ferrari->counter; // d3
+               Int2 x_adjust = (0x50*z) >> 9; // d1
                if (slide < 0) x_adjust = -x_adjust;
                oinitengine.car_x_pos -= x_adjust;
             }
@@ -470,8 +470,8 @@ void OCrash::do_car_flip() {
             oinitengine.car_increment = ((car_inc16 >> 1) << 16) | (oinitengine.car_increment&0xFFFF);
             osoundint.queue_sound(sound::CRASH2);
             if (oinitengine.car_increment >> 16 > 0x14) {
-               int16_t z = spr_ferrari->counter > 0x1FD? 0x1FD: spr_ferrari->counter; // d3
-               int16_t x_adjust = (0x50*z) >> 9; // d1
+               Int2 z = spr_ferrari->counter > 0x1FD? 0x1FD: spr_ferrari->counter; // d3
+               Int2 x_adjust = (0x50*z) >> 9; // d1
                if (slide < 0) x_adjust = -x_adjust;
                oinitengine.car_x_pos -= x_adjust;
             }
@@ -483,7 +483,7 @@ void OCrash::do_car_flip() {
    }
 // flip_cont
    olevelobjs.collision_sprite = 0; // Moved this for clarity
-   uint32_t frames = addr + (frame << 3);
+   Num4 frames = addr + (frame << 3);
    spr_ferrari->addr = roms.rom0p->read32(frames);
 // Fast Crash: Car Heads towards camera in sky, before vanishing (0x161E)
 // ──────────────────────────────────────────────────────────────────────
@@ -510,9 +510,9 @@ void OCrash::do_car_flip() {
 // Note that we've set crash_zinc previously now for clarity
 // use ferrari_crash_z to set priority
    spr_ferrari->priority = spr_ferrari->counter > 0x1FD? 0x1FD: spr_ferrari->counter;
-   int16_t x_diff = (slide*spr_ferrari->priority) >> 9;
+   Int2 x_diff = (slide*spr_ferrari->priority) >> 9;
    oinitengine.car_x_pos -= x_diff;
-   int16_t passenger_frame = (int8_t)roms.rom0p->read8(6 + frames);
+   Int2 passenger_frame = (Int1)roms.rom0p->read8(6 + frames);
 // Start of sequence
    if (passenger_frame == 0) {
       slide >>= 1;
@@ -524,7 +524,7 @@ void OCrash::do_car_flip() {
 // 0x16CC
    passenger_frame = (passenger_frame*spr_ferrari->priority) >> 9;
 // Set Ferrari Y
-   int16_t y = -(oroad.road_y[oroad.road_p0 + spr_ferrari->priority] >> 4) + 223;
+   Int2 y = -(oroad.road_y[oroad.road_p0 + spr_ferrari->priority] >> 4) + 223;
    y -= passenger_frame;
    spr_ferrari->y = y;
 // Set Ferrari Zoom from Z
@@ -566,7 +566,7 @@ void OCrash::do_car_flip() {
 
 // Init Delay/Girl Pointing Finger
 // At: 175c
-void OCrash::init_finger(uint32_t frames) {
+void OCrash::init_finger(Num4 frames) {
    crash_spin_count = 1; // Denote Crash has taken place
 // Do Delay whilst girl points finger
    if (crash_type == CRASH_FLIP) {
@@ -591,7 +591,7 @@ void OCrash::init_finger(uint32_t frames) {
 // At: 17d2
 void OCrash::trigger_smoke() {
    crash_z = spr_ferrari->counter;
-   int16_t slide_copy = slide;
+   Int2 slide_copy = slide;
    if (slide < 0)
       slide++;
    else if (slide > 0)
@@ -609,7 +609,7 @@ void OCrash::trigger_smoke() {
 #else
    spr_ferrari->pal_src = oferrari.ferrari_pal;
 #endif
-   spin_pass_frame = (int8_t)roms.rom0p->read8(6 + addr);
+   spin_pass_frame = (Int1)roms.rom0p->read8(6 + addr);
 // Slow Car
    oinitengine.car_increment = (oinitengine.car_increment - ((oinitengine.car_increment >> 2)&0xFFFF0000)) | (oinitengine.car_increment&0xFFFF);
 // Car stationary
@@ -633,8 +633,8 @@ void OCrash::post_flip_anim() {
    }
    oferrari.car_ctrl_active = true;
    crash_state = 6; // Denote pan camera to track centre
-   int16_t road_width = oroad.road_width >> 16;
-   int16_t car_x_pos = oinitengine.car_x_pos;
+   Int2 road_width = oroad.road_width >> 16;
+   Int2 car_x_pos = oinitengine.car_x_pos;
    camera_xinc = 8;
 // Double Road
    if (road_width >= 0xD7) {
@@ -660,7 +660,7 @@ void OCrash::post_flip_anim() {
 void OCrash::pan_camera() {
    oferrari.car_ctrl_active = true;
    oinitengine.car_x_pos += camera_xinc;
-   int16_t x_diff = (oferrari.car_x_diff*spr_ferrari->counter) >> 9;
+   Int2 x_diff = (oferrari.car_x_diff*spr_ferrari->counter) >> 9;
    spr_ferrari->x += x_diff;
 // Pan Right
    if (camera_xinc >= 0) {
@@ -678,8 +678,8 @@ void OCrash::pan_camera() {
 // At: 1c7e
 void OCrash::init_spin1() {
    osoundint.queue_sound(sound::INIT_SLIP);
-   uint16_t car_inc = oinitengine.car_increment >> 16;
-   uint16_t spins = 1;
+   Num2 car_inc = oinitengine.car_increment >> 16;
+   Num2 spins = 1;
    if (car_inc > 0xB4)
       spins += outils::random()&1;
    spinflipcount1 = spins;
@@ -701,7 +701,7 @@ void OCrash::init_spin1() {
 // At: 1c10
 void OCrash::init_spin2() {
    osoundint.queue_sound(sound::INIT_SLIP);
-   uint16_t car_inc = oinitengine.car_increment >> 16;
+   Num2 car_inc = oinitengine.car_increment >> 16;
    spinflipcount1 = 1;
    crash_spin_count = 2;
    spinflipcount2 = 8;
@@ -724,7 +724,7 @@ void OCrash::init_spin2() {
 void OCrash::collide_slow() {
    osoundint.queue_sound(sound::REBOUND);
 // Setup shift value for car bump, based on current speed, which ultimately determines how much car rises in air
-   uint16_t car_inc = oinitengine.car_increment >> 16;
+   Num2 car_inc = oinitengine.car_increment >> 16;
    if (car_inc <= 0x28)
       shift = 6;
    else if (car_inc <= 0x46)
@@ -733,7 +733,7 @@ void OCrash::collide_slow() {
       shift = 4;
    lookup_index = 0;
 // Calculate change in road y, so we can determine incline frame for ferrari
-   int16_t y = oroad.road_y[oroad.road_p0 + (0x3E0/2)] - oroad.road_y[oroad.road_p0 + (0x3F0/2)];
+   Int2 y = oroad.road_y[oroad.road_p0 + (0x3E0/2)] - oroad.road_y[oroad.road_p0 + (0x3F0/2)];
    frame_restore = 0;
    if (y >= 0x12) frame_restore++;
    if (y >= 0x13) frame_restore++;
@@ -756,7 +756,7 @@ void OCrash::collide_slow() {
 void OCrash::collide_med() {
    osoundint.queue_sound(sound::INIT_SLIP);
 // Set number of spins based on car speed
-   uint16_t car_inc = oinitengine.car_increment >> 16;
+   Num2 car_inc = oinitengine.car_increment >> 16;
    spinflipcount1 = car_inc <= 0x96? 1: 2;
    spinflipcount2 = crash_spin_count = 2;
    slide = ((spinflipcount1 + 1) << 2) + ((car_inc > 0xFF? 0xFF: car_inc) >> 3);
@@ -779,7 +779,7 @@ void OCrash::collide_med() {
 // At: 1b12
 void OCrash::collide_fast() {
    osoundint.queue_sound(sound::CRASH1);
-   uint16_t car_inc = oinitengine.car_increment >> 16;
+   Num2 car_inc = oinitengine.car_increment >> 16;
    if (car_inc > 0xFA) {
       crash_zinc = 1;
       crash_speed = 0;
@@ -792,7 +792,7 @@ void OCrash::collide_fast() {
    slide = (car_inc > 0xFF? 0xFF: car_inc) >> 2;
    slide += (slide >> 1);
    if (oinitengine.road_type != OInitEngine::ROAD_STRAIGHT) {
-      int16_t d2 = (0x78 - (oinitengine.road_curve <= 0x78? oinitengine.road_curve: 0x78)) >> 1;
+      Int2 d2 = (0x78 - (oinitengine.road_curve <= 0x78? oinitengine.road_curve: 0x78)) >> 1;
    // collide_fast_curve:
       slide += d2;
       if (oinitengine.road_type == OInitEngine::ROAD_RIGHT)
@@ -834,7 +834,7 @@ void OCrash::done(oentry *sprite) {
 //
 // At: 1df2
 void OCrash::do_shadow(oentry *src_sprite, oentry *dst_sprite) {
-   uint8_t shadow_shift;
+   Num1 shadow_shift;
 // Ferrari Shadow
    if (src_sprite == spr_ferrari) {
       dst_sprite->draw_props = oentry::BOTTOM;
@@ -845,11 +845,11 @@ void OCrash::do_shadow(oentry *src_sprite, oentry *dst_sprite) {
    dst_sprite->x = src_sprite->x;
    dst_sprite->road_priority = src_sprite->road_priority;
 // Get Z from source sprite (stored in counter)
-   uint16_t counter = (src_sprite->counter) >> shadow_shift;
+   Num2 counter = (src_sprite->counter) >> shadow_shift;
    counter = counter - (counter >> 2);
-   dst_sprite->zoom = (uint8_t)counter;
+   dst_sprite->zoom = (Num1)counter;
 // Set shadow y
-   uint16_t offset = src_sprite->counter > 0x1FF? 0x1FF: src_sprite->counter;
+   Num2 offset = src_sprite->counter > 0x1FF? 0x1FF: src_sprite->counter;
    dst_sprite->y = -(oroad.road_y[oroad.road_p0 + offset] >> 4) + 223;
    if (oroad.get_view_mode() != ORoad::VIEW_INCAR || crash_type == CRASH_FLIP)
       osprites.do_spr_order_shadows(dst_sprite);
@@ -894,12 +894,12 @@ void OCrash::do_crash_passengers(oentry *sprite) {
 //
 // At: 1ea6
 void OCrash::crash_pass1(oentry *sprite) {
-   uint32_t frames = (sprite == spr_pass1? outrun.adr.sprite_crash_man1: outrun.adr.sprite_crash_girl1) + (spin_pass_frame << 3);
+   Num4 frames = (sprite == spr_pass1? outrun.adr.sprite_crash_man1: outrun.adr.sprite_crash_girl1) + (spin_pass_frame << 3);
    sprite->addr = roms.rom0p->read32(frames);
-   uint8_t props = roms.rom0p->read8(4 + frames);
+   Num1 props = roms.rom0p->read8(4 + frames);
    sprite->pal_src = roms.rom0p->read8(5 + frames);
-   sprite->x = spr_ferrari->x + (int8_t)roms.rom0p->read8(6 + frames);
-   sprite->y = spr_ferrari->y + (int8_t)roms.rom0p->read8(7 + frames);
+   sprite->x = spr_ferrari->x + (Int1)roms.rom0p->read8(6 + frames);
+   sprite->y = spr_ferrari->y + (Int1)roms.rom0p->read8(7 + frames);
 // Check H-Flip
    if (props&BIT_7)
       sprite->control |= OSprites::HFLIP;
@@ -925,15 +925,15 @@ void OCrash::crash_pass1(oentry *sprite) {
 //
 // At: 1f26
 void OCrash::crash_pass2(oentry *sprite) {
-   uint32_t frames = (sprite == spr_pass1? outrun.adr.sprite_crash_man2: outrun.adr.sprite_crash_girl2);
+   Num4 frames = (sprite == spr_pass1? outrun.adr.sprite_crash_man2: outrun.adr.sprite_crash_girl2);
 // Use coll_count2 to select one of the three animations that can be played
 // Use crash_delay to toggle between two distinct frames
    frames += ((coll_count2&3) << 4) + (crash_delay&8);
    sprite->addr = roms.rom0p->read32(frames);
-   uint8_t props = roms.rom0p->read8(4 + frames);
+   Num1 props = roms.rom0p->read8(4 + frames);
    sprite->pal_src = roms.rom0p->read8(5 + frames);
-   sprite->x = spr_ferrari->x + (int8_t)roms.rom0p->read8(6 + frames);
-   sprite->y = spr_ferrari->y + (int8_t)roms.rom0p->read8(7 + frames);
+   sprite->x = spr_ferrari->x + (Int1)roms.rom0p->read8(6 + frames);
+   sprite->y = spr_ferrari->y + (Int1)roms.rom0p->read8(7 + frames);
 // Check H-Flip
    if (props&BIT_7)
       sprite->control |= OSprites::HFLIP;
@@ -947,7 +947,7 @@ void OCrash::crash_pass2(oentry *sprite) {
    sprite->zoom = 0x7E;
 // Man
    if (sprite == spr_pass1) {
-      const int8_t XY_OFF[] = {
+      const Int1 XY_OFF[] = {
          -0xC, -0x1E,
          0x2, -0x1B,
          0x4, -0x1A,
@@ -968,7 +968,7 @@ void OCrash::crash_pass2(oentry *sprite) {
    }
 // Woman
    else {
-      const int8_t XY_OFF[] = {
+      const Int1 XY_OFF[] = {
          0xA, -0x1A,
          0x0, -0x1B,
          -0xF, -0x1B,
@@ -1052,7 +1052,7 @@ void OCrash::pass_flip(oentry *sprite) {
    }
 // Slow crash
    else {
-      int16_t zinc = crash_zinc >> 2;
+      Int2 zinc = crash_zinc >> 2;
    // Adjust the z position of the female more than the man
       if (sprite == spr_pass2) {
          zinc += (zinc >> 1);
@@ -1060,13 +1060,13 @@ void OCrash::pass_flip(oentry *sprite) {
       sprite->counter -= zinc;
    }
 // set_z_lookup
-   int16_t zoom = sprite->counter >> 2;
+   Int2 zoom = sprite->counter >> 2;
    if (zoom < 0x40) zoom = 0x40;
-   sprite->zoom = (uint8_t)zoom;
-   uint32_t frames = sprite->z + (sprite->xw1 << 3);
+   sprite->zoom = (Num1)zoom;
+   Num4 frames = sprite->z + (sprite->xw1 << 3);
    sprite->addr = roms.rom0p->read32(frames);
-   uint16_t offset = sprite->counter > 0x1FF? 0x1FF: sprite->counter;
-   int16_t y_change = (((int8_t)roms.rom0p->read8(6 + frames))*offset) >> 9; // d1
+   Num2 offset = sprite->counter > 0x1FF? 0x1FF: sprite->counter;
+   Int2 y_change = (((Int1)roms.rom0p->read8(6 + frames))*offset) >> 9; // d1
    sprite->y = -(oroad.road_y[oroad.road_p0 + offset] >> 4) + 223;
    sprite->y -= y_change;
 // At 2138
@@ -1096,7 +1096,7 @@ void OCrash::pass_flip(oentry *sprite) {
    }
 // set_passenger_x
    sprite->x = spr_ferrari->x;
-   sprite->x += ((int8_t)roms.rom0p->read8(5 + frames));
+   sprite->x += ((Int1)roms.rom0p->read8(5 + frames));
    done(sprite);
 }
 
@@ -1104,9 +1104,9 @@ void OCrash::pass_flip(oentry *sprite) {
 // At: 205a
 void OCrash::pass_situp(oentry *sprite) {
 // Update passenger x position
-   int16_t x_diff = (oferrari.car_x_diff*sprite->counter) >> 9;
+   Int2 x_diff = (oferrari.car_x_diff*sprite->counter) >> 9;
    sprite->x += x_diff;
-   uint32_t frames = sprite->z + (sprite->xw1 << 3);
+   Num4 frames = sprite->z + (sprite->xw1 << 3);
    sprite->addr = roms.rom0p->read32(frames);
    sprite->pal_src = roms.rom0p->read8(4 + frames);
 // Decrement frame delay counter
@@ -1129,9 +1129,9 @@ void OCrash::pass_situp(oentry *sprite) {
 // At: 222c
 void OCrash::pass_turnhead(oentry *sprite) {
 // Update passenger x position
-   int16_t x_diff = (oferrari.car_x_diff*sprite->counter) >> 9;
+   Int2 x_diff = (oferrari.car_x_diff*sprite->counter) >> 9;
    sprite->x += x_diff;
-   uint32_t frames = sprite->z + (sprite->xw1 << 3);
+   Num4 frames = sprite->z + (sprite->xw1 << 3);
    sprite->addr = roms.rom0p->read32(frames);
    sprite->pal_src = roms.rom0p->read8(4 + frames);
 // End of animation sequence.
