@@ -3,34 +3,32 @@
 #include "Globals.hpp"
 #include "Play/Audio.hpp"
 
-namespace cannonball
-{
-    extern Audio audio;
+namespace cannonball {
+extern Audio audio;
 
-    // Frame counter
-	extern int frame;
+// Frame counter
+extern int frame;
 
-    // Tick Logic. Used when running at non-standard > 30 fps
-    extern bool tick_frame;
+// Tick Logic. Used when running at non-standard > 30 fps
+extern bool tick_frame;
 
-    // Millisecond Time Per Frame
-    extern double frame_ms;
+// Millisecond Time Per Frame
+extern double frame_ms;
 
-    // FPS Counter
-    extern int fps_counter;
+// FPS Counter
+extern int fps_counter;
 
-    // Engine Master State
-    extern int state;
+// Engine Master State
+extern int state;
 
-    enum
-    {
-        STATE_BOOT,
-        STATE_INIT_MENU,
-        STATE_MENU,
-        STATE_INIT_GAME,
-        STATE_GAME,
-        STATE_QUIT
-    };
-}
+enum {
+   STATE_BOOT,
+   STATE_INIT_MENU,
+   STATE_MENU,
+   STATE_INIT_GAME,
+   STATE_GAME,
+   STATE_QUIT
+};
+} // namespace cannonball
 
-int main(int argc, char* argv[]);
+int main(int argc, char *argv[]);

@@ -40,7 +40,6 @@ and course ordering.
 Optionally, you can include the following files from the Japanese version to
 play these alternate tracks:
 -------------------------------------------------------------------------------
-
 epr-10380.133
 epr-10382.118
 epr-10381.132
@@ -54,5 +53,4 @@ epr-10330.57
 Fixed Audio Rom (Optional)
 http://reassembler.blogspot.co.uk/2013/01/outrun-original-game-shipped-with.html
 -------------------------------------------------------------------------------
-
 opr-10188.71f
