@@ -1,17 +1,23 @@
-// Microsoft DirectX 8 Force Feedback (aka Haptic) Support
-// -	Currently, SDL does not support haptic devices. So this is Win32 only.
-// -	DirectX 8 still works on Windows XP, so I'm not attempting to support a higher version for now.
-//
-// Ref: http://msdn.microsoft.com/en-us/library/windows/desktop/ee417563%28v=vs.85%29.aspx
-//
+// Force Feedback (a.k.a. Haptic) Support Abstraction Layer
 // Copyright Chris White.
 // See License.txt for more details.
 #include "Jolt.hpp"
 
+#ifdef WIN32
+// Microsoft // DirectX 8 Needed (Windows XP and up)
+// DirectX 8 still works on Windows XP, so I'm not attempting to support a higher version for now.
+// Ref: http://msdn.microsoft.com/en-us/library/windows/desktop/ee417563%28v=vs.85%29.aspx
+#   define DIRECTINPUT_VERSION 0x0800
+#   include <dinput.h>
+#   include <SDL_syswm.h> // Used to get window handle for DirectX
+#else
+// Currently, SDL does not support haptic devices. So this is Win32 only.
+#endif
+
+namespace forcefeedback {
+#ifndef WIN32
 // Dummy Functions For Non-Windows Builds
 // ──────────────────────────────────────
-#ifndef WIN32
-namespace forcefeedback {
 bool init(int a, int b, int c) {
    return false;
 } // Did not initialize
@@ -23,17 +29,9 @@ int set(int x, int f) {
 bool is_supported() {
    return false;
 } // Not supported
-} // namespace forcefeedback
-
+#else
 // DirectX 8 Code Below
 // ────────────────────
-#else
-// DirectX 8 Needed (Windows XP and up)
-#   define DIRECTINPUT_VERSION 0x0800
-#   include <dinput.h>
-#   include <SDL_syswm.h> // Used to get window handle for DirectX
-
-namespace forcefeedback {
 // Function prototypes
 // ───────────────────
 HRESULT InitDirectInput(HWND hDlg);
@@ -229,5 +227,5 @@ int set(int xdirection, int force) {
 bool is_supported() {
    return g_supported;
 }
-} // namespace forcefeedback
 #endif
+} // namespace forcefeedback
