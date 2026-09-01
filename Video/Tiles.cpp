@@ -3,7 +3,6 @@
 #include "LoadROM.hpp"
 #include "Video/Tiles.hpp"
 #include "Arena/Config.hpp"
-#include <cstring>
 
 // Video Emulation: OutRun Tilemap Hardware.
 // Based on MAME source code.
