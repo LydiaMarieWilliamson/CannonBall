@@ -1,12 +1,18 @@
-// Dirent interface for Microsoft Visual Studio
+// An abstraction layer for <dirent.h> and Windows Visual Studio.
+// Reproduces and exports: DIR, struct dirent, opendir(), readdir(), closedir().
+#if !defined _MSC_VER
+#   include <dirent.h>
+#elif !defined DIRENT_H
+#define DIRENT_H
+// In order to get a cross-platform directory listing I'm using a Visual Studio version of Linux's Dirent from here:
+//	https://github.com/tronkko/dirent
 //
+// This appears to be the most lightweight solution available without resorting to enormous boost libraries or switching to C++17.
 // Copyright (C) 1998-2019 Toni Ronkko
 // This file is part of dirent.
 // Dirent may be freely distributed under the MIT license.
 // For all details and documentation, see
 //	https://github.com/tronkko/dirent
-#ifndef DIRENT_H
-#define DIRENT_H
 
 // Hide warnings about unreferenced local functions
 #if defined __clang__
@@ -248,8 +254,7 @@ static int strverscmp(const char *a, const char *b);
 // Compatibility with older Microsoft compilers and non-Microsoft compilers
 #   define wcstombs_s dirent_wcstombs_s
 #   define mbstowcs_s dirent_mbstowcs_s
-#endif
-#if defined _MSC_VER && _MSC_VER >= 1400
+#else
 // Optimize dirent_set_errno() away on modern Microsoft compilers
 #   define dirent_set_errno _set_errno
 #endif
@@ -260,13 +265,7 @@ static WIN32_FIND_DATAW *dirent_next(_WDIR *dirp);
 
 #if !defined _MSC_VER || _MSC_VER < 1400
 static int dirent_mbstowcs_s(size_t *pReturnValue, wchar_t *wcstr, size_t sizeInWords, const char *mbstr, size_t count);
-#endif
-
-#if !defined _MSC_VER || _MSC_VER < 1400
 static int dirent_wcstombs_s(size_t *pReturnValue, char *mbstr, size_t sizeInBytes, const wchar_t *wcstr, size_t count);
-#endif
-
-#if !defined _MSC_VER || _MSC_VER < 1400
 static void dirent_set_errno(int error);
 #endif
 
@@ -748,9 +747,7 @@ static int dirent_mbstowcs_s(size_t *pReturnValue, wchar_t *wcstr, size_t sizeIn
 // Success
    return 0;
 }
-#endif
 
-#if !defined _MSC_VER || _MSC_VER < 1400
 // Convert wide-character string to multi-byte string
 static int dirent_wcstombs_s(size_t *pReturnValue, char *mbstr, size_t sizeInBytes, const wchar_t *wcstr, size_t count) {
 // Older Visual Studio or non-Microsoft compiler
@@ -771,12 +768,10 @@ static int dirent_wcstombs_s(size_t *pReturnValue, char *mbstr, size_t sizeInByt
 // Success
    return 0;
 }
-#endif
 
-#if !defined _MSC_VER || _MSC_VER < 1400
 // Set errno variable
-static void dirent_set_errno(int error) {
 // Non-Microsoft compiler or older Microsoft compiler
+static void dirent_set_errno(int error) {
    errno = error;
 }
 #endif

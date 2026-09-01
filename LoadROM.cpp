@@ -13,16 +13,7 @@
 #include "Types.hpp"
 #include "LoadROM.hpp"
 #include "Arena/Config.hpp"
-// In order to get a cross-platform directory listing I'm using a Visual Studio
-// version of Linux's Dirent from here: https://github.com/tronkko/dirent
-//
-// This appears to be the most lightweight solution available without resorting
-// to enormous boost libraries or switching to C++17.
-#ifdef _MSC_VER
-#   include "DirEnt.h"
-#else
-#   include <dirent.h>
-#endif
+#include "DirEnt.h"
 
 // Unordered Map to store contents of directory by CRC 32 value. Similar to Hashmap.
 static std::unordered_map<int, std::string> map;
@@ -53,7 +44,7 @@ void RomLoader::unload(void) {
 
 // Filename based ROM loader
 // ─────────────────────────
-// Advantage: Simpler. Does not require <dirent.h>
+// Advantage: Simpler. Does not require <DirEnt.h>
 int RomLoader::load_rom(const char *filename, const int offset, const int length, const int expected_crc, const Num1 interleave, const bool verbose) {
    std::string path = config.data.rom_path;
    path += std::string(filename);
