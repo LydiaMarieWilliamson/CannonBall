@@ -2,7 +2,7 @@
 ## ━━━━━━━━━━━━━━━━━━━━━━
 ## For ports, please try not to edit this file directly.
 ## Everything should go into a Win64.cmake equivalent.
-cmake_minimum_required(VERSION 3.3.2) ## Might compile lower, but untested
+cmake_minimum_required(VERSION 3.3.2) ## This might compile lower, but that is untested
 project(CannonBall)
 
 ## Directory Setup
@@ -10,12 +10,12 @@ project(CannonBall)
 ## CMake default file (override with -DTARGET=file)
 set(DCMAKE Linux-GL.cmake)
 
-## Source location
+## The source location
 set(SrcDir ..)
 
 ## Platform Specific Setup
 ## ───────────────────────
-## Include relevant CMAKE file (default, mingw, pandora etc.)
+## Include the relevant CMAKE file (default, mingw, pandora etc.)
 if(TARGET)
    if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/${TARGET}")
       message("CMake files for ${TARGET} found")
@@ -56,26 +56,9 @@ set(AudioSrc
 )
 
 set(PlaySrc
-   "${SrcDir}/Play/Audio.hpp" "${SrcDir}/Play/Input.hpp" "${SrcDir}/Play/RenderBase.hpp" "${SrcDir}/Play/Timer.hpp"
-   "${SrcDir}/Play/Audio.cpp" "${SrcDir}/Play/Input.cpp" "${SrcDir}/Play/RenderBase.cpp" "${SrcDir}/Play/Timer.cpp"
+   "${SrcDir}/Play/Audio.hpp" "${SrcDir}/Play/Input.hpp" "${SrcDir}/Play/Render.hpp" "${SrcDir}/Play/RenderBase.hpp" "${SrcDir}/Play/Timer.hpp"
+   "${SrcDir}/Play/Audio.cpp" "${SrcDir}/Play/Input.cpp" "${SrcDir}/Play/Render.cpp" "${SrcDir}/Play/RenderBase.cpp" "${SrcDir}/Play/Timer.cpp"
 )
-
-if(OPENGL)
-   set(RenderSrc
-      "${SrcDir}/Play/RenderGL.hpp"
-      "${SrcDir}/Play/RenderGL.cpp"
-   )
-elseif(OPENGLES)
-   set(RenderSrc
-      "${SrcDir}/Play/RenderGLES.hpp"
-      "${SrcDir}/Play/RenderGLES.cpp"
-   )
-else()
-   set(RenderSrc
-      "${SrcDir}/Play/RenderSurface.hpp"
-      "${SrcDir}/Play/RenderSurface.cpp"
-   )
-endif()
 
 set(JoltSrc
    "${SrcDir}/Jolt/Jolt.hpp"
@@ -109,16 +92,15 @@ set(GameSoundSrc
 )
 
 set(Srcs
-   ${Src} ${ArenaSrc} ${VideoSrc} ${AudioSrc} ${PlaySrc} ${RenderSrc} ${JoltSrc} ${GameSrc} ${GameDataSrc} ${GameSoundSrc}
+   ${Src} ${ArenaSrc} ${VideoSrc} ${AudioSrc} ${PlaySrc} ${JoltSrc} ${GameSrc} ${GameDataSrc} ${GameSoundSrc}
 )
 
-## Group files into relevant filters for Visual Studio build
+## Group files into relevant filters for the Visual Studio build
 SOURCE_GROUP(.. FILES ${Src})
 SOURCE_GROUP(..\\Arena FILES ${ArenaSrc})
 SOURCE_GROUP(..\\Video FILES ${VideoSrc})
 SOURCE_GROUP(..\\Audio FILES ${AudioSrc})
 SOURCE_GROUP(..\\Play FILES ${PlaySrc})
-SOURCE_GROUP(..\\Play FILES ${RenderSrc})
 SOURCE_GROUP(..\\Jolt FILES ${JoltSrc})
 SOURCE_GROUP(..\\Game FILES ${GameSrc})
 SOURCE_GROUP(..\\Game\\Data FILES ${GameDataSrc})

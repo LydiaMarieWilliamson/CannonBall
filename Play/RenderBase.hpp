@@ -23,6 +23,8 @@ public:
    }
 protected:
    SDL_Surface *surface;
+// SDL2 window
+   SDL_Window *window;
 // Palette Lookup
    Num4 rgb[S16_PALETTE_ENTRIES*2]; // Extended to hold shadow colours
    Num4 *screen_pixels;

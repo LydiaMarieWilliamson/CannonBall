@@ -10,13 +10,7 @@
 #include "Globals.hpp"
 #include "Arena/Config.hpp"
 #include "Game/Road.hpp"
-#ifdef WITH_OPENGL
-#   include "Play/RenderGL.hpp"
-#elif WITH_OPENGLES
-#   include "Play/RenderGLES.hpp"
-#else
-#   include "Play/RenderSurface.hpp"
-#endif
+#include "Play/Render.hpp"
 
 Video video;
 
