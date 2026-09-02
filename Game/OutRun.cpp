@@ -546,7 +546,13 @@ bool Outrun::decrement_timers() {
       return false;
 // Correct count-down timer running fast at 1/29th (3%)
 // Fix timer counting extra second
+#if 0
    if (config.engine.fix_timer) {
+#else
+// but not on high-score table, to avoid hang on best score screen at timeout
+// https://github.com/djyt/cannonball/issues/140
+   if (config.engine.fix_timer && game_state != GS_BEST2) {
+#endif
       if (--ostats.frame_counter > 0)
          return false;
       ostats.frame_counter = ostats.frame_reset;
