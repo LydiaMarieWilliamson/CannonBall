@@ -8,7 +8,7 @@
 // See License.txt for more details.
 #pragma once
 
-#include "SpriteEntry.hpp"
+#include "Game/SpriteEntry.hpp"
 
 class oanimsprite {
 public:

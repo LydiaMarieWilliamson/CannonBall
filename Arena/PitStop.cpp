@@ -10,14 +10,14 @@
 //
 // Copyright Chris White.
 // See License.txt for more details.
-#include "PitStop.hpp"
+#include "Arena/PitStop.hpp"
 #include "Play/Input.hpp"
 #include "Utils.hpp"
-#include "../Video.hpp"
-#include "../Game/OutRun.hpp"
-#include "../Game/Outputs.hpp"
-#include "../Game/Display.hpp"
-#include "../Game/Tiles.hpp"
+#include "Video.hpp"
+#include "Game/OutRun.hpp"
+#include "Game/Outputs.hpp"
+#include "Game/Display.hpp"
+#include "Game/Tiles.hpp"
 
 const static Num4 PAL_CRT[] = {
    0xF, 0xF000FF, 0xF000F0F, 0xFF00FFF, 0xFFF, 0xEEE0DDD, 0xCCC0BBB,

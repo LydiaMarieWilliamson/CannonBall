@@ -10,9 +10,9 @@
 // See License.txt for more details.
 #pragma once
 
-#include "SpriteEntry.hpp"
-#include "Sprite.hpp"
-#include "OutRun.hpp"
+#include "Game/SpriteEntry.hpp"
+#include "Game/Sprite.hpp"
+#include "Game/OutRun.hpp"
 #include "Game/Data/SpritePals.hpp"
 
 class OSprites {

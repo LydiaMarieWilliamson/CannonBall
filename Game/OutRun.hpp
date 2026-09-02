@@ -13,11 +13,11 @@
 #include "Arena/Config.hpp"
 
 // Main include for Ported OutRun Code
-#include "Addresses.hpp"
-#include "Sprites.hpp"
-#include "Road.hpp"
-#include "InitGame.hpp"
-#include "Sound/SoundInt.hpp"
+#include "Game/Addresses.hpp"
+#include "Game/Sprites.hpp"
+#include "Game/Road.hpp"
+#include "Game/InitGame.hpp"
+#include "Game/Sound/SoundInt.hpp"
 
 // Globals
 enum {

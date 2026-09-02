@@ -11,7 +11,7 @@
 // See License.txt for more details.
 #pragma once
 
-#include "OutRun.hpp"
+#include "Game/OutRun.hpp"
 
 class OMap {
 public:

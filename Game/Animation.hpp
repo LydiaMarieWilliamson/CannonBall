@@ -12,7 +12,7 @@
 // See License.txt for more details.
 #pragma once
 
-#include "SpriteMove.hpp"
+#include "Game/SpriteMove.hpp"
 
 class OAnimSeq {
 public:

@@ -13,9 +13,9 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <iostream>
 #include "Main.hpp"
-#include "Config.hpp"
+#include "Arena/Config.hpp"
 #include "Globals.hpp"
-#include "../Utils.hpp"
+#include "Utils.hpp"
 #include "Game/Tops.hpp"
 #include "Game/Tools.hpp"
 #include "Game/Sound/SoundInt.hpp"

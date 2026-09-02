@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Play/Input.hpp"
-#include "OutRun.hpp"
+#include "Game/OutRun.hpp"
 
 class OInputs {
 public:

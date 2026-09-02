@@ -3,7 +3,7 @@
 // Exports: class Render and its member functions init(), disable(), start_frame(), finalize_frame() and draw_frame().
 // Specializes: its member functions supports_window() and supports_vsync().
 
-#include "RenderBase.hpp"
+#include "Play/RenderBase.hpp"
 
 #if defined WITH_OPENGL // Rendering: Open GL desktop.
 // Open GL Video Rendering.

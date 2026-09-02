@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Render.hpp"
+#include "Play/Render.hpp"
 #include "Arena/Config.hpp"
 
 #if defined WITH_OPENGL // Rendering: Open GL desktop.

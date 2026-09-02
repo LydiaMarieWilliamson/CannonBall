@@ -7,7 +7,7 @@
 //
 // Copyright Chris White.
 // See License.txt for more details.
-#include "../LoadTrack.hpp"
+#include "LoadTrack.hpp"
 #include "Game/Palette.hpp"
 #include "Game/Tiles.hpp"
 

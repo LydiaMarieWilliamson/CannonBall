@@ -7,9 +7,9 @@
 // Boost string prediction
 #include <boost/algorithm/string/predicate.hpp>
 #include "Main.hpp"
-#include "Menu.hpp"
-#include "MenuLabels.hpp"
-#include "../Utils.hpp"
+#include "Arena/Menu.hpp"
+#include "Arena/MenuLabels.hpp"
+#include "Utils.hpp"
 #include "Game/Display.hpp"
 #include "Game/Inputs.hpp"
 #include "Game/Sprites.hpp"

@@ -16,10 +16,13 @@ Chris White (Project Creator).
 ### Addendum
 
 This version of CannonBall is being moved away from the [original version](https://github.com/djyt/cannonball) by djyt, with the file tree flattened out and renamed, with more evocative names and the renaming retrofitted, including here.
-Greater focus is being placed on the Linux version instead of the Windows version, the dependency on "cmake" removed in favor of "make", and support for the Windows version phased out.
-These changes will eventually supersede the [Getting Started](#GettingStarted) and [Build](#Build) sections and render the [Visual Studio 2019 Community Edition](#VisualStudio2019) section superfluous.
+Greater focus has been placed on the Linux version instead of the Windows version, the dependency on "cmake" removed in favor of "make", and support for the Windows version phased out.
+These changes now supersede the [Getting Started](#GettingStarted) and [Build](#Build) sections and render the [Visual Studio 2019 Community Edition](#VisualStudio2019) section superfluous, now replaced by [Compiling CannonBall](#Compiling).
 
+However, they are retained - for now - for backward-compatibility, but no support or guarantees will be made for their use.
+If you use them, you're on your own and you'll have to experiment.
 For now, the "cmake" files are being retained, but only the Linux + OPENGL version has been verified.
+
 The arcade game has "haptic" support, in which it responds to how hard you press, push or turn buttons, knobs and dials on input and jolts the game equipment on output.
 Only the Windows versions supported this in the original and here.
 You may try to add "haptic" support in the Linux versions, if you feel adventurous.
@@ -36,7 +39,22 @@ I may also add in the ability and option for the female passenger to take the wh
 Some of the extensions in the [cannonball-se version](https://github.com/J1mbo/cannonball-se) by J1mbo may be included in this version.
 I've also thought about the idea of adding some elements of [Road Blaster](https://en.wikipedia.org/wiki/Road_Blaster) to this game.
 
--- Darth Spectra 2026-07-22
+-- Darth Spectra 2026-07-22, revised 2026-09-01
+
+<a name=Compiling></a>
+## Compiling (Makefiles, Linux Only)
+
+CannonBall is a C++ translation of the 1980's arcade game and requires the SDL 2 and Boost libraries.
+The translation was only made of the executable code, not of the graphics and music.
+This requies the inclusion of the relevant ROM files, which will need to be added to the ROMs directory.
+They are listed [here](ROMs/README.md).
+You're on your own, for obtaining them.
+
+-- Darth Spectra 2026-09-01
+
+---
+
+## Compiling (cmake, Legacy Only)
 
 <a name=GettingStarted></a>
 ## Getting Started

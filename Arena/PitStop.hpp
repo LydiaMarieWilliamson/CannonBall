@@ -12,7 +12,7 @@
 // See License.txt for more details.
 #pragma once
 
-#include "../Types.hpp"
+#include "Types.hpp"
 
 class CabDiag {
 public:

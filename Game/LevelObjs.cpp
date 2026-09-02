@@ -8,7 +8,7 @@
 //
 // Copyright Chris White.
 // See License.txt for more details.
-#include "../LoadTrack.hpp"
+#include "LoadTrack.hpp"
 #include "Game/Tools.hpp"
 #include "Game/LevelObjs.hpp"
 #include "Game/Stats.hpp"

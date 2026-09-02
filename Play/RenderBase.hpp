@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Types.hpp"
-#include "../Globals.hpp"
+#include "Types.hpp"
+#include "Globals.hpp"
 #include <SDL.h>
 
 // Abstract Rendering Class

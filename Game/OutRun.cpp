@@ -6,7 +6,7 @@
 // See License.txt for more details.
 #include "Main.hpp"
 #include "LoadTrack.hpp"
-#include "../Utils.hpp"
+#include "Utils.hpp"
 #include "Game/AttractAI.hpp"
 #include "Game/Animation.hpp"
 #include "Game/Bonus.hpp"

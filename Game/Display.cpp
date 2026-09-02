@@ -8,7 +8,7 @@
 // Copyright Chris White.
 // See License.txt for more details.
 #include <cstring>
-#include "../Utils.hpp"
+#include "Utils.hpp"
 #include "Game/Ferrari.hpp"
 #include "Game/Tools.hpp"
 #include "Game/Display.hpp"
