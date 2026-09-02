@@ -41,6 +41,10 @@ I've also thought about the idea of adding some elements of [Road Blaster](https
 
 -- Darth Spectra 2026-07-22, revised 2026-09-01
 
+### Discussions With AI On OutRun And Project CannonBall
+*   [Compiling OutRun And Other Games: CMake Versus Makefile](Doc/ConvertCMake.md)
+*   [Decompilation Of OutRun](Doc/DecompileOutRun.md)
+
 <a name=Compiling></a>
 ## Compiling (Makefiles, Linux Only)
 
